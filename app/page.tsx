@@ -15,7 +15,7 @@ export default function Home() {
         <h1 style={{ fontSize: "3rem", fontWeight: 700, marginBottom: "1rem" }}>
           Aethernal
         </h1>
-        <p style={{ color: "#888", fontSize: "1.2rem" }}>Coming soon.</p>
+        <p style={{ color: "#888", fontSize: "1.2rem" }}>Coming soon. 🚀</p>
       </div>
     </main>
   );
