@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/dashboard";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.aethernal.me";
 
   if (code) {
     const supabase = await createClient();
@@ -24,17 +25,17 @@ export async function GET(request: Request) {
           .single();
 
         if (profile && !profile.onboarding_done) {
-          return NextResponse.redirect(`${origin}/onboarding`);
+          return NextResponse.redirect(`${baseUrl}/onboarding`);
         }
       }
 
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${baseUrl}${next}`);
     }
   }
 
   // Auth error — redirect to login with error
   return NextResponse.redirect(
-    `${origin}/login?message=${encodeURIComponent(
+    `${baseUrl}/login?message=${encodeURIComponent(
       "Authentifizierung fehlgeschlagen. Bitte versuche es erneut."
     )}`
   );
