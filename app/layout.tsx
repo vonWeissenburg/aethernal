@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Aethernal",
-  description: "Aethernal – Coming soon",
+  title: {
+    default: "Aethernal",
+    template: "%s | Aethernal",
+  },
+  description:
+    "Aethernal – Das digitale Gedenkprofil für Menschen und Tiere.",
 };
 
 export default function RootLayout({
@@ -12,7 +17,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de">
-      <body>{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

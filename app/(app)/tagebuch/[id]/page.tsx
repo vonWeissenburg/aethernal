@@ -1,0 +1,103 @@
+import { createClient } from "@/lib/supabase/server";
+import { redirect, notFound } from "next/navigation";
+import { formatDate } from "@/lib/utils";
+import { MOOD_ICONS, MOOD_LABELS } from "@/lib/types";
+import type { DiaryEntry, Memorial } from "@/lib/types";
+import Link from "next/link";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("diary_entries")
+    .select("title")
+    .eq("id", id)
+    .single();
+  return { title: data?.title ?? "Tagebucheintrag" };
+}
+
+export default async function DiaryEntryPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
+
+  const { data: entry } = await supabase
+    .from("diary_entries")
+    .select("*, memorial:memorials(id, name, type)")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .single<DiaryEntry & { memorial: Pick<Memorial, "id" | "name" | "type"> }>();
+
+  if (!entry) notFound();
+
+  return (
+    <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
+      {/* Back link */}
+      <Link
+        href="/tagebuch"
+        className="inline-flex items-center gap-1 text-sm text-aether-gray hover:text-violet transition mb-6"
+      >
+        ← Zurück zum Tagebuch
+      </Link>
+
+      <article className="bg-white rounded-2xl border border-lavender-dark p-8">
+        {/* Header */}
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-3">
+            {entry.mood && (
+              <span
+                className="text-2xl"
+                title={MOOD_LABELS[entry.mood]}
+              >
+                {MOOD_ICONS[entry.mood]}
+              </span>
+            )}
+            <h1 className="text-2xl font-serif font-semibold text-violet">
+              {entry.title ?? "Ohne Titel"}
+            </h1>
+          </div>
+          <div className="flex items-center gap-3 text-sm text-aether-gray">
+            <span>{formatDate(entry.entry_date)}</span>
+            {entry.memorial && (
+              <>
+                <span className="text-lavender-dark">|</span>
+                <Link
+                  href={`/memorial/${entry.memorial.id}`}
+                  className="text-amber hover:text-amber-dark transition"
+                >
+                  {entry.memorial.type === "animal" ? "🐾" : "🕊️"}{" "}
+                  {entry.memorial.name}
+                </Link>
+              </>
+            )}
+            {entry.mood && (
+              <>
+                <span className="text-lavender-dark">|</span>
+                <span>{MOOD_LABELS[entry.mood]}</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="w-full h-px bg-lavender-dark mb-6" />
+
+        {/* Content */}
+        <div className="prose prose-sm max-w-none text-aether-text whitespace-pre-line leading-relaxed">
+          {entry.content}
+        </div>
+      </article>
+    </div>
+  );
+}
