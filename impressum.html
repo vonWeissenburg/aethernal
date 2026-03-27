@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impressum — Aethernal</title>
+<meta name="description" content="Impressum von Aethernal gemäß § 5 ECG (Österreich).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --v:#1E1B4B; --vm:#2D2571; --vs:#4C4A8A;
+  --a:#C97A2B; --al:#E09548; --ad:#A5611E;
+  --lav:#F0EDF8; --lav2:#DDD8F0;
+  --cr:#FAFAF7; --tx:#1A1830; --gr:#6B6880;
+  --wh:#fff; --blk:#0D0B20;
+  --r:16px; --rs:10px;
+  --shadow:0 4px 32px rgba(30,27,75,0.08);
+  --shadow-lg:0 12px 48px rgba(30,27,75,0.14);
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Inter',sans-serif;background:var(--cr);color:var(--tx);line-height:1.6;overflow-x:hidden;font-size:16px}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+/* TYPOGRAPHY */
+h1{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;line-height:1.1;letter-spacing:-0.01em;color:var(--v)}
+h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;line-height:1.2;color:var(--v);margin-bottom:12px;margin-top:36px}
+p{color:var(--gr);line-height:1.75;font-size:0.97rem}
+@media(min-width:640px){h1{font-size:3rem}}
+
+/* LAYOUT */
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+@media(min-width:640px){.wrap{padding:0 36px}}
+@media(min-width:1024px){.wrap{padding:0 48px}}
+
+/* ── NAV ── */
+.nav-bar{
+  position:sticky;top:0;z-index:900;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:68px;
+  background:rgba(10,9,32,0.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;
+  letter-spacing:0.12em;color:var(--wh);text-decoration:none;
+}
+.nav-links{display:none;gap:28px}
+@media(min-width:640px){.nav-links{display:flex}}
+.nav-links a{font-size:13.5px;font-weight:500;color:rgba(255,255,255,0.65);transition:color 0.2s}
+.nav-links a:hover{color:var(--wh)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;border-radius:var(--rs);
+  font-size:13.5px;font-weight:600;border:none;transition:all 0.2s;
+}
+.btn-amber{background:var(--a);color:var(--wh)}
+.btn-amber:hover{background:var(--al);transform:translateY(-1px)}
+.nav-right{display:flex;align-items:center;gap:16px}
+
+/* ── MAIN CONTENT ── */
+.imprint-wrap{
+  max-width:720px;margin:0 auto;
+  padding:72px 20px 96px;
+}
+@media(min-width:640px){.imprint-wrap{padding:80px 36px 112px}}
+
+.imprint-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--a);margin-bottom:12px;display:block;
+}
+.imprint-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.8rem;font-weight:300;color:var(--v);
+  line-height:1.1;margin-bottom:40px;
+}
+@media(min-width:640px){.imprint-headline{font-size:3.4rem}}
+
+.imprint-card{
+  background:var(--wh);border-radius:var(--r);
+  border:1px solid var(--lav);padding:36px 32px;
+  margin-bottom:24px;
+  box-shadow:var(--shadow);
+}
+.imprint-card h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.3rem;font-weight:600;color:var(--v);
+  margin-top:0;margin-bottom:20px;
+  padding-bottom:12px;border-bottom:1px solid var(--lav);
+}
+.imprint-field{
+  display:grid;grid-template-columns:140px 1fr;gap:8px 16px;
+  margin-bottom:10px;align-items:baseline;
+}
+@media(max-width:479px){
+  .imprint-field{grid-template-columns:1fr;gap:2px;margin-bottom:14px}
+}
+.imprint-label{
+  font-size:12px;font-weight:600;letter-spacing:0.05em;
+  text-transform:uppercase;color:var(--vs);opacity:0.65;
+}
+.imprint-value{
+  font-size:15px;color:var(--tx);line-height:1.6;
+}
+.imprint-value a{color:var(--a);text-decoration:underline;text-underline-offset:3px}
+.imprint-value a:hover{color:var(--al)}
+
+.imprint-note{
+  background:var(--lav);border-radius:var(--rs);
+  padding:20px 24px;margin-top:32px;
+}
+.imprint-note p{font-size:13.5px;color:var(--vs);line-height:1.75}
+
+/* ── FOOTER ── */
+footer{background:var(--blk);padding:48px 0 32px}
+.footer-top{
+  display:grid;grid-template-columns:1fr;gap:32px;margin-bottom:40px;
+}
+@media(min-width:640px){.footer-top{grid-template-columns:2fr 1fr 1fr 1fr}}
+.footer-brand{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;font-weight:600;letter-spacing:0.12em;
+  color:var(--wh);margin-bottom:10px;
+}
+.footer-desc{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.75;max-width:280px}
+.footer-col h5{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:14px}
+.footer-col a{display:block;font-size:13.5px;color:rgba(255,255,255,0.55);margin-bottom:8px;transition:color 0.2s}
+.footer-col a:hover{color:var(--wh)}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,0.07);
+  padding-top:24px;display:flex;flex-wrap:wrap;
+  justify-content:space-between;gap:10px;
+  font-size:12px;color:rgba(255,255,255,0.25);
+}
+.footer-bottom a{color:rgba(255,255,255,0.35);transition:color 0.2s}
+.footer-bottom a:hover{color:var(--wh)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <a class="nav-logo" href="/">
+    <svg width="22" height="26" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="nav-lg" x1="60" y1="130" x2="60" y2="8" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="rgba(255,255,255,0.5)"/>
+          <stop offset="55%"  stop-color="rgba(255,255,255,0.88)"/>
+          <stop offset="100%" stop-color="#C97A2B"/>
+        </linearGradient>
+      </defs>
+      <path d="M 8 128 L 52 12" stroke="url(#nav-lg)" stroke-width="9" stroke-linecap="round"/>
+      <path d="M 112 128 L 68 12" stroke="url(#nav-lg)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="52" cy="12" r="4" fill="#E09548"/>
+      <circle cx="68" cy="12" r="4" fill="#E09548"/>
+      <path d="M 31 82 L 89 82" stroke="#E09548" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+      <path d="M 60 10 L 60 1" stroke="#E09548" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+    </svg>
+    AETHERNAL
+  </a>
+  <div class="nav-links">
+    <a href="/#menschen">Für Menschen</a>
+    <a href="/#tiere">Für Tiere</a>
+    <a href="/#spiritlink">SpiritLink</a>
+    <a href="/#nachrichten">Nachrichten</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-amber" href="/">Zurück zur Startseite</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="imprint-wrap">
+
+  <span class="imprint-eyebrow">Rechtliches</span>
+  <h1 class="imprint-headline">Impressum</h1>
+
+  <div class="imprint-card">
+    <h2>Angaben gemäß § 5 ECG</h2>
+
+    <div class="imprint-field">
+      <span class="imprint-label">Name</span>
+      <span class="imprint-value">Fabian Fehervary</span>
+    </div>
+    <div class="imprint-field">
+      <span class="imprint-label">Anschrift</span>
+      <span class="imprint-value">Hochgasse 355<br>2534 Alland<br>Österreich</span>
+    </div>
+    <div class="imprint-field">
+      <span class="imprint-label">E-Mail</span>
+      <span class="imprint-value"><a href="mailto:fabian.fehervary@eximie.at">fabian.fehervary@eximie.at</a></span>
+    </div>
+  </div>
+
+  <div class="imprint-card">
+    <h2>Haftungsausschluss</h2>
+    <p>Die Inhalte dieser Website wurden mit größtmöglicher Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird jedoch keine Gewähr übernommen.</p>
+    <br>
+    <p>Als Diensteanbieter sind wir gemäß § 7 Abs. 1 ECG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8–10 ECG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+  </div>
+
+  <div class="imprint-card">
+    <h2>Urheberrecht</h2>
+    <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem österreichischen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+  </div>
+
+  <div class="imprint-card">
+    <h2>Datenschutz</h2>
+    <p>Die Nutzung unserer Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (etwa E-Mail-Adresse) erhoben werden, erfolgt dies stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.</p>
+    <br>
+    <p>Wir weisen darauf hin, dass die Datenübertragung im Internet (z. B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.</p>
+    <br>
+    <p>Für Anfragen zum Datenschutz wenden Sie sich bitte an: <a href="mailto:fabian.fehervary@eximie.at">fabian.fehervary@eximie.at</a></p>
+  </div>
+
+  <div class="imprint-note">
+    <p>Aethernal ist ein Projekt von Fabian Fehervary. Für Anfragen: <a href="mailto:hallo@aethernal.me" style="color:var(--a);text-decoration:underline;text-underline-offset:3px">hallo@aethernal.me</a></p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand" style="display:flex;align-items:center;gap:10px;">
+          <svg width="18" height="21" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ft-lg" x1="60" y1="130" x2="60" y2="8" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="rgba(255,255,255,0.4)"/>
+                <stop offset="55%"  stop-color="rgba(255,255,255,0.8)"/>
+                <stop offset="100%" stop-color="#C97A2B"/>
+              </linearGradient>
+            </defs>
+            <path d="M 8 128 L 52 12" stroke="url(#ft-lg)" stroke-width="9" stroke-linecap="round"/>
+            <path d="M 112 128 L 68 12" stroke="url(#ft-lg)" stroke-width="9" stroke-linecap="round"/>
+            <circle cx="52" cy="12" r="4" fill="#E09548"/>
+            <circle cx="68" cy="12" r="4" fill="#E09548"/>
+            <path d="M 31 82 L 89 82" stroke="#E09548" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+          </svg>
+          AETHERNAL
+        </div>
+        <p class="footer-desc">Digitale Gedenkprofile für Menschen und Tiere. Ein Projekt von Fabian Fehervary, Alland.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Produkt</h5>
+        <a href="/#menschen">Für Menschen</a>
+        <a href="/#tiere">Für Tiere</a>
+        <a href="/#spiritlink">SpiritLink</a>
+        <a href="/#nachrichten">Nachrichten</a>
+      </div>
+      <div class="footer-col">
+        <h5>Partner</h5>
+        <a href="mailto:partner@aethernal.me">Partner werden</a>
+        <a href="mailto:partner@aethernal.me">partner@aethernal.me</a>
+      </div>
+      <div class="footer-col">
+        <h5>Rechtliches</h5>
+        <a href="/impressum.html">Impressum</a>
+        <a href="#">Datenschutz</a>
+        <a href="#">AGB</a>
+        <a href="mailto:hallo@aethernal.me">hallo@aethernal.me</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Aethernal · Fabian Fehervary · Alle Rechte vorbehalten</span>
+      <span>
+        <a href="/impressum.html">Impressum</a> &nbsp;·&nbsp;
+        <a href="#">Datenschutz</a> &nbsp;·&nbsp;
+        <a href="#">AGB</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -3,24 +3,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: aether-nextjs:latest
-    container_name: aether-nextjs
+    image: aethernal-web:latest
+    container_name: aethernal-web
     restart: unless-stopped
     env_file: .env
     networks:
       - traefik-public
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nextjs.rule=Host(`aethernal.me`) || Host(`www.aethernal.me`)"
-      - "traefik.http.routers.nextjs.entrypoints=websecure"
-      - "traefik.http.routers.nextjs.tls=true"
-      - "traefik.http.routers.nextjs.tls.certresolver=letsencrypt"
-      - "traefik.http.services.nextjs.loadbalancer.server.port=3000"
-      - "traefik.http.routers.nextjs.middlewares=www-to-apex"
-      - "traefik.http.middlewares.www-to-apex.redirectregex.regex=^https://www\\.aethernal\\.me/(.*)"
-      - "traefik.http.middlewares.www-to-apex.redirectregex.replacement=https://aethernal.me/$${1}"
-      - "traefik.http.middlewares.www-to-apex.redirectregex.permanent=true"
-
+      - "traefik.http.routers.aethernal-app.rule=Host(`app.aethernal.me`)"
+      - "traefik.http.routers.aethernal-app.entrypoints=websecure"
+      - "traefik.http.routers.aethernal-app.tls=true"
+      - "traefik.http.routers.aethernal-app.tls.certresolver=letsencrypt"
+      - "traefik.http.services.aethernal-app.loadbalancer.server.port=3000"
 networks:
   traefik-public:
     external: true
