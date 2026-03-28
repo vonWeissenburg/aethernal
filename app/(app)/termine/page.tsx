@@ -1,34 +1,46 @@
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import Link from "next/link";
+import type { Reminder } from "@/lib/types";
+import { REMINDER_TYPE_LABELS, REMINDER_TYPE_ICONS } from "@/lib/types";
+import { ReminderList } from "./reminder-list";
 
-export const metadata = { title: "Termine" };
+export const metadata = { title: "Termine & Erinnerungen" };
 
-export default function TerminePage() {
+export default async function TerminePage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: reminders } = await supabase
+    .from("reminders")
+    .select("*, memorials(name)")
+    .eq("user_id", user.id)
+    .order("reminder_date", { ascending: true })
+    .returns<Reminder[]>();
+
   return (
-    <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <div className="rounded-2xl border border-lavender-dark bg-white p-12 text-center">
-        <div className="text-5xl mb-6">📅</div>
-        <h1 className="text-3xl font-serif font-semibold text-violet mb-3">
-          Termine
-        </h1>
-        <p className="text-aether-gray max-w-md mx-auto mb-2">
-          Gedenktage, Jahrestage und besondere Daten, die automatisch erinnert
-          werden.
-        </p>
-        <div className="inline-block mt-4 mb-6 text-xs bg-amber/10 text-amber px-3 py-1.5 rounded-full font-medium">
-          Verfügbar ab Q3 2026
-        </div>
-        <div className="border-t border-lavender-dark pt-6">
-          <p className="text-sm text-aether-gray">
-            Du wirst benachrichtigt, sobald dieses Feature verfügbar ist.
+    <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
+      <div className="flex items-start justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-serif font-semibold text-violet">
+            Termine & Erinnerungen
+          </h1>
+          <p className="mt-2 text-aether-gray">
+            Gedenktage, Jahrestage und besondere Daten.
           </p>
-          <Link
-            href="/dashboard"
-            className="inline-block mt-4 text-sm text-amber hover:text-amber-dark transition"
-          >
-            ← Zurück zum Dashboard
-          </Link>
         </div>
+        <Link
+          href="/termine/neu"
+          className="shrink-0 inline-flex items-center gap-2 rounded-lg bg-amber px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-dark transition shadow-sm"
+        >
+          + Neuer Termin
+        </Link>
       </div>
+
+      <ReminderList reminders={reminders ?? []} />
     </div>
   );
 }

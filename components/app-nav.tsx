@@ -9,7 +9,8 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: "🏠" },
   { href: "/tagebuch", label: "Tagebuch", icon: "📖" },
   { href: "/nachrichten", label: "Nachrichten", icon: "💌" },
-  { href: "/termine", label: "Termine", icon: "📅", comingSoon: true },
+  { href: "/vertrauenspersonen", label: "Vertrauen", icon: "🤝" },
+  { href: "/termine", label: "Termine", icon: "📅" },
 ];
 
 export default function AppNav({
@@ -44,23 +45,15 @@ export default function AppNav({
             return (
               <Link
                 key={item.href}
-                href={item.comingSoon ? "#" : item.href}
+                href={item.href}
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition ${
-                  item.comingSoon
-                    ? "opacity-50 cursor-default"
-                    : isActive
-                      ? "bg-white/15 text-white"
-                      : "text-lavender/70 hover:bg-white/10 hover:text-white"
+                  isActive
+                    ? "bg-white/15 text-white"
+                    : "text-lavender/70 hover:bg-white/10 hover:text-white"
                 }`}
-                onClick={item.comingSoon ? (e) => e.preventDefault() : undefined}
               >
                 <span>{item.icon}</span>
                 <span>{item.label}</span>
-                {item.comingSoon && (
-                  <span className="ml-auto text-[10px] bg-amber/80 text-white px-1.5 py-0.5 rounded-full font-medium">
-                    Bald
-                  </span>
-                )}
               </Link>
             );
           })}
@@ -107,15 +100,10 @@ export default function AppNav({
             return (
               <Link
                 key={item.href}
-                href={item.comingSoon ? "#" : item.href}
+                href={item.href}
                 className={`flex flex-col items-center gap-0.5 px-3 py-1 text-xs transition ${
-                  item.comingSoon
-                    ? "opacity-40"
-                    : isActive
-                      ? "text-violet"
-                      : "text-aether-gray"
+                  isActive ? "text-violet" : "text-aether-gray"
                 }`}
-                onClick={item.comingSoon ? (e) => e.preventDefault() : undefined}
               >
                 <span className="text-lg">{item.icon}</span>
                 <span>{item.label}</span>

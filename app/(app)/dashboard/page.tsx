@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getGreeting, formatLifespan } from "@/lib/utils";
-import type { Memorial, Profile } from "@/lib/types";
+import type { Memorial, Profile, Message, Reminder } from "@/lib/types";
+import { STATUS_STYLES, STATUS_LABELS, REMINDER_TYPE_ICONS } from "@/lib/types";
 import Link from "next/link";
 
 export const metadata = { title: "Dashboard" };
@@ -37,6 +38,29 @@ export default async function DashboardPage() {
     .select("*", { count: "exact", head: true })
     .eq("user_id", user.id)
     .in("status", ["draft", "scheduled"]);
+
+  const { data: draftMessages } = await supabase
+    .from("messages")
+    .select("id, title, recipient_name, status")
+    .eq("user_id", user.id)
+    .eq("status", "draft")
+    .order("created_at", { ascending: false })
+    .limit(3)
+    .returns<Pick<Message, "id" | "title" | "recipient_name" | "status">[]>();
+
+  const { data: upcomingReminders } = await supabase
+    .from("reminders")
+    .select("id, title, reminder_date, reminder_type")
+    .eq("user_id", user.id)
+    .gte("reminder_date", new Date().toISOString().split("T")[0])
+    .order("reminder_date", { ascending: true })
+    .limit(3)
+    .returns<Pick<Reminder, "id" | "title" | "reminder_date" | "reminder_type">[]>();
+
+  const { count: reminderCount } = await supabase
+    .from("reminders")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id);
 
   const firstName = profile?.full_name?.split(" ")[0] ?? "";
 
@@ -90,6 +114,80 @@ export default async function DashboardPage() {
           </p>
           <p className="text-xs text-aether-gray">Nachrichten geplant</p>
         </div>
+        <div className="rounded-xl bg-white border border-lavender-dark px-5 py-3">
+          <p className="text-2xl font-serif font-semibold text-violet">
+            {reminderCount ?? 0}
+          </p>
+          <p className="text-xs text-aether-gray">Termine</p>
+        </div>
+      </div>
+
+      {/* Widgets */}
+      <div className="grid gap-6 sm:grid-cols-2 mb-10">
+        {/* Draft messages */}
+        {draftMessages && draftMessages.length > 0 && (
+          <div className="rounded-xl border border-lavender-dark bg-white p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-serif text-base font-semibold text-violet">
+                💌 Nachrichten-Entwürfe
+              </h3>
+              <Link href="/nachrichten" className="text-xs text-amber hover:text-amber-dark">
+                Alle →
+              </Link>
+            </div>
+            <div className="space-y-2">
+              {draftMessages.map((m) => (
+                <Link
+                  key={m.id}
+                  href={`/nachrichten/${m.id}/bearbeiten`}
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-lavender/50 transition"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm text-violet truncate">{m.title}</p>
+                    <p className="text-xs text-aether-gray">An {m.recipient_name}</p>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full shrink-0 ${STATUS_STYLES.draft}`}>
+                    {STATUS_LABELS.draft}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Upcoming reminders */}
+        {upcomingReminders && upcomingReminders.length > 0 && (
+          <div className="rounded-xl border border-lavender-dark bg-white p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-serif text-base font-semibold text-violet">
+                📅 Anstehende Termine
+              </h3>
+              <Link href="/termine" className="text-xs text-amber hover:text-amber-dark">
+                Alle →
+              </Link>
+            </div>
+            <div className="space-y-2">
+              {upcomingReminders.map((r) => (
+                <Link
+                  key={r.id}
+                  href={`/termine/${r.id}/bearbeiten`}
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-lavender/50 transition"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span>{REMINDER_TYPE_ICONS[r.reminder_type]}</span>
+                    <p className="text-sm text-violet truncate">{r.title}</p>
+                  </div>
+                  <span className="text-xs text-aether-gray shrink-0">
+                    {new Date(r.reminder_date).toLocaleDateString("de-AT", {
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Memorial cards */}

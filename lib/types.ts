@@ -111,3 +111,33 @@ export const STATUS_LABELS: Record<MessageStatus, string> = {
   sent: "Gesendet",
   failed: "Fehler",
 };
+
+export type ReminderType = "birthday" | "deathday" | "anniversary" | "custom";
+
+export interface Reminder {
+  id: string;
+  user_id: string;
+  memorial_id: string | null;
+  title: string;
+  description: string | null;
+  reminder_date: string;
+  reminder_type: ReminderType;
+  repeat_yearly: boolean;
+  created_at: string;
+  updated_at: string;
+  memorials?: { name: string } | null;
+}
+
+export const REMINDER_TYPE_LABELS: Record<ReminderType, string> = {
+  birthday: "Geburtstag",
+  deathday: "Todestag",
+  anniversary: "Jahrestag",
+  custom: "Benutzerdefiniert",
+};
+
+export const REMINDER_TYPE_ICONS: Record<ReminderType, string> = {
+  birthday: "🎂",
+  deathday: "🕊️",
+  anniversary: "💍",
+  custom: "📅",
+};
