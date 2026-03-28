@@ -66,3 +66,48 @@ export const MOOD_LABELS: Record<DiaryMood, string> = {
   loving: "Liebevoll",
   joyful: "Freudig",
 };
+
+export type TriggerType = "date" | "death";
+export type MessageStatus = "draft" | "scheduled" | "sent" | "failed";
+
+export interface Message {
+  id: string;
+  user_id: string;
+  memorial_id: string | null;
+  title: string;
+  body: string;
+  recipient_name: string;
+  recipient_email: string;
+  trigger_type: TriggerType;
+  trigger_date: string | null;
+  repeat_yearly: boolean;
+  status: MessageStatus;
+  sent_at: string | null;
+  created_at: string;
+  updated_at: string;
+  memorials?: { name: string } | null;
+}
+
+export interface TrustedPerson {
+  id: string;
+  user_id: string;
+  name: string;
+  email: string;
+  relationship: string | null;
+  confirmed: boolean;
+  created_at: string;
+}
+
+export const STATUS_STYLES: Record<MessageStatus, string> = {
+  draft: "bg-gray-100 text-gray-600",
+  scheduled: "bg-amber-100 text-amber-700",
+  sent: "bg-green-100 text-green-700",
+  failed: "bg-red-100 text-red-600",
+};
+
+export const STATUS_LABELS: Record<MessageStatus, string> = {
+  draft: "Entwurf",
+  scheduled: "Geplant",
+  sent: "Gesendet",
+  failed: "Fehler",
+};

@@ -1,34 +1,81 @@
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 import Link from "next/link";
+import type { Message, TrustedPerson } from "@/lib/types";
+import { STATUS_STYLES, STATUS_LABELS } from "@/lib/types";
+import { MessageList } from "./message-list";
+import { TrustedPersonSection } from "./trusted-person-section";
 
 export const metadata = { title: "Nachrichten" };
 
-export default function NachrichtenPage() {
+export default async function NachrichtenPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const params = await searchParams;
+  const activeTab = params.tab === "vertrauensperson" ? "vertrauensperson" : "nachrichten";
+
+  const { data: messages } = await supabase
+    .from("messages")
+    .select("*, memorials(name)")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .returns<Message[]>();
+
+  const { data: trustedPersons } = await supabase
+    .from("trusted_persons")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .returns<TrustedPerson[]>();
+
   return (
-    <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <div className="rounded-2xl border border-lavender-dark bg-white p-12 text-center">
-        <div className="text-5xl mb-6">💌</div>
-        <h1 className="text-3xl font-serif font-semibold text-violet mb-3">
-          Nachrichten
+    <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
+      <div className="mb-8">
+        <h1 className="text-3xl font-serif font-semibold text-violet">
+          Nachrichten aus dem Jenseits
         </h1>
-        <p className="text-aether-gray max-w-md mx-auto mb-2">
-          Zeitgesteuerte Nachrichten, die an deine Liebsten zugestellt werden,
-          wenn die Zeit gekommen ist.
+        <p className="mt-2 text-aether-gray">
+          Zeitgesteuerte Nachrichten an deine Liebsten.
         </p>
-        <div className="inline-block mt-4 mb-6 text-xs bg-amber/10 text-amber px-3 py-1.5 rounded-full font-medium">
-          Verfügbar ab Q2 2026
-        </div>
-        <div className="border-t border-lavender-dark pt-6">
-          <p className="text-sm text-aether-gray">
-            Du wirst benachrichtigt, sobald dieses Feature verfügbar ist.
-          </p>
-          <Link
-            href="/dashboard"
-            className="inline-block mt-4 text-sm text-amber hover:text-amber-dark transition"
-          >
-            ← Zurück zum Dashboard
-          </Link>
-        </div>
       </div>
+
+      {/* Tabs */}
+      <div className="flex gap-1 mb-8 border-b border-lavender-dark">
+        <Link
+          href="/nachrichten"
+          className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${
+            activeTab === "nachrichten"
+              ? "border-amber text-violet"
+              : "border-transparent text-aether-gray hover:text-violet"
+          }`}
+        >
+          💌 Meine Nachrichten
+        </Link>
+        <Link
+          href="/nachrichten?tab=vertrauensperson"
+          className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${
+            activeTab === "vertrauensperson"
+              ? "border-amber text-violet"
+              : "border-transparent text-aether-gray hover:text-violet"
+          }`}
+        >
+          🤝 Vertrauensperson
+        </Link>
+      </div>
+
+      {activeTab === "nachrichten" ? (
+        <MessageList messages={messages ?? []} />
+      ) : (
+        <TrustedPersonSection trustedPersons={trustedPersons ?? []} />
+      )}
     </div>
   );
 }

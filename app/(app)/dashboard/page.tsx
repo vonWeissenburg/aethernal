@@ -32,6 +32,12 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .returns<Memorial[]>();
 
+  const { count: messageCount } = await supabase
+    .from("messages")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .in("status", ["draft", "scheduled"]);
+
   const firstName = profile?.full_name?.split(" ")[0] ?? "";
 
   return (
@@ -57,11 +63,33 @@ export default async function DashboardPage() {
           Neues Gedenkprofil
         </Link>
         <Link
+          href="/nachrichten/neu"
+          className="inline-flex items-center gap-2 rounded-lg bg-amber px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-dark transition shadow-sm"
+        >
+          💌 Nachricht planen
+        </Link>
+        <Link
           href="/tagebuch/neu"
           className="inline-flex items-center gap-2 rounded-lg border border-violet/20 bg-white px-5 py-2.5 text-sm font-medium text-violet hover:bg-lavender transition"
         >
           Tagebucheintrag schreiben
         </Link>
+      </div>
+
+      {/* Stats */}
+      <div className="flex flex-wrap gap-4 mb-10">
+        <div className="rounded-xl bg-white border border-lavender-dark px-5 py-3">
+          <p className="text-2xl font-serif font-semibold text-violet">
+            {memorials?.length ?? 0}
+          </p>
+          <p className="text-xs text-aether-gray">Gedenkprofile</p>
+        </div>
+        <div className="rounded-xl bg-white border border-lavender-dark px-5 py-3">
+          <p className="text-2xl font-serif font-semibold text-violet">
+            {messageCount ?? 0}
+          </p>
+          <p className="text-xs text-aether-gray">Nachrichten geplant</p>
+        </div>
       </div>
 
       {/* Memorial cards */}
