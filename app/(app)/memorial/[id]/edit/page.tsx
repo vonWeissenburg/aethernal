@@ -3,12 +3,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { Memorial } from "@/lib/types";
+import { generateSlug } from "@/lib/utils";
+import type { Memorial, MemorialPhoto } from "@/lib/types";
 
 export default function EditMemorialPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [memorial, setMemorial] = useState<Memorial | null>(null);
+  const [photos, setPhotos] = useState<MemorialPhoto[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +46,16 @@ export default function EditMemorialPage() {
     setDescription(data.description ?? "");
     setBiography(data.biography ?? "");
     setIsPublic(data.is_public);
+
+    // Load photos
+    const { data: photoData } = await supabase
+      .from("memorial_photos")
+      .select("*")
+      .eq("memorial_id", id)
+      .order("order_index")
+      .returns<MemorialPhoto[]>();
+
+    setPhotos(photoData ?? []);
     setLoading(false);
   }, [id, router]);
 
@@ -63,18 +75,26 @@ export default function EditMemorialPage() {
     setSuccess(false);
 
     const supabase = createClient();
+
+    // Update slug if name changed
+    const updateData: Record<string, unknown> = {
+      name: name.trim(),
+      type,
+      birth_date: birthDate || null,
+      death_date: deathDate || null,
+      description: description.trim() || null,
+      biography: biography.trim() || null,
+      is_public: isPublic,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (memorial && name.trim() !== memorial.name) {
+      updateData.slug = generateSlug(name.trim());
+    }
+
     const { error: updateError } = await supabase
       .from("memorials")
-      .update({
-        name: name.trim(),
-        type,
-        birth_date: birthDate || null,
-        death_date: deathDate || null,
-        description: description.trim() || null,
-        biography: biography.trim() || null,
-        is_public: isPublic,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq("id", id);
 
     if (updateError) {
@@ -88,7 +108,11 @@ export default function EditMemorialPage() {
   }
 
   async function handleDelete() {
-    if (!confirm("Möchtest du dieses Gedenkprofil wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.")) {
+    if (
+      !confirm(
+        "Möchtest du dieses Gedenkprofil wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+      )
+    ) {
       return;
     }
 
@@ -126,16 +150,40 @@ export default function EditMemorialPage() {
         data: { publicUrl },
       } = supabase.storage.from("memorial-photos").getPublicUrl(filePath);
 
-      await supabase.from("memorial_photos").insert({
-        memorial_id: id,
-        url: publicUrl,
-      });
+      const { data: newPhoto } = await supabase
+        .from("memorial_photos")
+        .insert({
+          memorial_id: id,
+          url: publicUrl,
+        })
+        .select()
+        .single<MemorialPhoto>();
+
+      if (newPhoto) {
+        setPhotos((prev) => [...prev, newPhoto]);
+      }
     }
 
-    // Reset input
     e.target.value = "";
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 3000);
+  }
+
+  async function handleDeletePhoto(photo: MemorialPhoto) {
+    if (!confirm("Foto wirklich löschen?")) return;
+
+    const supabase = createClient();
+
+    // Delete from storage
+    const url = new URL(photo.url);
+    const pathParts = url.pathname.split("/memorial-photos/");
+    if (pathParts[1]) {
+      await supabase.storage
+        .from("memorial-photos")
+        .remove([decodeURIComponent(pathParts[1])]);
+    }
+
+    // Delete from DB
+    await supabase.from("memorial_photos").delete().eq("id", photo.id);
+    setPhotos((prev) => prev.filter((p) => p.id !== photo.id));
   }
 
   if (loading) {
@@ -212,6 +260,11 @@ export default function EditMemorialPage() {
             onChange={(e) => setName(e.target.value)}
             className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
           />
+          {memorial && name.trim() !== memorial.name && name.trim() && (
+            <p className="text-xs text-amber mt-1">
+              SpiritLink-URL wird beim Speichern aktualisiert.
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -277,11 +330,36 @@ export default function EditMemorialPage() {
           </label>
         </div>
 
-        {/* Photo upload */}
-        <div>
-          <label className="block text-sm font-medium text-aether-text mb-1.5">
-            Fotos hochladen
+        {/* Photo section */}
+        <div id="fotos">
+          <label className="block text-sm font-medium text-aether-text mb-3">
+            Fotos
           </label>
+
+          {/* Existing photos gallery */}
+          {photos.length > 0 && (
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+              {photos.map((photo) => (
+                <div key={photo.id} className="relative group aspect-square">
+                  <img
+                    src={photo.url}
+                    alt={photo.caption ?? ""}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleDeletePhoto(photo)}
+                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-red-600 text-white text-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-md hover:bg-red-700"
+                    title="Foto löschen"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Upload */}
           <input
             type="file"
             accept="image/*"

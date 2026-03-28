@@ -39,14 +39,6 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
   return (
     <div>
-      <div className="rounded-lg bg-amber/5 border border-amber/20 p-4 mb-6">
-        <p className="text-xs text-aether-gray">
-          📬 Der E-Mail-Versand wird in Kürze aktiviert. Deine geplanten
-          Nachrichten werden gespeichert und automatisch versendet, sobald der
-          Dienst eingerichtet ist.
-        </p>
-      </div>
-
       <div className="flex justify-end mb-6">
         <Link
           href="/nachrichten/neu"

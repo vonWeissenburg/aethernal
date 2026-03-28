@@ -71,6 +71,16 @@ export default async function NachrichtenPage({
         </Link>
       </div>
 
+      {/* Email notice */}
+      {activeTab === "nachrichten" && (
+        <div className="rounded-lg bg-amber/5 border border-amber/20 p-4 mb-6">
+          <p className="text-xs text-aether-gray">
+            📬 Der E-Mail-Versand wird in Kürze aktiviert. Du kannst bereits
+            Nachrichten erstellen und planen.
+          </p>
+        </div>
+      )}
+
       {activeTab === "nachrichten" ? (
         <MessageList messages={messages ?? []} />
       ) : (

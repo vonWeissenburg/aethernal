@@ -15,8 +15,10 @@ const NAV_ITEMS = [
 
 export default function AppNav({
   userName,
+  userEmail,
 }: {
   userName: string | null;
+  userEmail?: string | null;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -60,14 +62,17 @@ export default function AppNav({
         </nav>
 
         <div className="p-4 border-t border-white/10">
-          <div className="flex items-center gap-3 px-4 py-2 mb-2">
+          <Link
+            href="/einstellungen"
+            className="flex items-center gap-3 px-4 py-2 mb-2 rounded-lg hover:bg-white/10 transition"
+          >
             <div className="w-8 h-8 rounded-full bg-amber/20 flex items-center justify-center text-sm font-medium text-amber-light">
-              {userName?.charAt(0)?.toUpperCase() ?? "?"}
+              {(userName ?? userEmail)?.charAt(0)?.toUpperCase() ?? "?"}
             </div>
             <span className="text-sm text-lavender/80 truncate">
-              {userName ?? "Benutzer"}
+              {userName ?? userEmail ?? "Benutzer"}
             </span>
-          </div>
+          </Link>
           <button
             onClick={handleSignOut}
             className="w-full text-left px-4 py-2 text-sm text-lavender/60 hover:text-white hover:bg-white/10 rounded-lg transition"

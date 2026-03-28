@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import type { Memorial } from "@/lib/types";
+import type { Memorial, TrustedPerson } from "@/lib/types";
 import { MessageForm } from "../message-form";
 
 export const metadata = { title: "Neue Nachricht" };
@@ -21,8 +21,9 @@ export default async function NeueNachrichtPage() {
 
   const { data: trustedPersons } = await supabase
     .from("trusted_persons")
-    .select("id")
-    .eq("user_id", user.id);
+    .select("id, name, email")
+    .eq("user_id", user.id)
+    .returns<Pick<TrustedPerson, "id" | "name" | "email">[]>();
 
   return (
     <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
@@ -32,6 +33,7 @@ export default async function NeueNachrichtPage() {
       <MessageForm
         memorials={memorials ?? []}
         hasTrustedPerson={(trustedPersons?.length ?? 0) > 0}
+        trustedPersons={trustedPersons ?? []}
       />
     </div>
   );

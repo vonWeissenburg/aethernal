@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import type { Message, TriggerType } from "@/lib/types";
+import type { Message, TriggerType, TrustedPerson } from "@/lib/types";
 
 interface MessageFormProps {
   memorials: { id: string; name: string }[];
   hasTrustedPerson: boolean;
+  trustedPersons?: Pick<TrustedPerson, "id" | "name" | "email">[];
   existingMessage?: Message;
 }
 
@@ -17,6 +18,7 @@ const MAX_BODY = 5000;
 export function MessageForm({
   memorials,
   hasTrustedPerson,
+  trustedPersons = [],
   existingMessage,
 }: MessageFormProps) {
   const router = useRouter();
@@ -27,6 +29,9 @@ export function MessageForm({
   );
   const [recipientName, setRecipientName] = useState(
     existingMessage?.recipient_name ?? ""
+  );
+  const [recipientEmail, setRecipientEmail] = useState(
+    existingMessage?.recipient_email ?? ""
   );
   const [body, setBody] = useState(existingMessage?.body ?? "");
   const [title, setTitle] = useState(existingMessage?.title ?? "");
@@ -93,10 +98,37 @@ export function MessageForm({
         <h2 className="font-serif text-xl font-semibold text-violet mb-4">
           Empfänger
         </h2>
+
+        {trustedPersons.length > 0 && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-violet mb-1">
+              Aus Vertrauenspersonen wählen
+            </label>
+            <select
+              onChange={(e) => {
+                const tp = trustedPersons.find((t) => t.id === e.target.value);
+                if (tp) {
+                  setRecipientName(tp.name);
+                  setRecipientEmail(tp.email);
+                }
+              }}
+              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none bg-white"
+              defaultValue=""
+            >
+              <option value="">Manuell eingeben...</option>
+              {trustedPersons.map((tp) => (
+                <option key={tp.id} value={tp.id}>
+                  {tp.name} ({tp.email})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="block text-sm font-medium text-violet mb-1">
-              Vorname des Empfängers *
+              Name des Empfängers *
             </label>
             <input
               name="recipient_name"
@@ -115,7 +147,8 @@ export function MessageForm({
               name="recipient_email"
               type="email"
               required
-              defaultValue={existingMessage?.recipient_email ?? ""}
+              value={recipientEmail}
+              onChange={(e) => setRecipientEmail(e.target.value)}
               className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
               placeholder="maria@beispiel.at"
             />

@@ -24,7 +24,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-[#fafaf7]">
-      <AppNav userName={profile?.full_name ?? null} />
+      <AppNav userName={profile?.full_name ?? null} userEmail={user.email} />
       <main className="flex-1 pb-20 lg:pb-0">{children}</main>
     </div>
   );

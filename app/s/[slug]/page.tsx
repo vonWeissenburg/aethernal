@@ -20,7 +20,7 @@ export async function generateMetadata({
   if (!data) return { title: "Nicht gefunden" };
 
   return {
-    title: `${data.name} | Aethernal`,
+    title: data.name,
     description: data.description ?? `Gedenkprofil für ${data.name}`,
   };
 }

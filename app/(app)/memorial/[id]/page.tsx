@@ -141,7 +141,7 @@ export default async function MemorialDetailPage({
             Fotos
           </h2>
           <Link
-            href={`/memorial/${id}/edit`}
+            href={`/memorial/${id}/edit#fotos`}
             className="text-sm text-amber hover:text-amber-dark transition"
           >
             Fotos verwalten
