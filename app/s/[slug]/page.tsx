@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
-import { formatDate, formatLifespan } from "@/lib/utils";
+import { formatLifespan } from "@/lib/utils";
 import type { Memorial, MemorialPhoto } from "@/lib/types";
+import Image from "next/image";
 
 export async function generateMetadata({
   params,
@@ -65,9 +66,11 @@ export default async function SpiritLinkPage({
         {/* Profile header */}
         <div className="text-center mb-12">
           {memorial.profile_photo_url ? (
-            <img
+            <Image
               src={memorial.profile_photo_url}
               alt={memorial.name}
+              width={112}
+              height={112}
               className="w-28 h-28 rounded-full object-cover border-4 border-lavender mx-auto mb-6"
             />
           ) : (
@@ -122,12 +125,14 @@ export default async function SpiritLinkPage({
               {photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="aspect-square rounded-xl overflow-hidden bg-lavender"
+                  className="relative aspect-square rounded-xl overflow-hidden bg-lavender"
                 >
-                  <img
+                  <Image
                     src={photo.url}
                     alt={photo.caption ?? ""}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 50vw, 33vw"
                   />
                   {photo.caption && (
                     <p className="text-xs text-aether-gray mt-1 text-center px-1">

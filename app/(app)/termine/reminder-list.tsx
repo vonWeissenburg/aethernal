@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useToast } from "@/components/toast";
+import { useConfirm } from "@/components/confirm-dialog";
 import type { Reminder } from "@/lib/types";
 import { REMINDER_TYPE_LABELS, REMINDER_TYPE_ICONS } from "@/lib/types";
 
@@ -26,11 +28,18 @@ function isUpcoming(dateStr: string) {
 
 export function ReminderList({ reminders }: { reminders: Reminder[] }) {
   const router = useRouter();
+  const { showToast } = useToast();
+  const { confirm } = useConfirm();
 
-  async function handleDelete(id: string) {
-    if (!confirm("Termin wirklich löschen?")) return;
+  async function handleDelete(r: Reminder) {
+    const ok = await confirm({
+      title: "Termin löschen?",
+      message: `Möchtest du den Termin „${r.title}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
+    });
+    if (!ok) return;
     const supabase = createClient();
-    await supabase.from("reminders").delete().eq("id", id);
+    await supabase.from("reminders").delete().eq("id", r.id);
+    showToast("Termin gelöscht");
     router.refresh();
   }
 
@@ -113,7 +122,7 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
                   ✏️
                 </Link>
                 <button
-                  onClick={() => handleDelete(r.id)}
+                  onClick={() => handleDelete(r)}
                   className="text-aether-gray hover:text-red-600 transition p-1"
                   title="Löschen"
                 >

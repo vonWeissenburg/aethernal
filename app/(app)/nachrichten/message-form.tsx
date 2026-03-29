@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { validateMessage, firstError } from "@/lib/validation";
+import { useToast } from "@/components/toast";
 import type { Message, TriggerType, TrustedPerson } from "@/lib/types";
 
 interface MessageFormProps {
@@ -22,6 +24,7 @@ export function MessageForm({
   existingMessage,
 }: MessageFormProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [triggerType, setTriggerType] = useState<TriggerType>(
@@ -36,12 +39,31 @@ export function MessageForm({
   const [body, setBody] = useState(existingMessage?.body ?? "");
   const [title, setTitle] = useState(existingMessage?.title ?? "");
 
+  const today = new Date().toISOString().split("T")[0];
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>, asDraft: boolean) {
     e.preventDefault();
-    setSaving(true);
     setError("");
 
     const form = new FormData(e.currentTarget);
+    const triggerDate = triggerType === "date" ? (form.get("trigger_date") as string) || null : null;
+
+    const errors = validateMessage({
+      title: title.trim(),
+      body: body.trim(),
+      recipient_name: recipientName.trim(),
+      recipient_email: recipientEmail.trim(),
+      trigger_type: triggerType,
+      trigger_date: triggerDate,
+    });
+
+    if (errors.length > 0) {
+      setError(firstError(errors));
+      return;
+    }
+
+    setSaving(true);
+
     const supabase = createClient();
     const {
       data: { user },
@@ -50,13 +72,13 @@ export function MessageForm({
 
     const messageData = {
       user_id: user.id,
-      title: form.get("title") as string,
-      body: form.get("body") as string,
-      recipient_name: form.get("recipient_name") as string,
-      recipient_email: form.get("recipient_email") as string,
+      title: title.trim(),
+      body: body.trim(),
+      recipient_name: recipientName.trim(),
+      recipient_email: recipientEmail.trim(),
       memorial_id: (form.get("memorial_id") as string) || null,
       trigger_type: triggerType,
-      trigger_date: triggerType === "date" ? (form.get("trigger_date") as string) || null : null,
+      trigger_date: triggerDate,
       repeat_yearly: triggerType === "date" ? form.get("repeat_yearly") === "on" : false,
       status: asDraft ? "draft" : "scheduled",
     };
@@ -77,6 +99,7 @@ export function MessageForm({
       return;
     }
 
+    showToast(asDraft ? "Entwurf gespeichert" : "Nachricht geplant");
     router.push("/nachrichten");
     router.refresh();
   }
@@ -272,6 +295,7 @@ export function MessageForm({
                 name="trigger_date"
                 type="date"
                 required
+                min={today}
                 defaultValue={existingMessage?.trigger_date ?? ""}
                 className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
               />

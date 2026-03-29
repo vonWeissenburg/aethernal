@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { validateTrustedPerson, firstError } from "@/lib/validation";
+import { useToast } from "@/components/toast";
+import { useConfirm } from "@/components/confirm-dialog";
 import type { TrustedPerson } from "@/lib/types";
 import { useState } from "react";
 
@@ -11,15 +14,28 @@ export function TrustedPersonSection({
   trustedPersons: TrustedPerson[];
 }) {
   const router = useRouter();
+  const { showToast } = useToast();
+  const { confirm } = useConfirm();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSaving(true);
     setError("");
 
     const form = new FormData(e.currentTarget);
+    const name = (form.get("name") as string).trim();
+    const email = (form.get("email") as string).trim();
+    const relationship = (form.get("relationship") as string) || null;
+
+    const errors = validateTrustedPerson({ name, email, relationship });
+    if (errors.length > 0) {
+      setError(firstError(errors));
+      return;
+    }
+
+    setSaving(true);
+
     const supabase = createClient();
     const {
       data: { user },
@@ -29,9 +45,9 @@ export function TrustedPersonSection({
 
     const { error: err } = await supabase.from("trusted_persons").insert({
       user_id: user.id,
-      name: form.get("name") as string,
-      email: form.get("email") as string,
-      relationship: (form.get("relationship") as string) || null,
+      name,
+      email,
+      relationship: relationship?.trim() || null,
     });
 
     if (err) {
@@ -40,15 +56,22 @@ export function TrustedPersonSection({
       return;
     }
 
+    showToast("Vertrauensperson hinzugefügt");
     e.currentTarget.reset();
     setSaving(false);
     router.refresh();
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("Vertrauensperson wirklich entfernen?")) return;
+  async function handleDelete(tp: TrustedPerson) {
+    const ok = await confirm({
+      title: "Vertrauensperson entfernen?",
+      message: `Möchtest du „${tp.name}" wirklich als Vertrauensperson entfernen? Diese Aktion kann nicht rückgängig gemacht werden.`,
+      confirmLabel: "Entfernen",
+    });
+    if (!ok) return;
     const supabase = createClient();
-    await supabase.from("trusted_persons").delete().eq("id", id);
+    await supabase.from("trusted_persons").delete().eq("id", tp.id);
+    showToast("Vertrauensperson entfernt");
     router.refresh();
   }
 
@@ -90,7 +113,7 @@ export function TrustedPersonSection({
                   </span>
                 </div>
                 <button
-                  onClick={() => handleDelete(tp.id)}
+                  onClick={() => handleDelete(tp)}
                   className="text-aether-gray hover:text-red-600 transition p-1"
                   title="Entfernen"
                 >
@@ -110,7 +133,7 @@ export function TrustedPersonSection({
         </h3>
 
         {error && (
-          <p className="text-sm text-red-600 mb-4">{error}</p>
+          <p className="text-sm text-red-600 mb-4 p-3 bg-red-50 rounded-lg">{error}</p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -121,6 +144,7 @@ export function TrustedPersonSection({
             <input
               name="name"
               required
+              maxLength={200}
               className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
               placeholder="Vor- und Nachname"
             />
@@ -143,6 +167,7 @@ export function TrustedPersonSection({
             </label>
             <input
               name="relationship"
+              maxLength={200}
               className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
               placeholder="z.B. Ehepartner, Kind, beste Freundin"
             />

@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { validateSettings, firstError } from "@/lib/validation";
+import { useToast } from "@/components/toast";
+import { useConfirm } from "@/components/confirm-dialog";
 import type { Profile } from "@/lib/types";
 
 export function SettingsForm({
@@ -13,9 +16,10 @@ export function SettingsForm({
   email: string;
 }) {
   const router = useRouter();
+  const { showToast } = useToast();
+  const { confirm } = useConfirm();
   const [fullName, setFullName] = useState(profile?.full_name ?? "");
   const [saving, setSaving] = useState(false);
-  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
   // Password
@@ -25,12 +29,23 @@ export function SettingsForm({
 
   // Delete
   const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  // Rate limiting
+  const lastPasswordAttempt = useRef(0);
+  const lastDeleteAttempt = useRef(0);
 
   async function handleSaveName(e: React.FormEvent) {
     e.preventDefault();
-    setSaving(true);
     setError("");
-    setSuccess("");
+
+    const errors = validateSettings({ full_name: fullName.trim() });
+    if (errors.length > 0) {
+      setError(firstError(errors));
+      return;
+    }
+
+    setSaving(true);
 
     const supabase = createClient();
     const {
@@ -46,8 +61,7 @@ export function SettingsForm({
     if (err) {
       setError("Fehler beim Speichern.");
     } else {
-      setSuccess("Name gespeichert.");
-      setTimeout(() => setSuccess(""), 3000);
+      showToast("Name gespeichert");
       router.refresh();
     }
     setSaving(false);
@@ -55,18 +69,26 @@ export function SettingsForm({
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
-    if (newPassword.length < 8) {
-      setError("Passwort muss mindestens 8 Zeichen haben.");
+    setError("");
+
+    // Rate limit: max every 10 seconds
+    const now = Date.now();
+    if (now - lastPasswordAttempt.current < 10000) {
+      setError("Bitte warte einen Moment vor dem nächsten Versuch.");
       return;
     }
-    if (newPassword !== confirmPassword) {
-      setError("Passwörter stimmen nicht überein.");
+    lastPasswordAttempt.current = now;
+
+    const errors = validateSettings({
+      password: newPassword,
+      confirm_password: confirmPassword,
+    });
+    if (errors.length > 0) {
+      setError(firstError(errors));
       return;
     }
 
     setPasswordSaving(true);
-    setError("");
-    setSuccess("");
 
     const supabase = createClient();
     const { error: err } = await supabase.auth.updateUser({
@@ -76,10 +98,9 @@ export function SettingsForm({
     if (err) {
       setError(err.message);
     } else {
-      setSuccess("Passwort geändert.");
+      showToast("Passwort geändert");
       setNewPassword("");
       setConfirmPassword("");
-      setTimeout(() => setSuccess(""), 3000);
     }
     setPasswordSaving(false);
   }
@@ -87,12 +108,22 @@ export function SettingsForm({
   async function handleDeleteAccount() {
     if (deleteConfirm !== "LÖSCHEN") return;
 
-    if (
-      !confirm(
-        "Bist du sicher? Alle deine Daten werden unwiderruflich gelöscht."
-      )
-    )
+    // Rate limit: max every 60 seconds
+    const now = Date.now();
+    if (now - lastDeleteAttempt.current < 60000) {
+      setError("Bitte warte eine Minute vor dem nächsten Versuch.");
       return;
+    }
+    lastDeleteAttempt.current = now;
+
+    const ok = await confirm({
+      title: "Konto unwiderruflich löschen?",
+      message: "Alle deine Daten (Gedenkprofile, Nachrichten, Tagebucheinträge, Fotos) werden unwiderruflich gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+      confirmLabel: "Konto löschen",
+    });
+    if (!ok) return;
+
+    setDeleting(true);
 
     const supabase = createClient();
     const {
@@ -120,11 +151,6 @@ export function SettingsForm({
           {error}
         </div>
       )}
-      {success && (
-        <div className="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
-          {success}
-        </div>
-      )}
 
       {/* Profile */}
       <div className="rounded-xl border border-lavender-dark bg-white p-6">
@@ -139,6 +165,7 @@ export function SettingsForm({
             <input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
+              maxLength={100}
               className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
               placeholder="Dein Name"
             />
@@ -234,10 +261,10 @@ export function SettingsForm({
           <button
             type="button"
             onClick={handleDeleteAccount}
-            disabled={deleteConfirm !== "LÖSCHEN"}
+            disabled={deleteConfirm !== "LÖSCHEN" || deleting}
             className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700 transition disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            Konto unwiderruflich löschen
+            {deleting ? "Wird gelöscht..." : "Konto unwiderruflich löschen"}
           </button>
         </div>
       </div>

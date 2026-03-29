@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import { formatDate, formatLifespan } from "@/lib/utils";
 import type { Memorial, MemorialPhoto, DiaryEntry } from "@/lib/types";
 import Link from "next/link";
+import Image from "next/image";
 
 export async function generateMetadata({
   params,
@@ -61,9 +62,11 @@ export default async function MemorialDetailPage({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start gap-6 mb-10">
         {memorial.profile_photo_url ? (
-          <img
+          <Image
             src={memorial.profile_photo_url}
             alt={memorial.name}
+            width={96}
+            height={96}
             className="w-24 h-24 rounded-full object-cover border-4 border-lavender"
           />
         ) : (
@@ -153,12 +156,14 @@ export default async function MemorialDetailPage({
             {photos.map((photo) => (
               <div
                 key={photo.id}
-                className="aspect-square rounded-lg overflow-hidden bg-lavender"
+                className="relative aspect-square rounded-lg overflow-hidden bg-lavender"
               >
-                <img
+                <Image
                   src={photo.url}
                   alt={photo.caption ?? ""}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
               </div>
             ))}
@@ -210,9 +215,15 @@ export default async function MemorialDetailPage({
           </div>
         ) : (
           <div className="rounded-xl border-2 border-dashed border-lavender-dark p-8 text-center">
-            <p className="text-sm text-aether-gray">
-              Noch keine Tagebucheinträge.
+            <p className="text-sm text-aether-gray mb-3">
+              Noch keine Tagebucheinträge. Halte deine Erinnerungen fest.
             </p>
+            <Link
+              href={`/tagebuch/neu?memorial=${id}`}
+              className="text-sm text-amber hover:text-amber-dark font-medium transition"
+            >
+              Neuer Eintrag →
+            </Link>
           </div>
         )}
       </section>

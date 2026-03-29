@@ -2,19 +2,24 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { generateSlug } from "@/lib/utils";
+import { validateMemorial, firstError } from "@/lib/validation";
+import { useToast } from "@/components/toast";
+import { useConfirm } from "@/components/confirm-dialog";
 import type { Memorial, MemorialPhoto } from "@/lib/types";
 
 export default function EditMemorialPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const { showToast } = useToast();
+  const { confirm } = useConfirm();
   const [memorial, setMemorial] = useState<Memorial | null>(null);
   const [photos, setPhotos] = useState<MemorialPhoto[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   // Form state
   const [name, setName] = useState("");
@@ -65,18 +70,25 @@ export default function EditMemorialPage() {
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("Name ist erforderlich.");
+    setError(null);
+
+    const errors = validateMemorial({
+      name: name.trim(),
+      description: description.trim() || null,
+      biography: biography.trim() || null,
+      birth_date: birthDate || null,
+      death_date: deathDate || null,
+    });
+
+    if (errors.length > 0) {
+      setError(firstError(errors));
       return;
     }
 
     setSaving(true);
-    setError(null);
-    setSuccess(false);
 
     const supabase = createClient();
 
-    // Update slug if name changed
     const updateData: Record<string, unknown> = {
       name: name.trim(),
       type,
@@ -100,24 +112,22 @@ export default function EditMemorialPage() {
     if (updateError) {
       setError(updateError.message);
     } else {
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      showToast("Gedenkprofil gespeichert");
     }
 
     setSaving(false);
   }
 
   async function handleDelete() {
-    if (
-      !confirm(
-        "Möchtest du dieses Gedenkprofil wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
-      )
-    ) {
-      return;
-    }
+    const ok = await confirm({
+      title: "Gedenkprofil löschen?",
+      message: `Möchtest du das Gedenkprofil „${memorial?.name}" wirklich löschen? Alle zugehörigen Fotos, Tagebucheinträge und Daten werden unwiderruflich entfernt.`,
+    });
+    if (!ok) return;
 
     const supabase = createClient();
     await supabase.from("memorials").delete().eq("id", id);
+    showToast("Gedenkprofil gelöscht");
     router.push("/dashboard");
     router.refresh();
   }
@@ -142,7 +152,7 @@ export default function EditMemorialPage() {
         .upload(filePath, file);
 
       if (uploadError) {
-        setError(`Upload fehlgeschlagen: ${uploadError.message}`);
+        showToast(`Upload fehlgeschlagen: ${uploadError.message}`, "error");
         continue;
       }
 
@@ -164,11 +174,16 @@ export default function EditMemorialPage() {
       }
     }
 
+    showToast("Foto hochgeladen");
     e.target.value = "";
   }
 
   async function handleDeletePhoto(photo: MemorialPhoto) {
-    if (!confirm("Foto wirklich löschen?")) return;
+    const ok = await confirm({
+      title: "Foto löschen?",
+      message: "Möchtest du dieses Foto wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    });
+    if (!ok) return;
 
     const supabase = createClient();
 
@@ -184,6 +199,7 @@ export default function EditMemorialPage() {
     // Delete from DB
     await supabase.from("memorial_photos").delete().eq("id", photo.id);
     setPhotos((prev) => prev.filter((p) => p.id !== photo.id));
+    showToast("Foto gelöscht");
   }
 
   if (loading) {
@@ -217,12 +233,6 @@ export default function EditMemorialPage() {
         </div>
       )}
 
-      {success && (
-        <div className="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700 mb-6">
-          Erfolgreich gespeichert!
-        </div>
-      )}
-
       <form onSubmit={handleSave} className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <button
@@ -251,11 +261,12 @@ export default function EditMemorialPage() {
 
         <div>
           <label className="block text-sm font-medium text-aether-text mb-1.5">
-            Name
+            Name *
           </label>
           <input
             type="text"
             required
+            maxLength={200}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
@@ -300,8 +311,12 @@ export default function EditMemorialPage() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
+            maxLength={500}
             className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition resize-none"
           />
+          <p className="text-xs text-aether-gray mt-1 text-right">
+            {description.length}/500
+          </p>
         </div>
 
         <div>
@@ -312,9 +327,13 @@ export default function EditMemorialPage() {
             value={biography}
             onChange={(e) => setBiography(e.target.value)}
             rows={8}
+            maxLength={5000}
             placeholder="Erzähle die Geschichte..."
             className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition resize-y"
           />
+          <p className="text-xs text-aether-gray mt-1 text-right">
+            {biography.length}/5000
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -341,10 +360,12 @@ export default function EditMemorialPage() {
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
               {photos.map((photo) => (
                 <div key={photo.id} className="relative group aspect-square">
-                  <img
+                  <Image
                     src={photo.url}
                     alt={photo.caption ?? ""}
-                    className="w-full h-full object-cover rounded-lg"
+                    fill
+                    className="object-cover rounded-lg"
+                    sizes="(max-width: 640px) 33vw, 25vw"
                   />
                   <button
                     type="button"

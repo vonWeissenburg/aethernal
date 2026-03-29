@@ -4,6 +4,7 @@ import { getGreeting, formatLifespan } from "@/lib/utils";
 import type { Memorial, Profile, Message, Reminder } from "@/lib/types";
 import { STATUS_STYLES, STATUS_LABELS, REMINDER_TYPE_ICONS } from "@/lib/types";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata = { title: "Dashboard" };
 
@@ -201,9 +202,11 @@ export default async function DashboardPage() {
             >
               <div className="flex items-start gap-4">
                 {m.profile_photo_url ? (
-                  <img
+                  <Image
                     src={m.profile_photo_url}
                     alt={m.name}
+                    width={56}
+                    height={56}
                     className="w-14 h-14 rounded-full object-cover border-2 border-lavender"
                   />
                 ) : (

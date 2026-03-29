@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { validateReminder, firstError } from "@/lib/validation";
+import { useToast } from "@/components/toast";
 import type { Reminder, ReminderType } from "@/lib/types";
 import { REMINDER_TYPE_LABELS, REMINDER_TYPE_ICONS } from "@/lib/types";
 
@@ -24,6 +26,7 @@ export function ReminderForm({
   existingReminder,
 }: ReminderFormProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [reminderType, setReminderType] = useState<ReminderType>(
@@ -32,10 +35,27 @@ export function ReminderForm({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSaving(true);
     setError("");
 
     const form = new FormData(e.currentTarget);
+    const title = (form.get("title") as string).trim();
+    const description = (form.get("description") as string) || null;
+    const reminderDate = form.get("reminder_date") as string;
+
+    const errors = validateReminder({
+      title,
+      description,
+      reminder_date: reminderDate,
+      reminder_type: reminderType,
+    });
+
+    if (errors.length > 0) {
+      setError(firstError(errors));
+      return;
+    }
+
+    setSaving(true);
+
     const supabase = createClient();
     const {
       data: { user },
@@ -44,9 +64,9 @@ export function ReminderForm({
 
     const data = {
       user_id: user.id,
-      title: form.get("title") as string,
-      description: (form.get("description") as string) || null,
-      reminder_date: form.get("reminder_date") as string,
+      title,
+      description: description?.trim() || null,
+      reminder_date: reminderDate,
       reminder_type: reminderType,
       memorial_id: (form.get("memorial_id") as string) || null,
       repeat_yearly: form.get("repeat_yearly") === "on",
@@ -68,6 +88,7 @@ export function ReminderForm({
       return;
     }
 
+    showToast("Termin gespeichert");
     router.push("/termine");
     router.refresh();
   }
@@ -121,6 +142,7 @@ export function ReminderForm({
             <input
               name="title"
               required
+              maxLength={200}
               defaultValue={existingReminder?.title ?? ""}
               className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
               placeholder={
@@ -141,6 +163,7 @@ export function ReminderForm({
             <textarea
               name="description"
               rows={3}
+              maxLength={2000}
               defaultValue={existingReminder?.description ?? ""}
               className="w-full rounded-lg border border-lavender-dark px-4 py-3 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none resize-y"
               placeholder="Optionale Notizen..."

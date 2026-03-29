@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { generateSlug } from "@/lib/utils";
+import { validateMemorial, firstError } from "@/lib/validation";
+import { useToast } from "@/components/toast";
 
 export default function NewMemorialPage() {
   const [type, setType] = useState<"human" | "animal">("human");
@@ -14,16 +16,25 @@ export default function NewMemorialPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { showToast } = useToast();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("Bitte gib einen Namen ein.");
+    setError(null);
+
+    const errors = validateMemorial({
+      name: name.trim(),
+      description: description.trim() || null,
+      birth_date: birthDate || null,
+      death_date: deathDate || null,
+    });
+
+    if (errors.length > 0) {
+      setError(firstError(errors));
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     const supabase = createClient();
     const {
@@ -55,6 +66,7 @@ export default function NewMemorialPage() {
       return;
     }
 
+    showToast("Gedenkprofil erstellt");
     router.push(`/memorial/${data.id}`);
     router.refresh();
   }
@@ -110,11 +122,12 @@ export default function NewMemorialPage() {
 
         <div>
           <label className="block text-sm font-medium text-aether-text mb-1.5">
-            Name
+            Name *
           </label>
           <input
             type="text"
             required
+            maxLength={200}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={type === "animal" ? "z.B. Luna" : "z.B. Maria Müller"}
@@ -155,6 +168,7 @@ export default function NewMemorialPage() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
+            maxLength={500}
             placeholder="Ein paar Worte über die Person oder das Tier..."
             className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition resize-none"
           />

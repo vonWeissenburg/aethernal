@@ -3,16 +3,25 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useToast } from "@/components/toast";
+import { useConfirm } from "@/components/confirm-dialog";
 import type { Message } from "@/lib/types";
 import { STATUS_STYLES, STATUS_LABELS } from "@/lib/types";
 
 export function MessageList({ messages }: { messages: Message[] }) {
   const router = useRouter();
+  const { showToast } = useToast();
+  const { confirm } = useConfirm();
 
-  async function handleDelete(id: string) {
-    if (!confirm("Nachricht wirklich löschen?")) return;
+  async function handleDelete(m: Message) {
+    const ok = await confirm({
+      title: "Nachricht löschen?",
+      message: `Möchtest du die Nachricht „${m.title}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
+    });
+    if (!ok) return;
     const supabase = createClient();
-    await supabase.from("messages").delete().eq("id", id);
+    await supabase.from("messages").delete().eq("id", m.id);
+    showToast("Nachricht gelöscht");
     router.refresh();
   }
 
@@ -100,7 +109,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
                   </Link>
                 )}
                 <button
-                  onClick={() => handleDelete(m.id)}
+                  onClick={() => handleDelete(m)}
                   className="text-aether-gray hover:text-red-600 transition p-1"
                   title="Löschen"
                 >

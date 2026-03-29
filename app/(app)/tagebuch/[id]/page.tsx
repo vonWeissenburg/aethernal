@@ -4,6 +4,7 @@ import { formatDate } from "@/lib/utils";
 import { MOOD_ICONS, MOOD_LABELS } from "@/lib/types";
 import type { DiaryEntry, Memorial } from "@/lib/types";
 import Link from "next/link";
+import { DiaryEntryActions } from "./diary-entry-actions";
 
 export async function generateMetadata({
   params,
@@ -44,13 +45,16 @@ export default async function DiaryEntryPage({
 
   return (
     <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      {/* Back link */}
-      <Link
-        href="/tagebuch"
-        className="inline-flex items-center gap-1 text-sm text-aether-gray hover:text-violet transition mb-6"
-      >
-        ← Zurück zum Tagebuch
-      </Link>
+      {/* Header with back link and actions */}
+      <div className="flex items-center justify-between mb-6">
+        <Link
+          href="/tagebuch"
+          className="inline-flex items-center gap-1 text-sm text-aether-gray hover:text-violet transition"
+        >
+          ← Zurück zum Tagebuch
+        </Link>
+        <DiaryEntryActions id={entry.id} title={entry.title} />
+      </div>
 
       <article className="bg-white rounded-2xl border border-lavender-dark p-8">
         {/* Header */}
