@@ -27,7 +27,7 @@ export default async function NeueNachrichtPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <h1 className="text-3xl font-serif font-semibold text-violet mb-8">
+      <h1 className="text-3xl font-serif font-semibold text-gold-light mb-8">
         Neue Nachricht
       </h1>
       <MessageForm

@@ -49,14 +49,14 @@ export default async function DiaryEntryPage({
       <div className="flex items-center justify-between mb-6">
         <Link
           href="/tagebuch"
-          className="inline-flex items-center gap-1 text-sm text-aether-gray hover:text-violet transition"
+          className="inline-flex items-center gap-1 text-sm text-text-secondary hover:text-gold-light transition"
         >
           ← Zurück zum Tagebuch
         </Link>
         <DiaryEntryActions id={entry.id} title={entry.title} />
       </div>
 
-      <article className="bg-white rounded-2xl border border-lavender-dark p-8">
+      <article className="bg-bg-card rounded-2xl border border-border-card p-8">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-3">
@@ -68,18 +68,18 @@ export default async function DiaryEntryPage({
                 {MOOD_ICONS[entry.mood]}
               </span>
             )}
-            <h1 className="text-2xl font-serif font-semibold text-violet">
+            <h1 className="text-2xl font-serif font-semibold text-gold-light">
               {entry.title ?? "Ohne Titel"}
             </h1>
           </div>
-          <div className="flex items-center gap-3 text-sm text-aether-gray">
+          <div className="flex items-center gap-3 text-sm text-text-secondary">
             <span>{formatDate(entry.entry_date)}</span>
             {entry.memorial && (
               <>
-                <span className="text-lavender-dark">|</span>
+                <span className="text-text-secondary-dark">|</span>
                 <Link
                   href={`/memorial/${entry.memorial.id}`}
-                  className="text-amber hover:text-amber-dark transition"
+                  className="text-gold-light hover:text-gold transition"
                 >
                   {entry.memorial.type === "animal" ? "🐾" : "🕊️"}{" "}
                   {entry.memorial.name}
@@ -88,17 +88,17 @@ export default async function DiaryEntryPage({
             )}
             {entry.mood && (
               <>
-                <span className="text-lavender-dark">|</span>
+                <span className="text-text-secondary-dark">|</span>
                 <span>{MOOD_LABELS[entry.mood]}</span>
               </>
             )}
           </div>
         </div>
 
-        <div className="w-full h-px bg-lavender-dark mb-6" />
+        <div className="w-full h-px bg-surface-container-high-dark mb-6" />
 
         {/* Content */}
-        <div className="prose prose-sm max-w-none text-aether-text whitespace-pre-line leading-relaxed">
+        <div className="prose prose-sm prose-invert max-w-none text-text-primary whitespace-pre-line leading-relaxed">
           {entry.content}
         </div>
       </article>

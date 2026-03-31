@@ -106,22 +106,22 @@ export default function EditDiaryEntryPage() {
   if (initialLoading) {
     return (
       <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-        <p className="text-aether-gray">Laden...</p>
+        <p className="text-text-secondary">Laden...</p>
       </div>
     );
   }
 
   return (
     <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <h1 className="text-3xl font-serif font-semibold text-violet mb-2">
+      <h1 className="text-3xl font-serif font-semibold text-gold-light mb-2">
         Eintrag bearbeiten
       </h1>
-      <p className="text-aether-gray mb-8">
+      <p className="text-text-secondary mb-8">
         Bearbeite deinen Tagebucheintrag.
       </p>
 
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 mb-6">
+        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light mb-6">
           {error}
         </div>
       )}
@@ -129,13 +129,13 @@ export default function EditDiaryEntryPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Memorial selector */}
         <div>
-          <label className="block text-sm font-medium text-aether-text mb-1.5">
+          <label className="block text-sm font-medium text-text-primary mb-1.5">
             Gedenkprofil
           </label>
           <select
             value={memorialId}
             onChange={(e) => setMemorialId(e.target.value)}
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
+            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
           >
             <option value="">Kein Profil</option>
             {memorials.map((m) => (
@@ -148,7 +148,7 @@ export default function EditDiaryEntryPage() {
 
         {/* Mood selector */}
         <div>
-          <label className="block text-sm font-medium text-aether-text mb-3">
+          <label className="block text-sm font-medium text-text-primary mb-3">
             Wie fühlst du dich?
           </label>
           <div className="flex gap-3">
@@ -159,12 +159,12 @@ export default function EditDiaryEntryPage() {
                 onClick={() => setMood(mood === m ? "" : m)}
                 className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition ${
                   mood === m
-                    ? "border-violet bg-lavender/50"
-                    : "border-lavender-dark hover:border-violet/30"
+                    ? "border-gold bg-gold/10"
+                    : "border-border-card hover:border-gold/30"
                 }`}
               >
                 <span className="text-2xl">{MOOD_ICONS[m]}</span>
-                <span className="text-[10px] text-aether-gray">
+                <span className="text-[10px] text-text-secondary">
                   {MOOD_LABELS[m]}
                 </span>
               </button>
@@ -174,9 +174,9 @@ export default function EditDiaryEntryPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-aether-text mb-1.5">
+            <label className="block text-sm font-medium text-text-primary mb-1.5">
               Titel{" "}
-              <span className="text-aether-gray font-normal">(optional)</span>
+              <span className="text-text-secondary font-normal">(optional)</span>
             </label>
             <input
               type="text"
@@ -184,24 +184,24 @@ export default function EditDiaryEntryPage() {
               onChange={(e) => setTitle(e.target.value)}
               maxLength={200}
               placeholder="z.B. Ein schöner Gedanke"
-              className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
+              className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary placeholder:text-text-muted/50 focus:ring-1 focus:ring-gold-light/50 transition"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-aether-text mb-1.5">
+            <label className="block text-sm font-medium text-text-primary mb-1.5">
               Datum
             </label>
             <input
               type="date"
               value={entryDate}
               onChange={(e) => setEntryDate(e.target.value)}
-              className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
+              className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-aether-text mb-1.5">
+          <label className="block text-sm font-medium text-text-primary mb-1.5">
             Dein Eintrag *
           </label>
           <textarea
@@ -211,9 +211,9 @@ export default function EditDiaryEntryPage() {
             rows={10}
             maxLength={10000}
             placeholder="Was bewegt dich heute?"
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition resize-y"
+            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary placeholder:text-text-muted/50 focus:ring-1 focus:ring-gold-light/50 transition resize-y"
           />
-          <p className="text-xs text-aether-gray mt-1 text-right">
+          <p className="text-xs text-text-secondary mt-1 text-right">
             {content.length}/10000
           </p>
         </div>
@@ -222,14 +222,14 @@ export default function EditDiaryEntryPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-5 py-2.5 text-sm text-aether-gray hover:text-violet transition"
+            className="px-5 py-2.5 text-sm text-text-secondary hover:text-gold-light transition"
           >
             Abbrechen
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-violet px-6 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition shadow-sm disabled:opacity-50"
+            className="rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
           >
             {loading ? "Wird gespeichert..." : "Änderungen speichern"}
           </button>

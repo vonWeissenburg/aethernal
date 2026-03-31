@@ -67,10 +67,10 @@ export default async function MemorialDetailPage({
             alt={memorial.name}
             width={96}
             height={96}
-            className="w-24 h-24 rounded-full object-cover border-4 border-lavender"
+            className="w-24 h-24 rounded-full object-cover border-4 border-border-card"
           />
         ) : (
-          <div className="w-24 h-24 rounded-full bg-lavender flex items-center justify-center text-4xl">
+          <div className="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center text-4xl">
             {memorial.type === "animal" ? "🐾" : "🕊️"}
           </div>
         )}
@@ -78,25 +78,25 @@ export default async function MemorialDetailPage({
         <div className="flex-1">
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-serif font-semibold text-violet">
+              <h1 className="text-3xl font-serif font-semibold text-gold-light">
                 {memorial.name}
               </h1>
               {(memorial.birth_date || memorial.death_date) && (
-                <p className="text-aether-gray mt-1">
+                <p className="text-text-secondary mt-1">
                   {formatLifespan(memorial.birth_date, memorial.death_date)}
                 </p>
               )}
             </div>
             <Link
               href={`/memorial/${id}/edit`}
-              className="rounded-lg border border-violet/20 bg-white px-4 py-2 text-sm font-medium text-violet hover:bg-lavender transition"
+              className="rounded-lg border border-gold/20 bg-bg-card px-4 py-2 text-sm font-medium text-gold-light hover:bg-surface-container-high transition"
             >
               Bearbeiten
             </Link>
           </div>
 
           {memorial.description && (
-            <p className="mt-3 text-aether-text leading-relaxed">
+            <p className="mt-3 text-text-primary leading-relaxed">
               {memorial.description}
             </p>
           )}
@@ -105,8 +105,8 @@ export default async function MemorialDetailPage({
             <span
               className={`text-xs px-2.5 py-1 rounded-full ${
                 memorial.is_public
-                  ? "bg-green-50 text-green-700"
-                  : "bg-gray-100 text-gray-600"
+                  ? "bg-success/10 text-success"
+                  : "bg-surface-container-high text-text-secondary"
               }`}
             >
               {memorial.is_public ? "Öffentlich" : "Privat"}
@@ -116,7 +116,7 @@ export default async function MemorialDetailPage({
                 href={`${process.env.NEXT_PUBLIC_APP_URL}/s/${memorial.slug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-amber hover:text-amber-dark underline"
+                className="text-xs text-gold-light hover:text-gold underline"
               >
                 SpiritLink öffnen
               </a>
@@ -128,10 +128,10 @@ export default async function MemorialDetailPage({
       {/* Biography */}
       {memorial.biography && (
         <section className="mb-10">
-          <h2 className="text-xl font-serif font-semibold text-violet mb-4">
+          <h2 className="text-xl font-serif font-semibold text-gold-light mb-4">
             Biografie
           </h2>
-          <div className="bg-white rounded-xl border border-lavender-dark p-6 prose prose-sm max-w-none text-aether-text whitespace-pre-line">
+          <div className="bg-bg-card rounded-xl border border-border-card p-6 prose prose-sm prose-invert max-w-none text-text-primary whitespace-pre-line">
             {memorial.biography}
           </div>
         </section>
@@ -140,12 +140,12 @@ export default async function MemorialDetailPage({
       {/* Photo gallery */}
       <section className="mb-10">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-serif font-semibold text-violet">
+          <h2 className="text-xl font-serif font-semibold text-gold-light">
             Fotos
           </h2>
           <Link
             href={`/memorial/${id}/edit#fotos`}
-            className="text-sm text-amber hover:text-amber-dark transition"
+            className="text-sm text-gold-light hover:text-gold transition"
           >
             Fotos verwalten
           </Link>
@@ -156,7 +156,7 @@ export default async function MemorialDetailPage({
             {photos.map((photo) => (
               <div
                 key={photo.id}
-                className="relative aspect-square rounded-lg overflow-hidden bg-lavender"
+                className="relative aspect-square rounded-lg overflow-hidden bg-surface-container-high"
               >
                 <Image
                   src={photo.url}
@@ -169,8 +169,8 @@ export default async function MemorialDetailPage({
             ))}
           </div>
         ) : (
-          <div className="rounded-xl border-2 border-dashed border-lavender-dark p-8 text-center">
-            <p className="text-sm text-aether-gray">
+          <div className="rounded-xl border-2 border-dashed border-outline-variant p-8 text-center">
+            <p className="text-sm text-text-secondary">
               Noch keine Fotos hochgeladen.
             </p>
           </div>
@@ -180,12 +180,12 @@ export default async function MemorialDetailPage({
       {/* Recent diary entries */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-serif font-semibold text-violet">
+          <h2 className="text-xl font-serif font-semibold text-gold-light">
             Tagebuch
           </h2>
           <Link
             href={`/tagebuch/neu?memorial=${id}`}
-            className="text-sm text-amber hover:text-amber-dark transition"
+            className="text-sm text-gold-light hover:text-gold transition"
           >
             Neuer Eintrag
           </Link>
@@ -197,30 +197,30 @@ export default async function MemorialDetailPage({
               <Link
                 key={entry.id}
                 href={`/tagebuch/${entry.id}`}
-                className="block bg-white rounded-xl border border-lavender-dark p-5 hover:shadow-sm hover:border-violet/20 transition"
+                className="block bg-bg-card rounded-xl border border-border-card p-5 hover:bg-bg-card-hover transition"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-medium text-violet">
+                  <h3 className="font-medium text-gold-light">
                     {entry.title ?? "Ohne Titel"}
                   </h3>
-                  <span className="text-xs text-aether-gray">
+                  <span className="text-xs text-text-secondary">
                     {formatDate(entry.entry_date)}
                   </span>
                 </div>
-                <p className="text-sm text-aether-gray line-clamp-2">
+                <p className="text-sm text-text-secondary line-clamp-2">
                   {entry.content}
                 </p>
               </Link>
             ))}
           </div>
         ) : (
-          <div className="rounded-xl border-2 border-dashed border-lavender-dark p-8 text-center">
-            <p className="text-sm text-aether-gray mb-3">
+          <div className="rounded-xl border-2 border-dashed border-outline-variant p-8 text-center">
+            <p className="text-sm text-text-secondary mb-3">
               Noch keine Tagebucheinträge. Halte deine Erinnerungen fest.
             </p>
             <Link
               href={`/tagebuch/neu?memorial=${id}`}
-              className="text-sm text-amber hover:text-amber-dark font-medium transition"
+              className="text-sm text-gold-light hover:text-gold font-medium transition"
             >
               Neuer Eintrag →
             </Link>

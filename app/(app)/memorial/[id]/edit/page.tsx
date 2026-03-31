@@ -205,7 +205,7 @@ export default function EditMemorialPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-aether-gray">Wird geladen...</div>
+        <div className="text-text-secondary">Wird geladen...</div>
       </div>
     );
   }
@@ -214,21 +214,21 @@ export default function EditMemorialPage() {
     <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-serif font-semibold text-violet">
+          <h1 className="text-3xl font-serif font-semibold text-gold-light">
             Profil bearbeiten
           </h1>
-          <p className="mt-1 text-aether-gray">{memorial?.name}</p>
+          <p className="mt-1 text-text-secondary">{memorial?.name}</p>
         </div>
         <button
           onClick={() => router.push(`/memorial/${id}`)}
-          className="text-sm text-aether-gray hover:text-violet transition"
+          className="text-sm text-text-secondary hover:text-gold-light transition"
         >
           Zurück
         </button>
       </div>
 
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 mb-6">
+        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light mb-6">
           {error}
         </div>
       )}
@@ -240,8 +240,8 @@ export default function EditMemorialPage() {
             onClick={() => setType("human")}
             className={`p-3 rounded-xl border-2 text-center transition text-sm ${
               type === "human"
-                ? "border-violet bg-lavender/50"
-                : "border-lavender-dark hover:border-violet/30"
+                ? "border-gold bg-gold/10"
+                : "border-border-card hover:border-gold/30"
             }`}
           >
             🕊️ Mensch
@@ -251,8 +251,8 @@ export default function EditMemorialPage() {
             onClick={() => setType("animal")}
             className={`p-3 rounded-xl border-2 text-center transition text-sm ${
               type === "animal"
-                ? "border-violet bg-lavender/50"
-                : "border-lavender-dark hover:border-violet/30"
+                ? "border-gold bg-gold/10"
+                : "border-border-card hover:border-gold/30"
             }`}
           >
             🐾 Tier
@@ -260,7 +260,7 @@ export default function EditMemorialPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-aether-text mb-1.5">
+          <label className="block text-sm font-medium text-text-primary mb-1.5">
             Name *
           </label>
           <input
@@ -269,10 +269,10 @@ export default function EditMemorialPage() {
             maxLength={200}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
+            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
           />
           {memorial && name.trim() !== memorial.name && name.trim() && (
-            <p className="text-xs text-amber mt-1">
+            <p className="text-xs text-gold-light mt-1">
               SpiritLink-URL wird beim Speichern aktualisiert.
             </p>
           )}
@@ -280,31 +280,31 @@ export default function EditMemorialPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-aether-text mb-1.5">
+            <label className="block text-sm font-medium text-text-primary mb-1.5">
               Geburtsdatum
             </label>
             <input
               type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
+              className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-aether-text mb-1.5">
+            <label className="block text-sm font-medium text-text-primary mb-1.5">
               Sterbedatum
             </label>
             <input
               type="date"
               value={deathDate}
               onChange={(e) => setDeathDate(e.target.value)}
-              className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
+              className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-aether-text mb-1.5">
+          <label className="block text-sm font-medium text-text-primary mb-1.5">
             Kurze Beschreibung
           </label>
           <textarea
@@ -312,15 +312,15 @@ export default function EditMemorialPage() {
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
             maxLength={500}
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition resize-none"
+            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition resize-none"
           />
-          <p className="text-xs text-aether-gray mt-1 text-right">
+          <p className="text-xs text-text-secondary mt-1 text-right">
             {description.length}/500
           </p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-aether-text mb-1.5">
+          <label className="block text-sm font-medium text-text-primary mb-1.5">
             Biografie
           </label>
           <textarea
@@ -329,9 +329,9 @@ export default function EditMemorialPage() {
             rows={8}
             maxLength={5000}
             placeholder="Erzähle die Geschichte..."
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition resize-y"
+            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary placeholder:text-text-muted/50 focus:ring-1 focus:ring-gold-light/50 transition resize-y"
           />
-          <p className="text-xs text-aether-gray mt-1 text-right">
+          <p className="text-xs text-text-secondary mt-1 text-right">
             {biography.length}/5000
           </p>
         </div>
@@ -342,16 +342,16 @@ export default function EditMemorialPage() {
             id="is_public"
             checked={isPublic}
             onChange={(e) => setIsPublic(e.target.checked)}
-            className="rounded border-lavender-dark text-violet focus:ring-violet/20"
+            className="rounded border-border-card text-gold-light focus:ring-gold-light/30"
           />
-          <label htmlFor="is_public" className="text-sm text-aether-text">
+          <label htmlFor="is_public" className="text-sm text-text-primary">
             Profil öffentlich machen (SpiritLink)
           </label>
         </div>
 
         {/* Photo section */}
         <div id="fotos">
-          <label className="block text-sm font-medium text-aether-text mb-3">
+          <label className="block text-sm font-medium text-text-primary mb-3">
             Fotos
           </label>
 
@@ -370,7 +370,7 @@ export default function EditMemorialPage() {
                   <button
                     type="button"
                     onClick={() => handleDeletePhoto(photo)}
-                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-red-600 text-white text-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-md hover:bg-red-700"
+                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-error text-white text-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-md hover:bg-error/80"
                     title="Foto löschen"
                   >
                     ✕
@@ -386,22 +386,22 @@ export default function EditMemorialPage() {
             accept="image/*"
             multiple
             onChange={handlePhotoUpload}
-            className="w-full text-sm text-aether-gray file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-lavender file:text-violet hover:file:bg-lavender-dark file:cursor-pointer file:transition"
+            className="w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-surface-container-high file:text-gold-light hover:file:bg-surface-bright-dark file:cursor-pointer file:transition"
           />
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-lavender-dark">
+        <div className="flex items-center justify-between pt-4 border-t border-border-card">
           <button
             type="button"
             onClick={handleDelete}
-            className="text-sm text-red-500 hover:text-red-700 transition"
+            className="text-sm text-error hover:text-error-light transition"
           >
             Profil löschen
           </button>
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-violet px-6 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition shadow-sm disabled:opacity-50"
+            className="rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
           >
             {saving ? "Wird gespeichert..." : "Speichern"}
           </button>

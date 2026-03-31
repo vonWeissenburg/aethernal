@@ -90,11 +90,11 @@ export function TrustedPersonList({
   return (
     <div>
       {/* Info box */}
-      <div className="rounded-xl border border-lavender-dark bg-lavender/30 p-5 mb-8">
+      <div className="rounded-xl border border-border-card bg-surface-container-high/30 p-5 mb-8">
         <div className="flex gap-3">
           <span className="text-xl">🤝</span>
-          <div className="text-sm text-aether-gray leading-relaxed">
-            <p className="font-medium text-violet mb-1">Wie funktioniert das?</p>
+          <div className="text-sm text-text-secondary leading-relaxed">
+            <p className="font-medium text-gold-light mb-1">Wie funktioniert das?</p>
             <p>
               Wenn du &quot;Nach dem Tod&quot;-Nachrichten eingerichtet hast, braucht es
               eine Person deines Vertrauens, die deinen Tod bestätigen kann.
@@ -110,24 +110,24 @@ export function TrustedPersonList({
           {trustedPersons.map((tp) => (
             <div
               key={tp.id}
-              className="rounded-xl border border-lavender-dark bg-white p-5"
+              className="rounded-xl bg-surface-container-high border-none p-5"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-serif text-lg font-semibold text-violet">
+                  <h3 className="font-serif text-lg font-semibold text-gold-light">
                     {tp.name}
                   </h3>
-                  <p className="text-sm text-aether-gray mt-0.5">{tp.email}</p>
+                  <p className="text-sm text-text-secondary mt-0.5">{tp.email}</p>
                   {tp.relationship && (
-                    <p className="text-sm text-aether-gray mt-0.5">
+                    <p className="text-sm text-text-secondary mt-0.5">
                       {tp.relationship}
                     </p>
                   )}
                   <span
                     className={`inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-medium ${
                       tp.confirmed
-                        ? "bg-green-100 text-green-700"
-                        : "bg-amber-100 text-amber-700"
+                        ? "bg-success/10 text-success"
+                        : "bg-gold-100 text-gold-light-700"
                     }`}
                   >
                     {tp.confirmed ? "Bestätigt" : "Ausstehend"}
@@ -136,14 +136,14 @@ export function TrustedPersonList({
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => setEditingId(tp.id)}
-                    className="text-aether-gray hover:text-violet transition p-1"
+                    className="text-text-secondary hover:text-gold-light transition p-1"
                     title="Bearbeiten"
                   >
                     ✏️
                   </button>
                   <button
                     onClick={() => handleDelete(tp)}
-                    className="text-aether-gray hover:text-red-600 transition p-1"
+                    className="text-text-secondary hover:text-error transition p-1"
                     title="Entfernen"
                   >
                     🗑️
@@ -156,8 +156,8 @@ export function TrustedPersonList({
       )}
 
       {/* Add/Edit Form */}
-      <div className="rounded-xl border border-lavender-dark bg-white p-6">
-        <h3 className="font-serif text-lg font-semibold text-violet mb-4">
+      <div className="rounded-xl bg-surface-container-high border-none p-6">
+        <h3 className="font-serif text-lg font-semibold text-gold-light mb-4">
           {editingId
             ? "Vertrauensperson bearbeiten"
             : trustedPersons.length > 0
@@ -166,12 +166,12 @@ export function TrustedPersonList({
         </h3>
 
         {error && (
-          <p className="text-sm text-red-600 mb-4 p-3 bg-red-50 rounded-lg">{error}</p>
+          <p className="text-sm text-error-light mb-4 p-3 bg-error/10 border border-error/30 rounded-lg">{error}</p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-gold-light mb-1">
               Name *
             </label>
             <input
@@ -180,12 +180,12 @@ export function TrustedPersonList({
               maxLength={200}
               defaultValue={editingPerson?.name ?? ""}
               key={editingId ?? "new"}
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="Vor- und Nachname"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-gold-light mb-1">
               E-Mail *
             </label>
             <input
@@ -194,12 +194,12 @@ export function TrustedPersonList({
               required
               defaultValue={editingPerson?.email ?? ""}
               key={`email-${editingId ?? "new"}`}
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="email@beispiel.at"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-gold-light mb-1">
               Beziehung / Verhältnis
             </label>
             <input
@@ -207,7 +207,7 @@ export function TrustedPersonList({
               maxLength={200}
               defaultValue={editingPerson?.relationship ?? ""}
               key={`rel-${editingId ?? "new"}`}
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="z.B. Ehepartner, Kind, beste Freundin"
             />
           </div>
@@ -215,7 +215,7 @@ export function TrustedPersonList({
             <button
               type="submit"
               disabled={saving}
-              className="rounded-lg bg-violet px-6 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition disabled:opacity-50"
+              className="rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition disabled:opacity-50"
             >
               {saving
                 ? "Wird gespeichert..."
@@ -227,7 +227,7 @@ export function TrustedPersonList({
               <button
                 type="button"
                 onClick={() => setEditingId(null)}
-                className="rounded-lg border border-lavender-dark px-5 py-2.5 text-sm font-medium text-aether-gray hover:bg-lavender transition"
+                className="rounded-lg border border-border-card px-5 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-container-high transition"
               >
                 Abbrechen
               </button>
@@ -237,8 +237,8 @@ export function TrustedPersonList({
       </div>
 
       {/* Notice */}
-      <div className="mt-6 rounded-lg bg-amber/5 border border-amber/20 p-4">
-        <p className="text-xs text-aether-gray">
+      <div className="mt-6 rounded-lg bg-gold/5 border border-gold/20 p-4">
+        <p className="text-xs text-text-secondary">
           Die Bestätigungs-E-Mail an deine Vertrauensperson wird in Kürze aktiviert.
           Bis dahin wird der Status als &quot;Ausstehend&quot; angezeigt.
         </p>

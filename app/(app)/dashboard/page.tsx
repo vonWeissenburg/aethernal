@@ -69,11 +69,11 @@ export default async function DashboardPage() {
     <div className="max-w-5xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
       {/* Greeting */}
       <div className="mb-10">
-        <h1 className="text-3xl font-serif font-semibold text-violet">
+        <h1 className="text-3xl font-serif font-semibold text-gold-light">
           {getGreeting()}
           {firstName ? `, ${firstName}` : ""}
         </h1>
-        <p className="mt-2 text-aether-gray">
+        <p className="mt-2 text-text-secondary">
           Verwalte deine Gedenkprofile und halte Erinnerungen lebendig.
         </p>
       </div>
@@ -82,20 +82,20 @@ export default async function DashboardPage() {
       <div className="flex flex-wrap gap-3 mb-10">
         <Link
           href="/memorial/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-violet px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition shadow-sm"
+          className="inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition shadow-sm"
         >
           <span className="text-lg">+</span>
           Neues Gedenkprofil
         </Link>
         <Link
           href="/nachrichten/neu"
-          className="inline-flex items-center gap-2 rounded-lg bg-amber px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-dark transition shadow-sm"
+          className="inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm"
         >
           💌 Nachricht planen
         </Link>
         <Link
           href="/tagebuch/neu"
-          className="inline-flex items-center gap-2 rounded-lg border border-violet/20 bg-white px-5 py-2.5 text-sm font-medium text-violet hover:bg-lavender transition"
+          className="inline-flex items-center gap-2 rounded-lg border border-gold/20 bg-bg-card px-5 py-2.5 text-sm font-medium text-gold-light hover:bg-surface-container-high transition"
         >
           Tagebucheintrag schreiben
         </Link>
@@ -103,23 +103,23 @@ export default async function DashboardPage() {
 
       {/* Stats */}
       <div className="flex flex-wrap gap-4 mb-10">
-        <div className="rounded-xl bg-white border border-lavender-dark px-5 py-3">
-          <p className="text-2xl font-serif font-semibold text-violet">
+        <div className="rounded-xl bg-bg-card border border-border-card px-5 py-3">
+          <p className="text-2xl font-serif font-semibold text-gold-light">
             {memorials?.length ?? 0}
           </p>
-          <p className="text-xs text-aether-gray">Gedenkprofile</p>
+          <p className="text-xs text-text-secondary">Gedenkprofile</p>
         </div>
-        <div className="rounded-xl bg-white border border-lavender-dark px-5 py-3">
-          <p className="text-2xl font-serif font-semibold text-violet">
+        <div className="rounded-xl bg-bg-card border border-border-card px-5 py-3">
+          <p className="text-2xl font-serif font-semibold text-gold-light">
             {messageCount ?? 0}
           </p>
-          <p className="text-xs text-aether-gray">Nachrichten geplant</p>
+          <p className="text-xs text-text-secondary">Nachrichten geplant</p>
         </div>
-        <div className="rounded-xl bg-white border border-lavender-dark px-5 py-3">
-          <p className="text-2xl font-serif font-semibold text-violet">
+        <div className="rounded-xl bg-bg-card border border-border-card px-5 py-3">
+          <p className="text-2xl font-serif font-semibold text-gold-light">
             {reminderCount ?? 0}
           </p>
-          <p className="text-xs text-aether-gray">Termine</p>
+          <p className="text-xs text-text-secondary">Termine</p>
         </div>
       </div>
 
@@ -127,12 +127,12 @@ export default async function DashboardPage() {
       <div className="grid gap-6 sm:grid-cols-2 mb-10">
         {/* Draft messages */}
         {draftMessages && draftMessages.length > 0 && (
-          <div className="rounded-xl border border-lavender-dark bg-white p-5">
+          <div className="rounded-xl bg-surface-container-high border-none p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-serif text-base font-semibold text-violet">
+              <h3 className="font-serif text-base font-semibold text-gold-light">
                 💌 Nachrichten-Entwürfe
               </h3>
-              <Link href="/nachrichten" className="text-xs text-amber hover:text-amber-dark">
+              <Link href="/nachrichten" className="text-xs text-gold-light hover:text-gold">
                 Alle →
               </Link>
             </div>
@@ -141,11 +141,11 @@ export default async function DashboardPage() {
                 <Link
                   key={m.id}
                   href={`/nachrichten/${m.id}/bearbeiten`}
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-lavender/50 transition"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm text-violet truncate">{m.title}</p>
-                    <p className="text-xs text-aether-gray">An {m.recipient_name}</p>
+                    <p className="text-sm text-gold-light truncate">{m.title}</p>
+                    <p className="text-xs text-text-secondary">An {m.recipient_name}</p>
                   </div>
                   <span className={`text-xs px-2 py-0.5 rounded-full shrink-0 ${STATUS_STYLES.draft}`}>
                     {STATUS_LABELS.draft}
@@ -158,12 +158,12 @@ export default async function DashboardPage() {
 
         {/* Upcoming reminders */}
         {upcomingReminders && upcomingReminders.length > 0 && (
-          <div className="rounded-xl border border-lavender-dark bg-white p-5">
+          <div className="rounded-xl bg-surface-container-high border-none p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-serif text-base font-semibold text-violet">
+              <h3 className="font-serif text-base font-semibold text-gold-light">
                 📅 Anstehende Termine
               </h3>
-              <Link href="/termine" className="text-xs text-amber hover:text-amber-dark">
+              <Link href="/termine" className="text-xs text-gold-light hover:text-gold">
                 Alle →
               </Link>
             </div>
@@ -172,13 +172,13 @@ export default async function DashboardPage() {
                 <Link
                   key={r.id}
                   href={`/termine/${r.id}/bearbeiten`}
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-lavender/50 transition"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span>{REMINDER_TYPE_ICONS[r.reminder_type]}</span>
-                    <p className="text-sm text-violet truncate">{r.title}</p>
+                    <p className="text-sm text-gold-light truncate">{r.title}</p>
                   </div>
-                  <span className="text-xs text-aether-gray shrink-0">
+                  <span className="text-xs text-text-secondary shrink-0">
                     {new Date(r.reminder_date).toLocaleDateString("de-AT", {
                       day: "numeric",
                       month: "short",
@@ -198,7 +198,7 @@ export default async function DashboardPage() {
             <Link
               key={m.id}
               href={`/memorial/${m.id}`}
-              className="group rounded-xl border border-lavender-dark bg-white p-5 hover:shadow-md hover:border-violet/30 transition"
+              className="group rounded-xl bg-surface-container-high border-none p-5 hover:bg-bg-card-hover transition"
             >
               <div className="flex items-start gap-4">
                 {m.profile_photo_url ? (
@@ -207,24 +207,24 @@ export default async function DashboardPage() {
                     alt={m.name}
                     width={56}
                     height={56}
-                    className="w-14 h-14 rounded-full object-cover border-2 border-lavender"
+                    className="w-14 h-14 rounded-full object-cover border-2 border-border-card"
                   />
                 ) : (
-                  <div className="w-14 h-14 rounded-full bg-lavender flex items-center justify-center text-xl">
+                  <div className="w-14 h-14 rounded-full bg-surface-container-high flex items-center justify-center text-xl">
                     {m.type === "animal" ? "🐾" : "🕊️"}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-serif text-lg font-semibold text-violet group-hover:text-violet-light transition truncate">
+                  <h3 className="font-serif text-lg font-semibold text-gold-light group-hover:text-gold transition truncate">
                     {m.name}
                   </h3>
                   {(m.birth_date || m.death_date) && (
-                    <p className="text-sm text-aether-gray mt-0.5">
+                    <p className="text-sm text-text-secondary mt-0.5">
                       {formatLifespan(m.birth_date, m.death_date)}
                     </p>
                   )}
                   {m.description && (
-                    <p className="text-sm text-aether-gray mt-1.5 line-clamp-2">
+                    <p className="text-sm text-text-secondary mt-1.5 line-clamp-2">
                       {m.description}
                     </p>
                   )}
@@ -234,14 +234,14 @@ export default async function DashboardPage() {
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full ${
                     m.is_public
-                      ? "bg-green-50 text-green-700"
-                      : "bg-gray-100 text-gray-600"
+                      ? "bg-success/10 text-success"
+                      : "bg-surface-container-high text-text-secondary"
                   }`}
                 >
                   {m.is_public ? "Öffentlich" : "Privat"}
                 </span>
                 {m.is_public && m.slug && (
-                  <span className="text-xs text-amber">
+                  <span className="text-xs text-gold-light">
                     SpiritLink aktiv
                   </span>
                 )}
@@ -250,18 +250,18 @@ export default async function DashboardPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-xl border-2 border-dashed border-lavender-dark bg-white p-12 text-center">
+        <div className="rounded-xl border-2 border-dashed border-outline-variant bg-bg-card p-12 text-center">
           <div className="text-4xl mb-4">🕊️</div>
-          <h3 className="text-lg font-serif font-semibold text-violet mb-2">
+          <h3 className="text-lg font-serif font-semibold text-gold-light mb-2">
             Noch keine Gedenkprofile
           </h3>
-          <p className="text-sm text-aether-gray mb-6 max-w-md mx-auto">
+          <p className="text-sm text-text-secondary mb-6 max-w-md mx-auto">
             Erstelle dein erstes Gedenkprofil, um die Erinnerung an einen
             geliebten Menschen oder ein Tier zu bewahren.
           </p>
           <Link
             href="/memorial/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-violet px-6 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition shadow-sm"
+            className="inline-flex items-center gap-2 rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition shadow-sm"
           >
             Erstes Gedenkprofil erstellen
           </Link>

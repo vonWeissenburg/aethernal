@@ -4,35 +4,55 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Left panel — violet branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-violet flex-col items-center justify-center p-12 text-white">
-        <div className="max-w-md text-center space-y-6">
-          <h1 className="font-serif text-5xl font-light tracking-wide">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-bg-primary relative">
+      {/* Background radial gradient */}
+      <div
+        className="fixed inset-0 pointer-events-none -z-10"
+        style={{
+          background:
+            "radial-gradient(circle at center, #1a1c29 0%, #0b0d17 70%)",
+        }}
+      />
+
+      {/* Subtle ambient glow */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div className="absolute top-[10%] left-[15%] w-96 h-96 bg-gold-light/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-blue-400/5 rounded-full blur-[150px]" />
+      </div>
+
+      {/* Material Symbols font */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet"
+      />
+
+      {/* Logo header */}
+      <header className="fixed top-0 w-full flex items-center justify-center px-6 h-16 z-50">
+        <div className="flex items-center gap-2">
+          <span
+            className="material-symbols-outlined text-2xl text-gold-light"
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
+            auto_awesome
+          </span>
+          <span className="text-2xl font-serif tracking-widest text-gold-light">
             Aethernal
-          </h1>
-          <div className="w-16 h-px bg-amber mx-auto" />
-          <p className="text-lg text-lavender/80 font-light leading-relaxed">
-            Das digitale Gedenkprofil, das Erinnerungen bewahrt und Verbindungen
-            schafft, die über die Zeit hinausgehen.
+          </span>
+        </div>
+      </header>
+
+      {/* Content */}
+      <div className="w-full max-w-md px-6 pt-20 pb-12">{children}</div>
+
+      {/* Footer */}
+      <footer className="pb-8 text-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-px w-12 bg-outline-variant/30" />
+          <p className="text-[10px] text-text-muted/40 tracking-[0.2em] uppercase">
+            Ewige Erinnerung &bull; Aethernal
           </p>
         </div>
-      </div>
-
-      {/* Mobile header */}
-      <div className="lg:hidden bg-violet px-6 py-8 text-center text-white">
-        <h1 className="font-serif text-3xl font-light tracking-wide">
-          Aethernal
-        </h1>
-        <p className="mt-2 text-sm text-lavender/70">
-          Erinnerungen, die bleiben.
-        </p>
-      </div>
-
-      {/* Right panel — form */}
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-12 bg-white">
-        <div className="w-full max-w-md">{children}</div>
-      </div>
+      </footer>
     </div>
   );
 }

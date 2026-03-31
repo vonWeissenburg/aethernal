@@ -44,81 +44,103 @@ async function LoginForm({
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-serif font-semibold text-violet">
+      {/* Hero branding */}
+      <div className="text-center mb-8">
+        <div className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-gold-light/10 border border-gold-light/10">
+          <span
+            className="material-symbols-outlined text-4xl text-gold-light"
+          >
+            all_inclusive
+          </span>
+        </div>
+        <h1 className="font-serif text-3xl text-text-primary mb-2 tracking-tight">
           Willkommen zurück
-        </h2>
-        <p className="mt-2 text-sm text-aether-gray">
-          Melde dich an, um deine Gedenkprofile zu verwalten.
+        </h1>
+        <p className="font-serif italic text-text-secondary text-base opacity-80">
+          Erinnerungen für die Ewigkeit
         </p>
       </div>
 
       {message && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light">
           {message}
         </div>
       )}
 
-      <form action={signIn} className="space-y-5">
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-aether-text mb-1.5"
-          >
-            E-Mail-Adresse
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="name@beispiel.at"
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
-          />
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
+      {/* Login card */}
+      <div className="bg-surface-container/30 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/10 shadow-2xl">
+        <form action={signIn} className="space-y-6">
+          <div className="space-y-2">
             <label
-              htmlFor="password"
-              className="block text-sm font-medium text-aether-text"
+              htmlFor="email"
+              className="text-xs uppercase tracking-widest text-text-secondary ml-1"
             >
-              Passwort
+              E-Mail Adresse
             </label>
-            <Link
-              href="/reset-password"
-              className="text-xs text-amber hover:text-amber-dark transition"
-            >
-              Passwort vergessen?
-            </Link>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-secondary group-focus-within:text-gold-light transition-colors">
+                <span className="material-symbols-outlined text-xl">mail</span>
+              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="name@beispiel.at"
+                className="block w-full pl-11 pr-4 py-4 rounded-lg border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-gold-light/50 bg-surface-container-low text-text-primary placeholder:text-text-muted/40 transition-all"
+              />
+            </div>
           </div>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            autoComplete="current-password"
-            placeholder="••••••••"
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
-          />
-        </div>
 
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-violet px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition shadow-sm"
-        >
-          Anmelden
-        </button>
-      </form>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="text-xs uppercase tracking-widest text-text-secondary ml-1"
+              >
+                Passwort
+              </label>
+              <Link
+                href="/reset-password"
+                className="text-xs text-text-secondary hover:text-gold-light transition"
+              >
+                Passwort vergessen?
+              </Link>
+            </div>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-secondary group-focus-within:text-gold-light transition-colors">
+                <span className="material-symbols-outlined text-xl">lock</span>
+              </div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                autoComplete="current-password"
+                placeholder="••••••••"
+                className="block w-full pl-11 pr-4 py-4 rounded-lg border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-gold-light/50 bg-surface-container-low text-text-primary placeholder:text-text-muted/40 transition-all"
+              />
+            </div>
+          </div>
 
-      <p className="text-center text-sm text-aether-gray">
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-gold-light to-gold text-bg-primary font-semibold py-4 rounded-lg shadow-lg hover:brightness-110 active:scale-[0.98] transition-all duration-300 uppercase tracking-widest text-sm"
+          >
+            Anmelden
+          </button>
+        </form>
+      </div>
+
+      {/* Footer link */}
+      <p className="text-center text-sm text-text-secondary/70">
         Noch kein Konto?{" "}
         <Link
           href="/register"
-          className="font-medium text-amber hover:text-amber-dark transition"
+          className="text-gold-light font-medium hover:underline underline-offset-4 ml-1"
         >
-          Jetzt registrieren
+          Registrieren
         </Link>
       </p>
     </div>

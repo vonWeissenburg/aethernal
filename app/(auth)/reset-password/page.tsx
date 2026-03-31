@@ -50,23 +50,23 @@ async function ResetForm({
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-serif font-semibold text-violet">
+        <h2 className="text-2xl font-serif font-semibold text-gold-light">
           Passwort zurücksetzen
         </h2>
-        <p className="mt-2 text-sm text-aether-gray">
+        <p className="mt-2 text-sm text-text-secondary">
           Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum
           Zurücksetzen.
         </p>
       </div>
 
       {message && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light">
           {message}
         </div>
       )}
 
       {success && (
-        <div className="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+        <div className="rounded-lg bg-success/10 border border-success/30 px-4 py-3 text-sm text-success">
           {success}
         </div>
       )}
@@ -75,7 +75,7 @@ async function ResetForm({
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-aether-text mb-1.5"
+            className="block text-sm font-medium text-text-primary mb-1.5"
           >
             E-Mail-Adresse
           </label>
@@ -86,22 +86,22 @@ async function ResetForm({
             required
             autoComplete="email"
             placeholder="name@beispiel.at"
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
+            className="w-full rounded-lg bg-surface-container-high border-none p-4 text-sm text-text-primary placeholder:text-text-muted/40 focus:ring-1 focus:ring-gold-light/50 transition-all"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-lg bg-violet px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition shadow-sm"
+          className="w-full rounded-lg bg-gradient-to-r from-gold-light to-gold px-4 py-4 text-sm font-semibold text-bg-primary hover:brightness-110 transition-all shadow-lg uppercase tracking-widest"
         >
           Link senden
         </button>
       </form>
 
-      <p className="text-center text-sm text-aether-gray">
+      <p className="text-center text-sm text-text-secondary">
         <Link
           href="/login"
-          className="font-medium text-amber hover:text-amber-dark transition"
+          className="font-medium text-gold-light hover:text-gold transition"
         >
           Zurück zur Anmeldung
         </Link>

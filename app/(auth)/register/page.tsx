@@ -66,133 +66,138 @@ async function RegisterForm({
 }) {
   const { message } = await searchParams;
 
+  const inputClasses =
+    "w-full bg-surface-container-high border-none rounded-lg p-4 text-text-primary placeholder:text-text-muted/40 focus:ring-1 focus:ring-gold-light/50 transition-all";
+
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-serif font-semibold text-violet">
+      <div className="text-center">
+        <h1 className="font-serif text-3xl text-text-primary mb-2 tracking-tight">
           Konto erstellen
-        </h2>
-        <p className="mt-2 text-sm text-aether-gray">
-          Erstelle dein Aethernal-Konto und bewahre Erinnerungen für immer.
+        </h1>
+        <p className="text-text-secondary text-sm">
+          Beginne deine Reise im ewigen Gedenkraum.
         </p>
       </div>
 
       {message && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light">
           {message}
         </div>
       )}
 
-      <form action={signUp} className="space-y-5">
-        <div>
-          <label
-            htmlFor="full_name"
-            className="block text-sm font-medium text-aether-text mb-1.5"
-          >
-            Vollständiger Name
-          </label>
-          <input
-            id="full_name"
-            name="full_name"
-            type="text"
-            required
-            autoComplete="name"
-            placeholder="Max Mustermann"
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
-          />
-        </div>
+      <div className="bg-surface-container/30 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/10 shadow-2xl">
+        <form action={signUp} className="space-y-5">
+          <div className="space-y-1.5">
+            <label
+              htmlFor="full_name"
+              className="font-serif text-xs text-text-secondary px-1"
+            >
+              Vollständiger Name
+            </label>
+            <input
+              id="full_name"
+              name="full_name"
+              type="text"
+              required
+              autoComplete="name"
+              placeholder="Elias Müller"
+              className={inputClasses}
+            />
+          </div>
 
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-aether-text mb-1.5"
-          >
-            E-Mail-Adresse
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="name@beispiel.at"
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
-          />
-        </div>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="email"
+              className="font-serif text-xs text-text-secondary px-1"
+            >
+              E-Mail Adresse
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="name@beispiel.at"
+              className={inputClasses}
+            />
+          </div>
 
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-aether-text mb-1.5"
-          >
-            Passwort
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            minLength={8}
-            autoComplete="new-password"
-            placeholder="Mindestens 8 Zeichen"
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
-          />
-        </div>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="password"
+              className="font-serif text-xs text-text-secondary px-1"
+            >
+              Passwort
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              minLength={8}
+              autoComplete="new-password"
+              placeholder="Mindestens 8 Zeichen"
+              className={inputClasses}
+            />
+          </div>
 
-        <div>
-          <label
-            htmlFor="confirm_password"
-            className="block text-sm font-medium text-aether-text mb-1.5"
-          >
-            Passwort bestätigen
-          </label>
-          <input
-            id="confirm_password"
-            name="confirm_password"
-            type="password"
-            required
-            minLength={8}
-            autoComplete="new-password"
-            placeholder="Passwort wiederholen"
-            className="w-full rounded-lg border border-lavender-dark bg-white px-4 py-2.5 text-sm text-aether-text placeholder:text-aether-gray/50 focus:border-violet focus:ring-2 focus:ring-violet/20 outline-none transition"
-          />
-        </div>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="confirm_password"
+              className="font-serif text-xs text-text-secondary px-1"
+            >
+              Passwort bestätigen
+            </label>
+            <input
+              id="confirm_password"
+              name="confirm_password"
+              type="password"
+              required
+              minLength={8}
+              autoComplete="new-password"
+              placeholder="Passwort wiederholen"
+              className={inputClasses}
+            />
+          </div>
 
-        <button
-          type="submit"
-          className="w-full rounded-lg bg-violet px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition shadow-sm"
-        >
-          Registrieren
-        </button>
+          <p className="text-xs text-text-secondary/60 leading-relaxed px-1">
+            Mit der Registrierung akzeptierst du unsere{" "}
+            <a
+              href="https://aethernal.me/agb"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold-light hover:underline"
+            >
+              AGB
+            </a>{" "}
+            und{" "}
+            <a
+              href="https://aethernal.me/datenschutz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold-light hover:underline"
+            >
+              Datenschutzerklärung
+            </a>
+            .
+          </p>
 
-        <p className="text-xs text-center text-aether-gray leading-relaxed">
-          Mit der Registrierung akzeptierst du unsere{" "}
-          <a
-            href="https://aethernal.me/agb"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-amber hover:text-amber-dark underline"
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-gold-light to-gold py-4 rounded-lg font-semibold text-bg-primary tracking-widest uppercase text-sm mt-2 hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-gold/10"
           >
-            AGB
-          </a>{" "}
-          und{" "}
-          <a
-            href="https://aethernal.me/datenschutz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-amber hover:text-amber-dark underline"
-          >
-            Datenschutzerklärung
-          </a>
-          .
-        </p>
-      </form>
+            Registrieren
+          </button>
+        </form>
+      </div>
 
-      <p className="text-center text-sm text-aether-gray">
+      <p className="text-center text-sm text-text-secondary/70">
         Bereits ein Konto?{" "}
         <Link
           href="/login"
-          className="font-medium text-amber hover:text-amber-dark transition"
+          className="text-gold-light font-medium hover:underline underline-offset-4 ml-1"
         >
           Anmelden
         </Link>

@@ -39,22 +39,22 @@ export default async function NachrichtenPage({
   return (
     <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
       <div className="mb-8">
-        <h1 className="text-3xl font-serif font-semibold text-violet">
+        <h1 className="text-3xl font-serif font-semibold text-gold-light">
           Nachrichten aus dem Jenseits
         </h1>
-        <p className="mt-2 text-aether-gray">
+        <p className="mt-2 text-text-secondary">
           Zeitgesteuerte Nachrichten an deine Liebsten.
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-8 border-b border-lavender-dark">
+      <div className="flex gap-1 mb-8 border-b border-border-card">
         <Link
           href="/nachrichten"
           className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${
             activeTab === "nachrichten"
-              ? "border-amber text-violet"
-              : "border-transparent text-aether-gray hover:text-violet"
+              ? "border-gold text-gold-light"
+              : "border-transparent text-text-secondary hover:text-gold-light"
           }`}
         >
           💌 Meine Nachrichten
@@ -63,8 +63,8 @@ export default async function NachrichtenPage({
           href="/nachrichten?tab=vertrauensperson"
           className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${
             activeTab === "vertrauensperson"
-              ? "border-amber text-violet"
-              : "border-transparent text-aether-gray hover:text-violet"
+              ? "border-gold text-gold-light"
+              : "border-transparent text-text-secondary hover:text-gold-light"
           }`}
         >
           🤝 Vertrauensperson
@@ -73,8 +73,8 @@ export default async function NachrichtenPage({
 
       {/* Email notice */}
       {activeTab === "nachrichten" && (
-        <div className="rounded-lg bg-amber/5 border border-amber/20 p-4 mb-6">
-          <p className="text-xs text-aether-gray">
+        <div className="rounded-lg bg-gold/5 border border-gold/20 p-4 mb-6">
+          <p className="text-xs text-text-secondary">
             📬 Der E-Mail-Versand wird in Kürze aktiviert. Du kannst bereits
             Nachrichten erstellen und planen.
           </p>

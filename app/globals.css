@@ -1,32 +1,128 @@
 @import "tailwindcss";
 
 @theme {
-  --color-violet: #1E1B4B;
-  --color-violet-light: #2D2571;
-  --color-violet-muted: #4C4A8A;
-  --color-amber: #C97A2B;
-  --color-amber-light: #E09548;
-  --color-amber-dark: #A5611E;
-  --color-lavender: #F0EDF8;
-  --color-lavender-dark: #DDD8F0;
-  --color-aether-text: #1A1830;
-  --color-aether-gray: #6B6880;
+  /* === Background === */
+  --color-bg-primary: #0B0D17;
+  --color-bg-secondary: #141627;
+  --color-bg-card: #1C1F33;
+  --color-bg-card-hover: #252840;
+  --color-bg-input: #1C1F33;
 
+  /* === Gold Accent === */
+  --color-gold: #D4AF37;
+  --color-gold-light: #F2CA50;
+  --color-gold-dim: #E9C349;
+  --color-gold-dark: #C5A028;
+  --color-gold-glow: rgba(242, 202, 80, 0.15);
+
+  /* === Text === */
+  --color-text-primary: #E1E1F0;
+  --color-text-secondary: #D0C5AF;
+  --color-text-muted: #99907C;
+  --color-text-faint: #4D4635;
+
+  /* === Surface (Material Design inspired) === */
+  --color-surface: #11131D;
+  --color-surface-container: #1D1F2A;
+  --color-surface-container-low: #191B26;
+  --color-surface-container-high: #282934;
+  --color-surface-container-highest: #32343F;
+  --color-surface-bright: #373844;
+
+  /* === Status === */
+  --color-success: #4CAF7D;
+  --color-error: #CF6679;
+  --color-error-light: #FFB4AB;
+  --color-warning: #EAC249;
+
+  /* === Outline === */
+  --color-outline: #99907C;
+  --color-outline-variant: #4D4635;
+  --color-border-card: #2A2D45;
+
+  /* === Typography === */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-serif: "Noto Serif", Georgia, serif;
+}
+
+/* === Base Styles === */
+html {
+  color-scheme: dark;
 }
 
 body {
   font-family: var(--font-sans);
-  color: var(--color-aether-text);
-  background: #fafaf7;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* === Selection === */
+::selection {
+  background: rgba(212, 175, 55, 0.3);
+  color: var(--color-text-primary);
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-container-highest);
+  border-radius: 10px;
+}
+
+/* === Animations === */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 .animate-fade-in {
   animation: fade-in 0.2s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
+}
+
+/* === Glass panel effect === */
+.glass-panel {
+  background: rgba(29, 31, 42, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* === Hide scrollbar === */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* === Gold shimmer text === */
+.shimmer-text {
+  background: linear-gradient(90deg, #f2ca50, #ffe088, #f2ca50);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* === Form elements dark scheme === */
+input[type="date"] {
+  color-scheme: dark;
 }

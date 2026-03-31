@@ -147,46 +147,46 @@ export function SettingsForm({
   return (
     <div className="space-y-8">
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light">
           {error}
         </div>
       )}
 
       {/* Profile */}
-      <div className="rounded-xl border border-lavender-dark bg-white p-6">
-        <h2 className="font-serif text-xl font-semibold text-violet mb-4">
+      <div className="rounded-xl bg-surface-container-high border-none p-6">
+        <h2 className="font-serif text-xl font-semibold text-gold-light mb-4">
           Profil
         </h2>
         <form onSubmit={handleSaveName} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1.5">
               Anzeigename
             </label>
             <input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               maxLength={100}
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none rounded-lg px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="Dein Name"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1.5">
               E-Mail-Adresse
             </label>
             <input
               value={email}
               disabled
-              className="w-full rounded-lg border border-lavender-dark bg-gray-50 px-4 py-2.5 text-sm text-aether-gray cursor-not-allowed"
+              className="w-full rounded-lg bg-surface-container border-none px-4 py-2.5 text-sm text-text-secondary cursor-not-allowed"
             />
-            <p className="text-xs text-aether-gray mt-1">
+            <p className="text-xs text-text-secondary mt-1">
               E-Mail-Änderung wird in Kürze verfügbar sein.
             </p>
           </div>
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-violet px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition disabled:opacity-50"
+            className="rounded-lg bg-gold px-5 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition disabled:opacity-50"
           >
             {saving ? "Wird gespeichert..." : "Name speichern"}
           </button>
@@ -194,13 +194,13 @@ export function SettingsForm({
       </div>
 
       {/* Password */}
-      <div className="rounded-xl border border-lavender-dark bg-white p-6">
-        <h2 className="font-serif text-xl font-semibold text-violet mb-4">
+      <div className="rounded-xl bg-surface-container-high border-none p-6">
+        <h2 className="font-serif text-xl font-semibold text-gold-light mb-4">
           Passwort ändern
         </h2>
         <form onSubmit={handleChangePassword} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1.5">
               Neues Passwort
             </label>
             <input
@@ -209,12 +209,12 @@ export function SettingsForm({
               onChange={(e) => setNewPassword(e.target.value)}
               minLength={8}
               required
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none rounded-lg px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="Mindestens 8 Zeichen"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1.5">
               Passwort bestätigen
             </label>
             <input
@@ -223,14 +223,14 @@ export function SettingsForm({
               onChange={(e) => setConfirmPassword(e.target.value)}
               minLength={8}
               required
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none rounded-lg px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="Passwort wiederholen"
             />
           </div>
           <button
             type="submit"
             disabled={passwordSaving}
-            className="rounded-lg bg-violet px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition disabled:opacity-50"
+            className="rounded-lg bg-gold px-5 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition disabled:opacity-50"
           >
             {passwordSaving ? "Wird geändert..." : "Passwort ändern"}
           </button>
@@ -238,23 +238,23 @@ export function SettingsForm({
       </div>
 
       {/* Delete account */}
-      <div className="rounded-xl border border-red-200 bg-red-50/30 p-6">
-        <h2 className="font-serif text-xl font-semibold text-red-700 mb-2">
+      <div className="rounded-xl border border-error/10 bg-error/5 p-6">
+        <h2 className="font-serif text-xl font-semibold text-error-light mb-2">
           Konto löschen
         </h2>
-        <p className="text-sm text-aether-gray mb-4">
+        <p className="text-sm text-text-secondary mb-4">
           Alle deine Daten (Gedenkprofile, Nachrichten, Tagebucheinträge, Fotos)
           werden unwiderruflich gelöscht.
         </p>
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-red-700 mb-1">
+            <label className="block text-sm font-medium text-error-light mb-1">
               Tippe &quot;LÖSCHEN&quot; zum Bestätigen
             </label>
             <input
               value={deleteConfirm}
               onChange={(e) => setDeleteConfirm(e.target.value)}
-              className="w-full rounded-lg border border-red-200 px-4 py-2.5 text-sm focus:border-red-400 focus:ring-1 focus:ring-red-200 outline-none"
+              className="w-full rounded-lg bg-surface-container border-none rounded-lg px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-error/50 transition-all"
               placeholder="LÖSCHEN"
             />
           </div>
@@ -262,7 +262,7 @@ export function SettingsForm({
             type="button"
             onClick={handleDeleteAccount}
             disabled={deleteConfirm !== "LÖSCHEN" || deleting}
-            className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-700 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            className="rounded-lg bg-error px-5 py-3 text-sm font-medium text-white hover:bg-error/80 transition disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {deleting ? "Wird gelöscht..." : "Konto unwiderruflich löschen"}
           </button>

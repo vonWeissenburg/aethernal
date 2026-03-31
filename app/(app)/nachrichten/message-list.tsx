@@ -27,18 +27,18 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
   if (messages.length === 0) {
     return (
-      <div className="rounded-xl border-2 border-dashed border-lavender-dark bg-white p-12 text-center">
+      <div className="rounded-xl border-2 border-dashed border-outline-variant bg-bg-card p-12 text-center">
         <div className="text-4xl mb-4">💌</div>
-        <h3 className="text-lg font-serif font-semibold text-violet mb-2">
+        <h3 className="text-lg font-serif font-semibold text-gold-light mb-2">
           Noch keine Nachrichten geplant
         </h3>
-        <p className="text-sm text-aether-gray mb-6 max-w-md mx-auto">
+        <p className="text-sm text-text-secondary mb-6 max-w-md mx-auto">
           Schreibe deine erste Nachricht an einen geliebten Menschen. Sie wird
           zugestellt, wenn die Zeit gekommen ist.
         </p>
         <Link
           href="/nachrichten/neu"
-          className="inline-flex items-center gap-2 rounded-lg bg-amber px-6 py-2.5 text-sm font-medium text-white hover:bg-amber-dark transition shadow-sm"
+          className="inline-flex items-center gap-2 rounded-lg bg-gold px-6 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm"
         >
           + Neue Nachricht
         </Link>
@@ -51,7 +51,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
       <div className="flex justify-end mb-6">
         <Link
           href="/nachrichten/neu"
-          className="inline-flex items-center gap-2 rounded-lg bg-amber px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-dark transition shadow-sm"
+          className="inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm"
         >
           + Neue Nachricht
         </Link>
@@ -61,18 +61,18 @@ export function MessageList({ messages }: { messages: Message[] }) {
         {messages.map((m) => (
           <div
             key={m.id}
-            className="rounded-xl border border-lavender-dark bg-white p-5 hover:shadow-sm transition"
+            className="rounded-xl bg-surface-container-high border-none p-5 hover:shadow-sm transition"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <h3 className="font-serif text-lg font-semibold text-violet truncate">
+                <h3 className="font-serif text-lg font-semibold text-gold-light truncate">
                   {m.title}
                 </h3>
-                <p className="text-sm text-aether-gray mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   An {m.recipient_name} &lt;{m.recipient_email}&gt;
                 </p>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="text-sm text-aether-gray">
+                  <span className="text-sm text-text-secondary">
                     {m.trigger_type === "date" ? "📅" : "🕊️"}{" "}
                     {m.trigger_type === "date"
                       ? m.trigger_date
@@ -81,12 +81,12 @@ export function MessageList({ messages }: { messages: Message[] }) {
                       : "Nach meinem Tod"}
                   </span>
                   {m.repeat_yearly && (
-                    <span className="text-xs bg-violet/10 text-violet px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-gold/10 text-gold-light px-2 py-0.5 rounded-full">
                       Jährlich
                     </span>
                   )}
                   {m.memorials?.name && (
-                    <span className="text-xs text-aether-gray">
+                    <span className="text-xs text-text-secondary">
                       · {m.memorials.name}
                     </span>
                   )}
@@ -102,7 +102,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
                 {(m.status === "draft" || m.status === "scheduled") && (
                   <Link
                     href={`/nachrichten/${m.id}/bearbeiten`}
-                    className="text-aether-gray hover:text-violet transition p-1"
+                    className="text-text-secondary hover:text-gold-light transition p-1"
                     title="Bearbeiten"
                   >
                     ✏️
@@ -110,7 +110,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
                 )}
                 <button
                   onClick={() => handleDelete(m)}
-                  className="text-aether-gray hover:text-red-600 transition p-1"
+                  className="text-text-secondary hover:text-error transition p-1"
                   title="Löschen"
                 >
                   🗑️

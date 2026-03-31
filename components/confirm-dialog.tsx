@@ -45,27 +45,27 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => handleClose(false)}
           />
           {/* Dialog */}
-          <div className="relative bg-white rounded-xl shadow-xl max-w-sm w-full mx-4 p-6 animate-fade-in">
-            <h3 className="text-lg font-serif font-semibold text-violet mb-2">
+          <div className="relative bg-surface-container rounded-xl border border-outline-variant/10 shadow-2xl max-w-sm w-full mx-4 p-6 animate-fade-in">
+            <h3 className="text-lg font-serif font-semibold text-gold-light mb-2">
               {options.title}
             </h3>
-            <p className="text-sm text-aether-gray mb-6 leading-relaxed">
+            <p className="text-sm text-text-secondary mb-6 leading-relaxed">
               {options.message}
             </p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => handleClose(false)}
-                className="rounded-lg border border-lavender-dark px-4 py-2 text-sm font-medium text-aether-gray hover:bg-lavender transition"
+                className="rounded-lg border border-border-card px-4 py-2 text-sm font-medium text-text-secondary hover:bg-surface-container-high transition"
               >
                 {options.cancelLabel ?? "Abbrechen"}
               </button>
               <button
                 onClick={() => handleClose(true)}
-                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition"
+                className="rounded-lg bg-error px-4 py-2 text-sm font-medium text-white hover:bg-error/80 transition"
                 autoFocus
               >
                 {options.confirmLabel ?? "Löschen"}

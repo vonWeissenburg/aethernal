@@ -51,65 +51,76 @@ export default async function SpiritLinkPage({
     .returns<MemorialPhoto[]>();
 
   return (
-    <div className="min-h-screen bg-[#fafaf7]">
+    <div
+      className="min-h-screen text-text-primary"
+      style={{
+        background: "radial-gradient(circle at top center, #1a1e30 0%, #11131d 100%)",
+      }}
+    >
+      {/* Material Symbols font */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet"
+      />
+
       {/* Header */}
-      <header className="bg-violet text-white py-4 px-6">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <span className="font-serif text-xl font-light tracking-wide">
-            Aethernal
-          </span>
-          <span className="text-xs text-lavender/60">SpiritLink</span>
-        </div>
+      <header className="fixed top-0 w-full z-50 bg-bg-primary/60 backdrop-blur-xl flex items-center justify-center px-6 h-16">
+        <h1 className="text-xl font-serif italic text-gold-light tracking-wide">
+          Aethernal SpiritLink
+        </h1>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 lg:px-8 py-10 lg:py-16">
-        {/* Profile header */}
-        <div className="text-center mb-12">
-          {memorial.profile_photo_url ? (
-            <Image
-              src={memorial.profile_photo_url}
-              alt={memorial.name}
-              width={112}
-              height={112}
-              className="w-28 h-28 rounded-full object-cover border-4 border-lavender mx-auto mb-6"
-            />
-          ) : (
-            <div className="w-28 h-28 rounded-full bg-lavender flex items-center justify-center text-5xl mx-auto mb-6">
-              {memorial.type === "animal" ? "🐾" : "🕊️"}
-            </div>
-          )}
+      <main className="pt-24 pb-20 px-6 max-w-md mx-auto">
+        {/* Profile Section */}
+        <section className="flex flex-col items-center text-center mb-12">
+          <div className="relative w-[150px] h-[150px] mb-6">
+            <div className="absolute inset-0 rounded-full border-[3px] border-gold/60 scale-105 shadow-[0_0_20px_rgba(212,175,55,0.15)]" />
+            {memorial.profile_photo_url ? (
+              <Image
+                src={memorial.profile_photo_url}
+                alt={memorial.name}
+                width={150}
+                height={150}
+                className="w-full h-full rounded-full object-cover border-2 border-gold relative z-10"
+              />
+            ) : (
+              <div className="w-full h-full rounded-full bg-surface-container-high flex items-center justify-center text-6xl relative z-10 border-2 border-gold">
+                {memorial.type === "animal" ? "🐾" : "🕊️"}
+              </div>
+            )}
+          </div>
 
-          <h1 className="text-4xl font-serif font-semibold text-violet">
+          <h2 className="font-serif text-4xl font-light text-text-primary mb-2 tracking-tight">
             {memorial.name}
-          </h1>
+          </h2>
 
           {(memorial.birth_date || memorial.death_date) && (
-            <p className="mt-2 text-lg text-aether-gray">
+            <p className="text-sm uppercase tracking-[0.15rem] text-gold/80 mb-8">
               {formatLifespan(memorial.birth_date, memorial.death_date)}
             </p>
           )}
 
+          {/* Decorative Divider */}
+          <div className="flex items-center w-full max-w-[220px] gap-4 mb-8">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold/30" />
+            <span className="text-gold text-sm">✦</span>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold/30" />
+          </div>
+
           {memorial.description && (
-            <p className="mt-4 text-aether-text max-w-lg mx-auto leading-relaxed">
-              {memorial.description}
+            <p className="font-serif italic text-text-secondary leading-relaxed text-lg px-2">
+              &bdquo;{memorial.description}&ldquo;
             </p>
           )}
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center gap-4 mb-12">
-          <div className="flex-1 h-px bg-lavender-dark" />
-          <span className="text-amber text-lg">✦</span>
-          <div className="flex-1 h-px bg-lavender-dark" />
-        </div>
+        </section>
 
         {/* Biography */}
         {memorial.biography && (
           <section className="mb-12">
-            <h2 className="text-2xl font-serif font-semibold text-violet mb-4 text-center">
+            <h3 className="font-serif text-xl text-gold-dim mb-4 text-center">
               Biografie
-            </h2>
-            <div className="bg-white rounded-2xl border border-lavender-dark p-8 text-aether-text leading-relaxed whitespace-pre-line">
+            </h3>
+            <div className="bg-surface-container-low p-6 rounded-xl border-l-2 border-gold/40 text-text-secondary text-sm leading-relaxed whitespace-pre-line">
               {memorial.biography}
             </div>
           </section>
@@ -117,28 +128,21 @@ export default async function SpiritLinkPage({
 
         {/* Photo gallery */}
         {photos && photos.length > 0 && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-serif font-semibold text-violet mb-4 text-center">
-              Erinnerungen
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <section className="mb-14">
+            <h3 className="font-serif text-xl text-gold-dim mb-4">Fotos</h3>
+            <div className="flex overflow-x-auto gap-4 pb-4 -mx-6 px-6 hide-scrollbar">
               {photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="relative aspect-square rounded-xl overflow-hidden bg-lavender"
+                  className="flex-shrink-0 w-48 aspect-[3/4] rounded-lg overflow-hidden bg-surface-container shadow-xl"
                 >
                   <Image
                     src={photo.url}
                     alt={photo.caption ?? ""}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 50vw, 33vw"
+                    width={192}
+                    height={256}
+                    className="w-full h-full object-cover"
                   />
-                  {photo.caption && (
-                    <p className="text-xs text-aether-gray mt-1 text-center px-1">
-                      {photo.caption}
-                    </p>
-                  )}
                 </div>
               ))}
             </div>
@@ -146,20 +150,22 @@ export default async function SpiritLinkPage({
         )}
 
         {/* Footer */}
-        <footer className="text-center pt-8 border-t border-lavender-dark">
-          <p className="text-sm text-aether-gray">
-            Erstellt mit{" "}
-            <a
-              href="https://aethernal.me"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-amber hover:text-amber-dark transition font-medium"
-            >
-              Aethernal
-            </a>
-          </p>
-          <p className="text-xs text-aether-gray/60 mt-1">
-            Erinnerungen, die bleiben.
+        <footer className="mt-12 flex flex-col items-center border-t border-outline-variant/5 pt-12 pb-8">
+          <div className="flex items-center gap-2 mb-6 opacity-80">
+            <span className="font-serif italic text-xs text-gold-light tracking-wide">
+              Erstellt mit Aethernal
+            </span>
+          </div>
+          <a
+            href="https://aethernal.me"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block py-3.5 px-10 rounded-full bg-gold text-bg-primary font-medium text-sm tracking-wide shadow-lg hover:brightness-110 transition-all active:scale-95"
+          >
+            Eigenes Gedenkprofil erstellen
+          </a>
+          <p className="mt-10 text-[9px] text-text-secondary/30 tracking-[0.2em] uppercase">
+            Erinnerungen f&uuml;r die Ewigkeit
           </p>
         </footer>
       </main>

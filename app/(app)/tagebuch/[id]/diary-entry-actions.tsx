@@ -28,14 +28,14 @@ export function DiaryEntryActions({ id, title }: { id: string; title: string | n
     <div className="flex items-center gap-2">
       <Link
         href={`/tagebuch/${id}/bearbeiten`}
-        className="text-aether-gray hover:text-violet transition p-1"
+        className="text-text-secondary hover:text-gold-light transition p-1"
         title="Bearbeiten"
       >
         ✏️
       </Link>
       <button
         onClick={handleDelete}
-        className="text-aether-gray hover:text-red-600 transition p-1"
+        className="text-text-secondary hover:text-error transition p-1"
         title="Löschen"
       >
         🗑️

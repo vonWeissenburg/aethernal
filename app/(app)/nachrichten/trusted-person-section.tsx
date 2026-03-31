@@ -77,8 +77,8 @@ export function TrustedPersonSection({
 
   return (
     <div>
-      <div className="rounded-xl border border-lavender-dark bg-lavender/30 p-6 mb-8">
-        <p className="text-sm text-aether-gray leading-relaxed">
+      <div className="rounded-xl border border-border-card bg-surface-container-high/30 p-6 mb-8">
+        <p className="text-sm text-text-secondary leading-relaxed">
           Deine Vertrauensperson kann bestätigen, dass du verstorben bist. Erst
           dann werden deine &quot;Nach dem Tod&quot;-Nachrichten versendet.
         </p>
@@ -89,24 +89,24 @@ export function TrustedPersonSection({
           {trustedPersons.map((tp) => (
             <div
               key={tp.id}
-              className="rounded-xl border border-lavender-dark bg-white p-5"
+              className="rounded-xl bg-surface-container-high border-none p-5"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="font-serif text-lg font-semibold text-violet">
+                  <h3 className="font-serif text-lg font-semibold text-gold-light">
                     {tp.name}
                   </h3>
-                  <p className="text-sm text-aether-gray mt-0.5">{tp.email}</p>
+                  <p className="text-sm text-text-secondary mt-0.5">{tp.email}</p>
                   {tp.relationship && (
-                    <p className="text-sm text-aether-gray mt-0.5">
+                    <p className="text-sm text-text-secondary mt-0.5">
                       {tp.relationship}
                     </p>
                   )}
                   <span
                     className={`inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-medium ${
                       tp.confirmed
-                        ? "bg-green-100 text-green-700"
-                        : "bg-amber-100 text-amber-700"
+                        ? "bg-success/10 text-success"
+                        : "bg-gold-100 text-gold-light-700"
                     }`}
                   >
                     {tp.confirmed ? "Bestätigt" : "Ausstehend"}
@@ -114,7 +114,7 @@ export function TrustedPersonSection({
                 </div>
                 <button
                   onClick={() => handleDelete(tp)}
-                  className="text-aether-gray hover:text-red-600 transition p-1"
+                  className="text-text-secondary hover:text-error transition p-1"
                   title="Entfernen"
                 >
                   🗑️
@@ -125,57 +125,57 @@ export function TrustedPersonSection({
         </div>
       )}
 
-      <div className="rounded-xl border border-lavender-dark bg-white p-6">
-        <h3 className="font-serif text-lg font-semibold text-violet mb-4">
+      <div className="rounded-xl bg-surface-container-high border-none p-6">
+        <h3 className="font-serif text-lg font-semibold text-gold-light mb-4">
           {trustedPersons.length > 0
             ? "Weitere Vertrauensperson hinzufügen"
             : "Vertrauensperson festlegen"}
         </h3>
 
         {error && (
-          <p className="text-sm text-red-600 mb-4 p-3 bg-red-50 rounded-lg">{error}</p>
+          <p className="text-sm text-error-light mb-4 p-3 bg-error/10 border border-error/30 rounded-lg">{error}</p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-gold-light mb-1">
               Name *
             </label>
             <input
               name="name"
               required
               maxLength={200}
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="Vor- und Nachname"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-gold-light mb-1">
               E-Mail *
             </label>
             <input
               name="email"
               type="email"
               required
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="email@beispiel.at"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-violet mb-1">
+            <label className="block text-sm font-medium text-gold-light mb-1">
               Beziehung / Verhältnis
             </label>
             <input
               name="relationship"
               maxLength={200}
-              className="w-full rounded-lg border border-lavender-dark px-4 py-2.5 text-sm focus:border-amber focus:ring-1 focus:ring-amber outline-none"
+              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
               placeholder="z.B. Ehepartner, Kind, beste Freundin"
             />
           </div>
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-violet px-6 py-2.5 text-sm font-medium text-white hover:bg-violet-light transition disabled:opacity-50"
+            className="rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition disabled:opacity-50"
           >
             {saving ? "Wird gespeichert..." : "Vertrauensperson speichern"}
           </button>

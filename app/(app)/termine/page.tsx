@@ -25,16 +25,16 @@ export default async function TerminePage() {
     <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
       <div className="flex items-start justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-serif font-semibold text-violet">
+          <h1 className="text-3xl font-serif font-semibold text-gold-light">
             Termine & Erinnerungen
           </h1>
-          <p className="mt-2 text-aether-gray">
+          <p className="mt-2 text-text-secondary">
             Gedenktage, Jahrestage und besondere Daten.
           </p>
         </div>
         <Link
           href="/termine/neu"
-          className="shrink-0 inline-flex items-center gap-2 rounded-lg bg-amber px-5 py-2.5 text-sm font-medium text-white hover:bg-amber-dark transition shadow-sm"
+          className="shrink-0 inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm"
         >
           + Neuer Termin
         </Link>
