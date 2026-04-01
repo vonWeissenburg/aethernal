@@ -145,33 +145,33 @@ export default async function DashboardPage() {
               )}
 
               {/* Quick Actions Bar */}
-              <div className="bg-card rounded-xl p-8 flex items-center justify-between border border-white/5">
-                <span className="font-headline text-xl text-slate-400 pl-4">Schnellzugriff</span>
-                <div className="flex gap-4">
+              <div className="bg-card rounded-xl p-6 flex items-center gap-4 border border-white/5">
+                <span className="font-headline text-lg text-slate-400 shrink-0">Schnellzugriff</span>
+                <div className="flex gap-3 flex-wrap justify-end flex-1">
                   <Link
                     href="/tagebuch"
-                    className="flex items-center gap-2.5 px-6 py-3.5 bg-surface hover:bg-white/10 rounded-lg transition-all duration-300 font-medium text-sm border border-white/5"
+                    className="flex items-center gap-2 px-4 py-3 bg-surface hover:bg-white/10 rounded-lg transition-all duration-300 font-medium text-sm border border-white/5"
                   >
                     <span className="material-symbols-outlined text-lg">menu_book</span>
                     Tagebuch
                   </Link>
                   <Link
                     href="/nachrichten"
-                    className="flex items-center gap-2.5 px-6 py-3.5 bg-surface hover:bg-white/10 rounded-lg transition-all duration-300 font-medium text-sm border border-white/5"
+                    className="flex items-center gap-2 px-4 py-3 bg-surface hover:bg-white/10 rounded-lg transition-all duration-300 font-medium text-sm border border-white/5"
                   >
                     <span className="material-symbols-outlined text-lg">mail</span>
                     Nachrichten
                   </Link>
                   <Link
                     href="/termine"
-                    className="flex items-center gap-2.5 px-6 py-3.5 bg-surface hover:bg-white/10 rounded-lg transition-all duration-300 font-medium text-sm border border-white/5"
+                    className="flex items-center gap-2 px-4 py-3 bg-surface hover:bg-white/10 rounded-lg transition-all duration-300 font-medium text-sm border border-white/5"
                   >
                     <span className="material-symbols-outlined text-lg">event</span>
                     Termine
                   </Link>
                   <Link
                     href="/memorial/new"
-                    className="flex items-center gap-2.5 px-7 py-3.5 bg-primary text-on-primary rounded-lg hover:brightness-110 transition-all duration-300 font-bold text-sm shadow-lg shadow-primary/10"
+                    className="flex items-center gap-2 px-5 py-3 bg-primary text-on-primary rounded-lg hover:brightness-110 transition-all duration-300 font-bold text-sm shadow-lg shadow-primary/10"
                   >
                     <span className="material-symbols-outlined text-lg">auto_awesome</span>
                     Neues Profil
