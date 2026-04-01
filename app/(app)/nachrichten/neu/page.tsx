@@ -26,15 +26,17 @@ export default async function NeueNachrichtPage() {
     .returns<Pick<TrustedPerson, "id" | "name" | "email">[]>();
 
   return (
-    <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <h1 className="text-3xl font-serif font-semibold text-gold-light mb-8">
-        Neue Nachricht
-      </h1>
-      <MessageForm
-        memorials={memorials ?? []}
-        hasTrustedPerson={(trustedPersons?.length ?? 0) > 0}
-        trustedPersons={trustedPersons ?? []}
-      />
+    <div className="min-h-screen bg-background">
+      <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
+        <h1 className="font-headline text-3xl font-semibold text-primary mb-8">
+          Neue Nachricht
+        </h1>
+        <MessageForm
+          memorials={memorials ?? []}
+          hasTrustedPerson={(trustedPersons?.length ?? 0) > 0}
+          trustedPersons={trustedPersons ?? []}
+        />
+      </div>
     </div>
   );
 }

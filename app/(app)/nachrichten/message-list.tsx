@@ -27,53 +27,57 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
   if (messages.length === 0) {
     return (
-      <div className="rounded-xl border-2 border-dashed border-outline-variant bg-bg-card p-12 text-center">
-        <div className="text-4xl mb-4">💌</div>
-        <h3 className="text-lg font-serif font-semibold text-gold-light mb-2">
+      <div className="rounded-2xl border-2 border-dashed border-outline-variant bg-surface p-12 text-center">
+        <span className="material-symbols-outlined text-5xl text-on-surface-variant mb-4 block">
+          drafts
+        </span>
+        <h3 className="font-headline text-lg font-semibold text-on-surface mb-2">
           Noch keine Nachrichten geplant
         </h3>
-        <p className="text-sm text-text-secondary mb-6 max-w-md mx-auto">
+        <p className="font-body text-sm text-on-surface-variant mb-6 max-w-md mx-auto">
           Schreibe deine erste Nachricht an einen geliebten Menschen. Sie wird
           zugestellt, wenn die Zeit gekommen ist.
         </p>
         <Link
           href="/nachrichten/neu"
-          className="inline-flex items-center gap-2 rounded-lg bg-gold px-6 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm"
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-label text-sm font-medium text-on-primary hover:brightness-110 transition shadow-md"
         >
-          + Neue Nachricht
+          <span className="material-symbols-outlined text-[20px]">add</span>
+          Neue Nachricht
         </Link>
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="flex justify-end mb-6">
-        <Link
-          href="/nachrichten/neu"
-          className="inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm"
-        >
-          + Neue Nachricht
-        </Link>
-      </div>
-
-      <div className="space-y-4">
+    <div className="relative pb-20">
+      {/* Message cards */}
+      <div className="space-y-3">
         {messages.map((m) => (
           <div
             key={m.id}
-            className="rounded-xl bg-surface-container-high border-none p-5 hover:shadow-sm transition"
+            className="group rounded-2xl bg-card p-5 transition hover:bg-surface-container-high"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <h3 className="font-serif text-lg font-semibold text-gold-light truncate">
-                  {m.title}
-                </h3>
-                <p className="text-sm text-text-secondary mt-1">
-                  An {m.recipient_name} &lt;{m.recipient_email}&gt;
+                <div className="flex items-center gap-3 mb-1">
+                  <h3 className="font-headline text-base font-semibold text-on-surface truncate">
+                    {m.title}
+                  </h3>
+                  <span
+                    className={`shrink-0 font-label text-xs px-2.5 py-0.5 rounded-full font-medium ${STATUS_STYLES[m.status]}`}
+                  >
+                    {STATUS_LABELS[m.status]}
+                  </span>
+                </div>
+                <p className="font-body text-sm text-on-surface-variant">
+                  An: {m.recipient_name}
                 </p>
-                <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="text-sm text-text-secondary">
-                    {m.trigger_type === "date" ? "📅" : "🕊️"}{" "}
+                <div className="flex flex-wrap items-center gap-3 mt-2">
+                  <span className="inline-flex items-center gap-1 font-body text-xs text-outline">
+                    <span className="material-symbols-outlined text-[16px]">
+                      {m.trigger_type === "date" ? "calendar_today" : "volunteer_activism"}
+                    </span>
                     {m.trigger_type === "date"
                       ? m.trigger_date
                         ? new Date(m.trigger_date).toLocaleDateString("de-AT")
@@ -81,45 +85,50 @@ export function MessageList({ messages }: { messages: Message[] }) {
                       : "Nach meinem Tod"}
                   </span>
                   {m.repeat_yearly && (
-                    <span className="text-xs bg-gold/10 text-gold-light px-2 py-0.5 rounded-full">
+                    <span className="inline-flex items-center gap-1 font-label text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                      <span className="material-symbols-outlined text-[14px]">repeat</span>
                       Jährlich
                     </span>
                   )}
                   {m.memorials?.name && (
-                    <span className="text-xs text-text-secondary">
-                      · {m.memorials.name}
+                    <span className="font-body text-xs text-outline">
+                      {m.memorials.name}
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <span
-                  className={`text-xs px-2 py-1 rounded-full font-medium ${STATUS_STYLES[m.status]}`}
-                >
-                  {STATUS_LABELS[m.status]}
-                </span>
+              <div className="flex items-center gap-1 shrink-0">
                 {(m.status === "draft" || m.status === "scheduled") && (
                   <Link
                     href={`/nachrichten/${m.id}/bearbeiten`}
-                    className="text-text-secondary hover:text-gold-light transition p-1"
+                    className="rounded-full p-2 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition"
                     title="Bearbeiten"
                   >
-                    ✏️
+                    <span className="material-symbols-outlined text-[20px]">edit</span>
                   </Link>
                 )}
                 <button
                   onClick={() => handleDelete(m)}
-                  className="text-text-secondary hover:text-error transition p-1"
+                  className="rounded-full p-2 text-on-surface-variant hover:text-error hover:bg-error/10 transition"
                   title="Löschen"
                 >
-                  🗑️
+                  <span className="material-symbols-outlined text-[20px]">delete</span>
                 </button>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* FAB */}
+      <Link
+        href="/nachrichten/neu"
+        className="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-on-primary shadow-lg hover:brightness-110 transition z-10"
+        title="Neue Nachricht"
+      >
+        <span className="material-symbols-outlined text-[28px]">add</span>
+      </Link>
     </div>
   );
 }

@@ -22,11 +22,11 @@ export default async function VertrauenspersonenPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
       <div className="mb-8">
-        <h1 className="text-3xl font-serif font-semibold text-gold-light">
+        <h1 className="font-headline text-3xl font-semibold text-on-surface">
           Vertrauenspersonen
         </h1>
-        <p className="mt-2 text-text-secondary">
-          Deine Vertrauenspersonen können bestätigen, dass du verstorben bist.
+        <p className="mt-2 font-body text-sm text-on-surface-variant">
+          Deine Vertrauenspersonen k&ouml;nnen best&auml;tigen, dass du verstorben bist.
           Erst dann werden deine &quot;Nach dem Tod&quot;-Nachrichten versendet.
         </p>
       </div>

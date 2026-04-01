@@ -37,55 +37,67 @@ export default async function NachrichtenPage({
     .returns<TrustedPerson[]>();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif font-semibold text-gold-light">
-          Nachrichten aus dem Jenseits
-        </h1>
-        <p className="mt-2 text-text-secondary">
-          Zeitgesteuerte Nachrichten an deine Liebsten.
-        </p>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 mb-8 border-b border-border-card">
-        <Link
-          href="/nachrichten"
-          className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${
-            activeTab === "nachrichten"
-              ? "border-gold text-gold-light"
-              : "border-transparent text-text-secondary hover:text-gold-light"
-          }`}
-        >
-          💌 Meine Nachrichten
-        </Link>
-        <Link
-          href="/nachrichten?tab=vertrauensperson"
-          className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${
-            activeTab === "vertrauensperson"
-              ? "border-gold text-gold-light"
-              : "border-transparent text-text-secondary hover:text-gold-light"
-          }`}
-        >
-          🤝 Vertrauensperson
-        </Link>
-      </div>
-
-      {/* Email notice */}
-      {activeTab === "nachrichten" && (
-        <div className="rounded-lg bg-gold/5 border border-gold/20 p-4 mb-6">
-          <p className="text-xs text-text-secondary">
-            📬 Der E-Mail-Versand wird in Kürze aktiviert. Du kannst bereits
-            Nachrichten erstellen und planen.
+    <div className="min-h-screen bg-background">
+      <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="font-headline text-3xl font-semibold text-primary">
+            Nachrichten aus dem Jenseits
+          </h1>
+          <p className="mt-2 font-body text-sm text-on-surface-variant">
+            Zeitgesteuerte Nachrichten an deine Liebsten.
           </p>
         </div>
-      )}
 
-      {activeTab === "nachrichten" ? (
-        <MessageList messages={messages ?? []} />
-      ) : (
-        <TrustedPersonSection trustedPersons={trustedPersons ?? []} />
-      )}
+        {/* Tab Bar */}
+        <div className="flex border-b border-outline-variant mb-8">
+          <Link
+            href="/nachrichten"
+            className={`relative flex items-center gap-2 px-5 py-3 font-label text-sm font-medium transition-colors ${
+              activeTab === "nachrichten"
+                ? "text-primary"
+                : "text-on-surface-variant hover:text-on-surface"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[20px]">mail</span>
+            Meine Nachrichten
+            {activeTab === "nachrichten" && (
+              <span className="absolute bottom-0 left-0 right-0 h-[3px] rounded-t-full bg-primary" />
+            )}
+          </Link>
+          <Link
+            href="/nachrichten?tab=vertrauensperson"
+            className={`relative flex items-center gap-2 px-5 py-3 font-label text-sm font-medium transition-colors ${
+              activeTab === "vertrauensperson"
+                ? "text-primary"
+                : "text-on-surface-variant hover:text-on-surface"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[20px]">handshake</span>
+            Vertrauensperson
+            {activeTab === "vertrauensperson" && (
+              <span className="absolute bottom-0 left-0 right-0 h-[3px] rounded-t-full bg-primary" />
+            )}
+          </Link>
+        </div>
+
+        {/* Email notice */}
+        {activeTab === "nachrichten" && (
+          <div className="flex items-start gap-3 rounded-xl bg-primary/5 border border-primary/20 p-4 mb-6">
+            <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">info</span>
+            <p className="font-body text-xs text-on-surface-variant">
+              Der E-Mail-Versand wird in Kürze aktiviert. Du kannst bereits
+              Nachrichten erstellen und planen.
+            </p>
+          </div>
+        )}
+
+        {activeTab === "nachrichten" ? (
+          <MessageList messages={messages ?? []} />
+        ) : (
+          <TrustedPersonSection trustedPersons={trustedPersons ?? []} />
+        )}
+      </div>
     </div>
   );
 }

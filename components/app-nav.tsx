@@ -5,22 +5,27 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
-const NAV_ITEMS = [
+const SIDEBAR_NAV = [
+  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
+  { href: "/gedenkprofile", label: "Gedenkprofile", icon: "account_circle", matchAlso: "/memorial" },
+  { href: "/tagebuch", label: "Tagebuch", icon: "menu_book" },
+  { href: "/nachrichten", label: "Nachrichten", icon: "mail" },
+  { href: "/vertrauenspersonen", label: "Vertrauenspersonen", icon: "group" },
+  { href: "/termine", label: "Termine", icon: "event" },
+];
+
+const BOTTOM_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/tagebuch", label: "Tagebuch", icon: "menu_book" },
   { href: "/nachrichten", label: "Nachrichten", icon: "chat_bubble" },
   { href: "/termine", label: "Termine", icon: "event_note" },
-];
-
-const MORE_ITEMS = [
-  { href: "/vertrauenspersonen", label: "Vertrauenspersonen", icon: "group" },
-  { href: "/memorial/new", label: "Neues Gedenkprofil", icon: "add_circle" },
+  { href: "/mehr", label: "Mehr", icon: "more_horiz" },
 ];
 
 function NavIcon({ name, filled }: { name: string; filled?: boolean }) {
   return (
     <span
-      className="material-symbols-outlined text-[22px]"
+      className="material-symbols-outlined"
       style={filled ? { fontVariationSettings: "'FILL' 1" } : undefined}
     >
       {name}
@@ -44,155 +49,147 @@ export default function AppNav({
     router.push("/login");
   }
 
+  function isActive(href: string, matchAlso?: string) {
+    if (pathname === href || pathname.startsWith(href + "/")) return true;
+    if (matchAlso && (pathname === matchAlso || pathname.startsWith(matchAlso + "/"))) return true;
+    // Special: /gedenkprofile matches /memorial routes
+    if (href === "/gedenkprofile" && pathname.startsWith("/memorial")) return true;
+    return false;
+  }
+
+  function isMobileActive(href: string) {
+    if (href === "/mehr") {
+      return pathname.startsWith("/einstellungen") ||
+        pathname.startsWith("/vertrauenspersonen") ||
+        pathname.startsWith("/memorial/new") ||
+        pathname.startsWith("/gedenkprofile");
+    }
+    return pathname === href || pathname.startsWith(href + "/");
+  }
+
+  const mobileMoreHref = pathname.startsWith("/vertrauenspersonen")
+    ? "/vertrauenspersonen"
+    : pathname.startsWith("/einstellungen")
+    ? "/einstellungen"
+    : "/einstellungen";
+
   return (
     <>
-      {/* Material Symbols font */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet"
-      />
-
-      {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:w-72 lg:flex-col bg-bg-primary border-r border-white/5 min-h-screen">
-        <div className="p-6 mb-4">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <span
-              className="material-symbols-outlined text-gold-light text-2xl"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              auto_awesome
-            </span>
-            <h1 className="font-serif text-2xl font-bold text-gold-light italic tracking-tight">
+      {/* ===== Desktop Sidebar (272px) ===== */}
+      <aside className="hidden lg:flex lg:w-72 lg:flex-col h-screen fixed left-0 top-0 bg-sidebar border-r border-white/5 shadow-2xl z-50">
+        {/* Logo */}
+        <div className="px-10 pt-10 mb-14">
+          <Link href="/dashboard" className="block">
+            <h1 className="font-headline text-2xl font-bold text-primary tracking-tight">
               Aethernal
             </h1>
+            <p className="text-slate-500 text-[10px] tracking-[0.3em] uppercase mt-1.5">
+              Digital Memorial
+            </p>
           </Link>
-          <p className="text-text-muted text-[10px] tracking-[0.2em] uppercase mt-1 ml-9">
-            Digital Memorial
-          </p>
         </div>
 
-        <nav className="flex-1 px-4 space-y-1">
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname.startsWith(item.href);
+        {/* Nav Links */}
+        <nav className="flex-grow space-y-2 px-6">
+          {SIDEBAR_NAV.map((item) => {
+            const active = isActive(item.href, item.matchAlso);
             return (
               <Link
                 key={item.href}
-                href={item.href}
-                className={`flex items-center gap-4 px-4 py-3.5 rounded-lg text-sm transition-all duration-300 ${
-                  isActive
-                    ? "text-gold-light font-semibold bg-gold-light/5 border-r-2 border-gold-light"
-                    : "text-text-muted hover:text-text-primary hover:bg-white/5"
+                href={item.href === "/gedenkprofile" ? "/dashboard" : item.href}
+                className={`flex items-center gap-4 px-4 py-3.5 text-sm tracking-wide transition-all duration-300 rounded-lg ${
+                  active
+                    ? "text-primary font-semibold border-r-2 border-primary bg-primary/5"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-white/5 group"
                 }`}
               >
-                <NavIcon name={item.icon} filled={isActive} />
-                <span className="tracking-wide">{item.label}</span>
-              </Link>
-            );
-          })}
-
-          <div className="my-3 border-t border-white/5" />
-
-          {MORE_ITEMS.map((item) => {
-            const isActive = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-4 px-4 py-3.5 rounded-lg text-sm transition-all duration-300 ${
-                  isActive
-                    ? "text-gold-light font-semibold bg-gold-light/5"
-                    : "text-text-muted hover:text-text-primary hover:bg-white/5"
-                }`}
-              >
-                <NavIcon name={item.icon} filled={isActive} />
-                <span className="tracking-wide">{item.label}</span>
+                <span
+                  className={`material-symbols-outlined ${!active ? "group-hover:text-primary" : ""}`}
+                  style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
+                >
+                  {item.icon}
+                </span>
+                <span className="font-body">{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div className="mt-auto p-4 border-t border-white/5">
-          <Link
-            href="/einstellungen"
-            className="flex items-center gap-3 px-4 py-2 mb-2 rounded-lg hover:bg-white/5 transition group"
-          >
-            <div className="w-9 h-9 rounded-full bg-gold/20 flex items-center justify-center text-sm font-medium text-gold-light">
+        {/* User Info + Settings + Logout */}
+        <div className="mt-auto pt-8 border-t border-white/5 px-6 pb-10">
+          <div className="flex items-center gap-3 px-4 mb-8">
+            <div className="w-11 h-11 rounded-full bg-primary/20 flex items-center justify-center text-sm font-semibold text-primary border border-white/10">
               {(userName ?? userEmail)?.charAt(0)?.toUpperCase() ?? "?"}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-medium text-text-primary truncate">
+              <p className="text-sm font-semibold text-on-surface truncate">
                 {userName ?? "Benutzer"}
               </p>
-              <p className="text-[10px] text-text-muted truncate">
+              <p className="text-[10px] text-slate-500 truncate">
                 {userEmail}
               </p>
             </div>
-          </Link>
+          </div>
           <div className="space-y-1">
             <Link
               href="/einstellungen"
-              className="flex items-center gap-3 px-4 py-2 text-text-muted hover:text-text-primary transition text-xs"
+              className="flex items-center gap-4 px-4 py-2 text-slate-400 hover:text-slate-200 transition-colors duration-300"
             >
-              <NavIcon name="settings" />
-              <span>Einstellungen</span>
+              <span className="material-symbols-outlined text-lg">settings</span>
+              <span className="text-xs">Einstellungen</span>
             </Link>
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center gap-3 px-4 py-2 text-text-muted hover:text-text-primary transition text-xs"
+              className="w-full flex items-center gap-4 px-4 py-2 text-slate-400 hover:text-slate-200 transition-colors duration-300"
             >
-              <NavIcon name="logout" />
-              <span>Abmelden</span>
+              <span className="material-symbols-outlined text-lg">logout</span>
+              <span className="text-xs">Abmelden</span>
             </button>
           </div>
         </div>
       </aside>
 
-      {/* Mobile header */}
-      <header className="lg:hidden bg-bg-primary/80 backdrop-blur-xl text-text-primary px-4 py-3 flex items-center justify-between sticky top-0 z-50 border-b border-gold-light/10">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <span
-            className="material-symbols-outlined text-gold-light"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            auto_awesome
-          </span>
-          <h1 className="font-serif text-xl font-bold text-gold-light italic tracking-tight">
-            Aethernal
-          </h1>
-        </Link>
-        <Link href="/einstellungen">
-          <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-xs font-medium text-gold-light border border-gold/20">
-            {(userName ?? userEmail)?.charAt(0)?.toUpperCase() ?? "?"}
+      {/* ===== Mobile Top Header ===== */}
+      <header className="lg:hidden fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-primary/10">
+        <div className="flex justify-between items-center px-6 h-16 w-full">
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary">auto_awesome</span>
+            <h1 className="text-2xl font-headline text-primary italic font-bold tracking-tight">
+              Aethernal
+            </h1>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/einstellungen">
+              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium text-primary border border-primary/20">
+                {(userName ?? userEmail)?.charAt(0)?.toUpperCase() ?? "?"}
+              </div>
+            </Link>
           </div>
-        </Link>
+        </div>
       </header>
 
-      {/* Mobile bottom nav */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-bg-primary/90 backdrop-blur-xl border-t border-gold-light/10 z-50 rounded-t-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
-        <div className="flex justify-around py-2 pb-safe">
-          {[...NAV_ITEMS, { href: "/einstellungen", label: "Mehr", icon: "more_horiz" }].map((item) => {
-            const isActive =
-              item.href === "/einstellungen"
-                ? pathname.startsWith("/einstellungen") || pathname.startsWith("/vertrauenspersonen")
-                : pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 transition-all duration-300 ${
-                  isActive
-                    ? "text-gold-light scale-105"
-                    : "text-text-primary/40 hover:text-gold-light/80"
-                }`}
-              >
-                <NavIcon name={item.icon} filled={isActive} />
-                <span className="text-[10px] font-medium tracking-wide">
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
+      {/* ===== Mobile Bottom Tab Bar ===== */}
+      <nav className="lg:hidden fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe bg-background/90 backdrop-blur-xl border-t border-primary/10 z-50 rounded-t-lg">
+        {BOTTOM_NAV.map((item) => {
+          const active = isMobileActive(item.href);
+          const href = item.href === "/mehr" ? mobileMoreHref : item.href;
+          return (
+            <Link
+              key={item.href}
+              href={href}
+              className={`flex flex-col items-center justify-center transition-all duration-300 active:scale-90 ${
+                active
+                  ? "text-primary"
+                  : "text-on-surface/40 hover:text-primary"
+              }`}
+            >
+              <NavIcon name={item.icon} filled={active} />
+              <span className="font-body text-[10px] font-medium mt-1">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
       </nav>
     </>
   );

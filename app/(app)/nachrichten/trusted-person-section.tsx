@@ -77,47 +77,58 @@ export function TrustedPersonSection({
 
   return (
     <div>
-      <div className="rounded-xl border border-border-card bg-surface-container-high/30 p-6 mb-8">
-        <p className="text-sm text-text-secondary leading-relaxed">
+      {/* Info banner */}
+      <div className="flex items-start gap-3 rounded-2xl bg-surface border border-outline-variant p-5 mb-8">
+        <span className="material-symbols-outlined text-primary text-[22px] mt-0.5">info</span>
+        <p className="font-body text-sm text-on-surface-variant leading-relaxed">
           Deine Vertrauensperson kann bestätigen, dass du verstorben bist. Erst
           dann werden deine &quot;Nach dem Tod&quot;-Nachrichten versendet.
         </p>
       </div>
 
+      {/* Existing trusted persons */}
       {trustedPersons.length > 0 && (
-        <div className="space-y-4 mb-8">
+        <div className="space-y-3 mb-8">
           {trustedPersons.map((tp) => (
             <div
               key={tp.id}
-              className="rounded-xl bg-surface-container-high border-none p-5"
+              className="rounded-2xl bg-card p-5"
             >
               <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="font-serif text-lg font-semibold text-gold-light">
-                    {tp.name}
-                  </h3>
-                  <p className="text-sm text-text-secondary mt-0.5">{tp.email}</p>
-                  {tp.relationship && (
-                    <p className="text-sm text-text-secondary mt-0.5">
-                      {tp.relationship}
-                    </p>
-                  )}
-                  <span
-                    className={`inline-block mt-2 text-xs px-2 py-0.5 rounded-full font-medium ${
-                      tp.confirmed
-                        ? "bg-success/10 text-success"
-                        : "bg-gold-100 text-gold-light-700"
-                    }`}
-                  >
-                    {tp.confirmed ? "Bestätigt" : "Ausstehend"}
-                  </span>
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                    <span className="material-symbols-outlined text-primary text-[22px]">person</span>
+                  </div>
+                  <div>
+                    <h3 className="font-headline text-base font-semibold text-on-surface">
+                      {tp.name}
+                    </h3>
+                    <p className="font-body text-sm text-on-surface-variant mt-0.5">{tp.email}</p>
+                    {tp.relationship && (
+                      <p className="font-body text-sm text-outline mt-0.5">
+                        {tp.relationship}
+                      </p>
+                    )}
+                    <span
+                      className={`inline-flex items-center gap-1 mt-2 font-label text-xs px-2.5 py-0.5 rounded-full font-medium ${
+                        tp.confirmed
+                          ? "bg-success/10 text-success"
+                          : "bg-primary/10 text-primary"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[14px]">
+                        {tp.confirmed ? "check_circle" : "schedule"}
+                      </span>
+                      {tp.confirmed ? "Bestätigt" : "Ausstehend"}
+                    </span>
+                  </div>
                 </div>
                 <button
                   onClick={() => handleDelete(tp)}
-                  className="text-text-secondary hover:text-error transition p-1"
+                  className="rounded-full p-2 text-on-surface-variant hover:text-error hover:bg-error/10 transition"
                   title="Entfernen"
                 >
-                  🗑️
+                  <span className="material-symbols-outlined text-[20px]">delete</span>
                 </button>
               </div>
             </div>
@@ -125,59 +136,69 @@ export function TrustedPersonSection({
         </div>
       )}
 
-      <div className="rounded-xl bg-surface-container-high border-none p-6">
-        <h3 className="font-serif text-lg font-semibold text-gold-light mb-4">
-          {trustedPersons.length > 0
-            ? "Weitere Vertrauensperson hinzufügen"
-            : "Vertrauensperson festlegen"}
-        </h3>
+      {/* Add form */}
+      <div className="rounded-2xl bg-card p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <span className="material-symbols-outlined text-primary text-[22px]">person_add</span>
+          <h3 className="font-headline text-lg font-semibold text-on-surface">
+            {trustedPersons.length > 0
+              ? "Weitere Vertrauensperson hinzufügen"
+              : "Vertrauensperson festlegen"}
+          </h3>
+        </div>
 
         {error && (
-          <p className="text-sm text-error-light mb-4 p-3 bg-error/10 border border-error/30 rounded-lg">{error}</p>
+          <div className="flex items-start gap-3 rounded-xl bg-error/10 border border-error/30 p-4 mb-5">
+            <span className="material-symbols-outlined text-error text-[20px] mt-0.5">error</span>
+            <p className="font-body text-sm text-error">{error}</p>
+          </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Name *
             </label>
             <input
               name="name"
               required
               maxLength={200}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               placeholder="Vor- und Nachname"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               E-Mail *
             </label>
             <input
               name="email"
               type="email"
               required
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               placeholder="email@beispiel.at"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Beziehung / Verhältnis
             </label>
             <input
               name="relationship"
               maxLength={200}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               placeholder="z.B. Ehepartner, Kind, beste Freundin"
             />
           </div>
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition disabled:opacity-50"
+            className="rounded-full bg-primary px-6 py-3 font-label text-sm font-semibold text-on-primary hover:brightness-110 transition shadow-md disabled:opacity-50"
           >
-            {saving ? "Wird gespeichert..." : "Vertrauensperson speichern"}
+            <span className="inline-flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[18px]">person_add</span>
+              {saving ? "Wird gespeichert..." : "Vertrauensperson speichern"}
+            </span>
           </button>
         </form>
       </div>

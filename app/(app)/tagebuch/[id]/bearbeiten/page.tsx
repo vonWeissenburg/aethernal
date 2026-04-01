@@ -105,136 +105,153 @@ export default function EditDiaryEntryPage() {
 
   if (initialLoading) {
     return (
-      <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-        <p className="text-text-secondary">Laden...</p>
+      <div className="min-h-screen bg-background">
+        <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
+          <div className="flex items-center gap-3 text-on-surface-variant">
+            <span className="material-symbols-outlined animate-spin">progress_activity</span>
+            <p className="font-body text-sm">Laden...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <h1 className="text-3xl font-serif font-semibold text-gold-light mb-2">
-        Eintrag bearbeiten
-      </h1>
-      <p className="text-text-secondary mb-8">
-        Bearbeite deinen Tagebucheintrag.
-      </p>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
+        {/* Back navigation */}
+        <button
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-1 text-sm font-label text-on-surface-variant hover:text-primary transition mb-6"
+        >
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+          Zurück
+        </button>
 
-      {error && (
-        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light mb-6">
-          {error}
-        </div>
-      )}
+        <h1 className="text-3xl font-headline font-semibold text-primary mb-2">
+          Eintrag bearbeiten
+        </h1>
+        <p className="font-body text-on-surface-variant mb-8">
+          Bearbeite deinen Tagebucheintrag.
+        </p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Memorial selector */}
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">
-            Gedenkprofil
-          </label>
-          <select
-            value={memorialId}
-            onChange={(e) => setMemorialId(e.target.value)}
-            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
-          >
-            <option value="">Kein Profil</option>
-            {memorials.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.type === "animal" ? "🐾" : "🕊️"} {m.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Mood selector */}
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-3">
-            Wie fühlst du dich?
-          </label>
-          <div className="flex gap-3">
-            {MOODS.map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => setMood(mood === m ? "" : m)}
-                className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition ${
-                  mood === m
-                    ? "border-gold bg-gold/10"
-                    : "border-border-card hover:border-gold/30"
-                }`}
-              >
-                <span className="text-2xl">{MOOD_ICONS[m]}</span>
-                <span className="text-[10px] text-text-secondary">
-                  {MOOD_LABELS[m]}
-                </span>
-              </button>
-            ))}
+        {error && (
+          <div className="rounded-xl bg-error/10 border border-error/20 px-4 py-3 text-sm font-body text-error mb-6 flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px]">error</span>
+            {error}
           </div>
-        </div>
+        )}
 
-        <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Memorial selector */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">
-              Titel{" "}
-              <span className="text-text-secondary font-normal">(optional)</span>
+            <label className="block text-sm font-label font-medium text-on-surface mb-1.5">
+              Gedenkprofil
             </label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              maxLength={200}
-              placeholder="z.B. Ein schöner Gedanke"
-              className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary placeholder:text-text-muted/50 focus:ring-1 focus:ring-gold-light/50 transition"
-            />
+            <select
+              value={memorialId}
+              onChange={(e) => setMemorialId(e.target.value)}
+              className="w-full rounded-xl bg-surface-container-high border border-outline-variant px-4 py-3 text-sm font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition"
+            >
+              <option value="">Kein Profil</option>
+              {memorials.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.type === "animal" ? "🐾" : "🕊️"} {m.name}
+                </option>
+              ))}
+            </select>
           </div>
+
+          {/* Mood selector */}
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">
-              Datum
+            <label className="block text-sm font-label font-medium text-on-surface mb-3">
+              Wie fühlst du dich?
             </label>
-            <input
-              type="date"
-              value={entryDate}
-              onChange={(e) => setEntryDate(e.target.value)}
-              className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
-            />
+            <div className="flex gap-3">
+              {MOODS.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMood(mood === m ? "" : m)}
+                  className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition ${
+                    mood === m
+                      ? "border-primary bg-primary/10 ring-2 ring-primary/30"
+                      : "border-outline-variant hover:border-primary/40 bg-surface-container-high"
+                  }`}
+                >
+                  <span className="text-2xl">{MOOD_ICONS[m]}</span>
+                  <span className="text-[10px] font-label text-on-surface-variant">
+                    {MOOD_LABELS[m]}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">
-            Dein Eintrag *
-          </label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-            rows={10}
-            maxLength={10000}
-            placeholder="Was bewegt dich heute?"
-            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary placeholder:text-text-muted/50 focus:ring-1 focus:ring-gold-light/50 transition resize-y"
-          />
-          <p className="text-xs text-text-secondary mt-1 text-right">
-            {content.length}/10000
-          </p>
-        </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-label font-medium text-on-surface mb-1.5">
+                Titel{" "}
+                <span className="text-outline font-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                maxLength={200}
+                placeholder="z.B. Ein schöner Gedanke"
+                className="w-full rounded-xl bg-surface-container-high border border-outline-variant px-4 py-3 text-sm font-body text-on-surface placeholder:text-outline/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-label font-medium text-on-surface mb-1.5">
+                Datum
+              </label>
+              <input
+                type="date"
+                value={entryDate}
+                onChange={(e) => setEntryDate(e.target.value)}
+                className="w-full rounded-xl bg-surface-container-high border border-outline-variant px-4 py-3 text-sm font-body text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition"
+              />
+            </div>
+          </div>
 
-        <div className="flex gap-3 pt-4">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-5 py-2.5 text-sm text-text-secondary hover:text-gold-light transition"
-          >
-            Abbrechen
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
-          >
-            {loading ? "Wird gespeichert..." : "Änderungen speichern"}
-          </button>
-        </div>
-      </form>
+          <div>
+            <label className="block text-sm font-label font-medium text-on-surface mb-1.5">
+              Dein Eintrag *
+            </label>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              required
+              rows={10}
+              maxLength={10000}
+              placeholder="Was bewegt dich heute?"
+              className="w-full rounded-xl bg-surface-container-high border border-outline-variant px-4 py-3 text-sm font-body text-on-surface placeholder:text-outline/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition resize-y"
+            />
+            <p className="text-xs font-label text-outline mt-1 text-right">
+              {content.length}/10000
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="px-5 py-2.5 text-sm font-label text-on-surface-variant hover:text-on-surface transition"
+            >
+              Abbrechen
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="rounded-full bg-primary px-6 py-3 text-sm font-label font-semibold text-on-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
+            >
+              {loading ? "Wird gespeichert..." : "Änderungen speichern"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

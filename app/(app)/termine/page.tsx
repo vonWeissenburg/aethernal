@@ -25,22 +25,25 @@ export default async function TerminePage() {
     <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
       <div className="flex items-start justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-serif font-semibold text-gold-light">
+          <h1 className="font-headline text-3xl font-semibold text-on-surface">
             Termine & Erinnerungen
           </h1>
-          <p className="mt-2 text-text-secondary">
+          <p className="mt-2 font-body text-sm text-on-surface-variant">
             Gedenktage, Jahrestage und besondere Daten.
           </p>
         </div>
-        <Link
-          href="/termine/neu"
-          className="shrink-0 inline-flex items-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm"
-        >
-          + Neuer Termin
-        </Link>
       </div>
 
       <ReminderList reminders={reminders ?? []} />
+
+      {/* FAB */}
+      <Link
+        href="/termine/neu"
+        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg hover:brightness-110 transition-all active:scale-95"
+        title="Neuer Termin"
+      >
+        <span className="material-symbols-outlined text-2xl">add</span>
+      </Link>
     </div>
   );
 }

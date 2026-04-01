@@ -16,6 +16,14 @@ function formatDate(dateStr: string) {
   });
 }
 
+function formatDay(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("de-AT", { day: "numeric" });
+}
+
+function formatMonth(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("de-AT", { month: "short" }).toUpperCase();
+}
+
 function isUpcoming(dateStr: string) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -26,6 +34,21 @@ function isUpcoming(dateStr: string) {
   return diffDays >= 0 && diffDays <= 30;
 }
 
+function getBorderColor(type: string) {
+  switch (type) {
+    case "birthday":
+      return "border-l-primary";
+    case "deathday":
+      return "border-l-outline";
+    case "anniversary":
+      return "border-l-primary";
+    case "custom":
+      return "border-l-success";
+    default:
+      return "border-l-outline";
+  }
+}
+
 export function ReminderList({ reminders }: { reminders: Reminder[] }) {
   const router = useRouter();
   const { showToast } = useToast();
@@ -33,100 +56,111 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
 
   async function handleDelete(r: Reminder) {
     const ok = await confirm({
-      title: "Termin löschen?",
-      message: `Möchtest du den Termin „${r.title}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
+      title: "Termin l\u00F6schen?",
+      message: `M\u00F6chtest du den Termin \u201E${r.title}\u201C wirklich l\u00F6schen? Diese Aktion kann nicht r\u00FCckg\u00E4ngig gemacht werden.`,
     });
     if (!ok) return;
     const supabase = createClient();
     await supabase.from("reminders").delete().eq("id", r.id);
-    showToast("Termin gelöscht");
+    showToast("Termin gel\u00F6scht");
     router.refresh();
   }
 
   if (reminders.length === 0) {
     return (
-      <div className="rounded-xl border-2 border-dashed border-outline-variant bg-bg-card p-12 text-center">
-        <div className="text-4xl mb-4">📅</div>
-        <h3 className="text-lg font-serif font-semibold text-gold-light mb-2">
+      <div className="rounded-2xl border-2 border-dashed border-outline-variant bg-card p-12 text-center">
+        <div className="flex justify-center mb-4">
+          <span className="material-symbols-outlined text-5xl text-outline" style={{ fontVariationSettings: "'wght' 200" }}>
+            calendar_month
+          </span>
+        </div>
+        <h3 className="font-headline text-lg font-semibold text-on-surface mb-2">
           Noch keine Termine
         </h3>
-        <p className="text-sm text-text-secondary mb-6 max-w-md mx-auto">
+        <p className="font-body text-sm text-on-surface-variant mb-6 max-w-md mx-auto">
           Erstelle deinen ersten Termin, um an wichtige Gedenktage und
           Jahrestage erinnert zu werden.
         </p>
         <Link
           href="/termine/neu"
-          className="inline-flex items-center gap-2 rounded-lg bg-gold px-6 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm"
+          className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-label text-sm font-semibold text-on-primary hover:brightness-110 transition shadow-sm"
         >
-          + Neuer Termin
+          <span className="material-symbols-outlined text-lg">add</span>
+          Neuer Termin
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {reminders.map((r) => {
         const upcoming = isUpcoming(r.reminder_date);
         return (
           <div
             key={r.id}
-            className={`rounded-xl border bg-bg-card p-5 transition ${
-              upcoming
-                ? "border-gold/40 shadow-sm"
-                : "border-border-card hover:shadow-sm"
-            }`}
+            className={`rounded-2xl bg-card border-l-4 ${getBorderColor(r.reminder_type)} p-4 transition hover:bg-surface-container-high`}
           >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex items-start gap-3 flex-1 min-w-0">
-                <span className="text-2xl mt-0.5">
-                  {REMINDER_TYPE_ICONS[r.reminder_type]}
+            <div className="flex items-center gap-4">
+              {/* Date block */}
+              <div className="flex flex-col items-center justify-center shrink-0 w-14 h-14 rounded-xl bg-surface-container-low">
+                <span className="font-headline text-xl font-bold text-on-surface leading-none">
+                  {formatDay(r.reminder_date)}
                 </span>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-serif text-lg font-semibold text-gold-light truncate">
-                    {r.title}
-                  </h3>
-                  <p className="text-sm text-text-secondary mt-0.5">
-                    {formatDate(r.reminder_date)}
-                    {r.repeat_yearly && " · Jährlich"}
+                <span className="font-label text-[10px] font-semibold text-on-surface-variant tracking-wider mt-0.5">
+                  {formatMonth(r.reminder_date)}
+                </span>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <h3 className="font-headline text-base font-semibold text-on-surface truncate">
+                  {r.title}
+                </h3>
+                {r.description && (
+                  <p className="font-body text-xs text-on-surface-variant mt-0.5 line-clamp-1">
+                    {r.description}
                   </p>
-                  {r.description && (
-                    <p className="text-sm text-text-secondary mt-1 line-clamp-2">
-                      {r.description}
-                    </p>
-                  )}
-                  <div className="flex flex-wrap items-center gap-2 mt-2">
-                    <span className="text-xs bg-surface-container-high text-gold-light px-2 py-0.5 rounded-full">
-                      {REMINDER_TYPE_LABELS[r.reminder_type]}
+                )}
+                <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-surface-container-high px-2 py-0.5 font-label text-xs text-on-surface-variant">
+                    {REMINDER_TYPE_LABELS[r.reminder_type]}
+                  </span>
+                  {r.repeat_yearly && (
+                    <span className="inline-flex items-center gap-0.5 font-label text-xs text-outline">
+                      <span className="material-symbols-outlined text-xs">repeat</span>
+                      J&auml;hrlich
                     </span>
-                    {r.memorials?.name && (
-                      <span className="text-xs text-text-secondary">
-                        · {r.memorials.name}
-                      </span>
-                    )}
-                    {upcoming && (
-                      <span className="text-xs bg-gold/10 text-gold-light px-2 py-0.5 rounded-full font-medium">
-                        Bald
-                      </span>
-                    )}
-                  </div>
+                  )}
+                  {r.memorials?.name && (
+                    <span className="font-label text-xs text-outline">
+                      {r.memorials.name}
+                    </span>
+                  )}
+                  {upcoming && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-label text-xs font-medium text-primary">
+                      <span className="material-symbols-outlined text-xs">upcoming</span>
+                      Bald
+                    </span>
+                  )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              {/* Actions */}
+              <div className="flex items-center gap-1 shrink-0">
                 <Link
                   href={`/termine/${r.id}/bearbeiten`}
-                  className="text-text-secondary hover:text-gold-light transition p-1"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition"
                   title="Bearbeiten"
                 >
-                  ✏️
+                  <span className="material-symbols-outlined text-lg">edit</span>
                 </Link>
                 <button
                   onClick={() => handleDelete(r)}
-                  className="text-text-secondary hover:text-error transition p-1"
-                  title="Löschen"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant hover:text-error hover:bg-error/10 transition"
+                  title="L&ouml;schen"
                 >
-                  🗑️
+                  <span className="material-symbols-outlined text-lg">delete</span>
                 </button>
               </div>
             </div>

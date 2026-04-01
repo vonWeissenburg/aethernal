@@ -21,7 +21,7 @@ export default async function NeuerTerminPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <h1 className="text-3xl font-serif font-semibold text-gold-light mb-8">
+      <h1 className="font-headline text-3xl font-semibold text-on-surface mb-8">
         Neuer Termin
       </h1>
       <ReminderForm memorials={memorials ?? []} />

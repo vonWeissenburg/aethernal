@@ -1,48 +1,75 @@
 @import "tailwindcss";
 
 @theme {
-  /* === Background === */
-  --color-bg-primary: #0B0D17;
-  --color-bg-secondary: #141627;
-  --color-bg-card: #1C1F33;
-  --color-bg-card-hover: #252840;
-  --color-bg-input: #1C1F33;
+  /* === Core Palette (Material Design 3 - from Stitch) === */
+  --color-primary: #F2CA50;
+  --color-primary-container: #D4AF37;
+  --color-primary-fixed: #FFE088;
+  --color-primary-fixed-dim: #E9C349;
+  --color-on-primary: #3C2F00;
+  --color-on-primary-container: #554300;
+  --color-on-primary-fixed: #241A00;
 
-  /* === Gold Accent === */
-  --color-gold: #D4AF37;
-  --color-gold-light: #F2CA50;
-  --color-gold-dim: #E9C349;
-  --color-gold-dark: #C5A028;
-  --color-gold-glow: rgba(242, 202, 80, 0.15);
+  /* === Secondary === */
+  --color-secondary: #EAC249;
+  --color-secondary-container: #B08C10;
+  --color-secondary-fixed: #FFE08B;
+  --color-secondary-fixed-dim: #EAC249;
+  --color-on-secondary: #3D2F00;
+  --color-on-secondary-container: #352800;
 
-  /* === Text === */
-  --color-text-primary: #E1E1F0;
-  --color-text-secondary: #D0C5AF;
-  --color-text-muted: #99907C;
-  --color-text-faint: #4D4635;
+  /* === Tertiary === */
+  --color-tertiary: #BFCDFF;
+  --color-tertiary-container: #97B0FF;
+  --color-tertiary-fixed: #DBE1FF;
+  --color-tertiary-fixed-dim: #B4C5FF;
+  --color-on-tertiary: #082B72;
+  --color-on-tertiary-container: #254188;
 
-  /* === Surface (Material Design inspired) === */
+  /* === Background & Surface === */
+  --color-background: #0B0D17;
   --color-surface: #11131D;
-  --color-surface-container: #1D1F2A;
+  --color-surface-dim: #11131D;
+  --color-surface-bright: #373844;
+  --color-surface-variant: #32343F;
+  --color-surface-tint: #E9C349;
+  --color-surface-container-lowest: #0C0E18;
   --color-surface-container-low: #191B26;
+  --color-surface-container: #1D1F2A;
   --color-surface-container-high: #282934;
   --color-surface-container-highest: #32343F;
-  --color-surface-bright: #373844;
+  --color-on-surface: #E1E1F0;
+  --color-on-surface-variant: #D0C5AF;
+  --color-on-background: #E1E1F0;
+  --color-inverse-surface: #E1E1F0;
+  --color-inverse-on-surface: #2E303B;
+  --color-inverse-primary: #735C00;
 
-  /* === Status === */
-  --color-success: #4CAF7D;
-  --color-error: #CF6679;
-  --color-error-light: #FFB4AB;
-  --color-warning: #EAC249;
+  /* === Error === */
+  --color-error: #FFB4AB;
+  --color-error-container: #93000A;
+  --color-on-error: #690005;
+  --color-on-error-container: #FFDAD6;
 
   /* === Outline === */
   --color-outline: #99907C;
   --color-outline-variant: #4D4635;
-  --color-border-card: #2A2D45;
+
+  /* === Status (App-specific) === */
+  --color-success: #4CAF7D;
+  --color-warning: #EAC249;
+
+  /* === Card shorthand (convenience aliases) === */
+  --color-card: #1C1F33;
+  --color-card-hover: #25283D;
+  --color-sidebar: #0B0D17;
 
   /* === Typography === */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Noto Serif", Georgia, serif;
+  --font-headline: "Noto Serif", Georgia, serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-label: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* === Base Styles === */
@@ -51,17 +78,17 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
-  color: var(--color-text-primary);
-  background: var(--color-bg-primary);
+  font-family: var(--font-body);
+  color: var(--color-on-surface);
+  background: var(--color-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* === Selection === */
 ::selection {
-  background: rgba(212, 175, 55, 0.3);
-  color: var(--color-text-primary);
+  background: rgba(242, 202, 80, 0.3);
+  color: var(--color-on-surface);
 }
 
 /* === Scrollbar === */
@@ -76,6 +103,13 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-surface-container-highest);
   border-radius: 10px;
+}
+
+/* === Material Symbols === */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* === Animations === */
@@ -109,6 +143,12 @@ body {
   -webkit-backdrop-filter: blur(20px);
 }
 
+.glass-input {
+  background: rgba(29, 31, 42, 0.4);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* === Hide scrollbar === */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -122,7 +162,40 @@ body {
   animation: shimmer 3s linear infinite;
 }
 
+/* === Gold gradient button === */
+.gold-gradient {
+  background: linear-gradient(135deg, #f2ca50 0%, #d4af37 100%);
+}
+
+/* === Golden glow effect === */
+.golden-glow {
+  background: radial-gradient(circle, rgba(242, 202, 80, 0.15) 0%, rgba(17, 19, 29, 0) 70%);
+}
+
+/* === Active tab underline === */
+.active-underline {
+  position: relative;
+}
+.active-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #f2ca50;
+}
+
 /* === Form elements dark scheme === */
-input[type="date"] {
+input[type="date"],
+input[type="datetime-local"],
+select {
   color-scheme: dark;
+}
+
+/* === Focus styles === */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
 }

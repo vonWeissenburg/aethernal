@@ -37,14 +37,15 @@ export default async function TerminBearbeitenPage({
   return (
     <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-serif font-semibold text-gold-light">
+        <h1 className="font-headline text-3xl font-semibold text-on-surface">
           Termin bearbeiten
         </h1>
         <Link
           href="/termine"
-          className="text-sm text-text-secondary hover:text-gold-light transition"
+          className="inline-flex items-center gap-1.5 font-label text-sm text-on-surface-variant hover:text-primary transition"
         >
-          ← Zurück
+          <span className="material-symbols-outlined text-lg">arrow_back</span>
+          Zur&uuml;ck
         </Link>
       </div>
       <ReminderForm memorials={memorials ?? []} existingReminder={reminder} />

@@ -21,6 +21,13 @@ const REMINDER_TYPES: ReminderType[] = [
   "custom",
 ];
 
+const TYPE_ICONS: Record<ReminderType, string> = {
+  birthday: "cake",
+  deathday: "water_drop",
+  anniversary: "favorite",
+  custom: "event",
+};
+
 export function ReminderForm({
   memorials,
   existingReminder,
@@ -96,14 +103,15 @@ export function ReminderForm({
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <p className="text-sm text-error-light mb-6 p-3 bg-error/10 border border-error/30 rounded-lg">
-          {error}
-        </p>
+        <div className="flex items-center gap-2 rounded-xl bg-error/10 border border-error/20 p-3 mb-6">
+          <span className="material-symbols-outlined text-error text-lg">error</span>
+          <p className="font-body text-sm text-error">{error}</p>
+        </div>
       )}
 
-      {/* Typ */}
-      <div className="rounded-xl bg-surface-container-high border-none p-6 mb-6">
-        <h2 className="font-serif text-xl font-semibold text-gold-light mb-4">
+      {/* Type selection */}
+      <div className="rounded-2xl bg-card p-6 mb-6">
+        <h2 className="font-headline text-xl font-semibold text-on-surface mb-4">
           Art des Termins
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -112,16 +120,20 @@ export function ReminderForm({
               key={type}
               type="button"
               onClick={() => setReminderType(type)}
-              className={`rounded-xl border-2 p-4 text-center transition ${
+              className={`flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition ${
                 reminderType === type
-                  ? "border-gold bg-gold/5"
-                  : "border-border-card bg-bg-card hover:border-gold/30"
+                  ? "border-primary bg-primary/5"
+                  : "border-outline-variant/30 bg-surface-container-low hover:border-primary/30"
               }`}
             >
-              <div className="text-2xl mb-1">
-                {REMINDER_TYPE_ICONS[type]}
-              </div>
-              <p className="text-xs font-medium text-gold-light">
+              <span
+                className={`material-symbols-outlined text-2xl ${
+                  reminderType === type ? "text-primary" : "text-on-surface-variant"
+                }`}
+              >
+                {TYPE_ICONS[type]}
+              </span>
+              <p className="font-label text-xs font-medium text-on-surface">
                 {REMINDER_TYPE_LABELS[type]}
               </p>
             </button>
@@ -130,13 +142,13 @@ export function ReminderForm({
       </div>
 
       {/* Details */}
-      <div className="rounded-xl bg-surface-container-high border-none p-6 mb-6">
-        <h2 className="font-serif text-xl font-semibold text-gold-light mb-4">
+      <div className="rounded-2xl bg-card p-6 mb-6">
+        <h2 className="font-headline text-xl font-semibold text-on-surface mb-4">
           Details
         </h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Titel *
             </label>
             <input
@@ -144,7 +156,7 @@ export function ReminderForm({
               required
               maxLength={200}
               defaultValue={existingReminder?.title ?? ""}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
               placeholder={
                 reminderType === "birthday"
                   ? "z.B. Omas Geburtstag"
@@ -157,7 +169,7 @@ export function ReminderForm({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Beschreibung
             </label>
             <textarea
@@ -165,13 +177,13 @@ export function ReminderForm({
               rows={3}
               maxLength={2000}
               defaultValue={existingReminder?.description ?? ""}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all resize-y"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all resize-y"
               placeholder="Optionale Notizen..."
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gold-light mb-1">
+              <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
                 Datum *
               </label>
               <input
@@ -179,18 +191,18 @@ export function ReminderForm({
                 type="date"
                 required
                 defaultValue={existingReminder?.reminder_date ?? ""}
-                className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+                className="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
               />
             </div>
             {memorials.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gold-light mb-1">
+                <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
                   Gedenkprofil zuordnen
                 </label>
                 <select
                   name="memorial_id"
                   defaultValue={existingReminder?.memorial_id ?? ""}
-                  className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+                  className="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
                 >
                   <option value="">Kein Profil</option>
                   {memorials.map((m) => (
@@ -202,14 +214,14 @@ export function ReminderForm({
               </div>
             )}
           </div>
-          <label className="flex items-center gap-2 cursor-pointer">
+          <label className="flex items-center gap-3 cursor-pointer">
             <input
               name="repeat_yearly"
               type="checkbox"
               defaultChecked={existingReminder?.repeat_yearly ?? true}
-              className="rounded border-border-card text-gold-light focus:ring-gold-light"
+              className="h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary"
             />
-            <span className="text-sm text-gold-light">Jährlich wiederholen</span>
+            <span className="font-label text-sm text-on-surface">J&auml;hrlich wiederholen</span>
           </label>
         </div>
       </div>
@@ -218,19 +230,20 @@ export function ReminderForm({
       <div className="flex flex-wrap gap-3 justify-end">
         <Link
           href="/termine"
-          className="rounded-lg border border-border-card px-5 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-container-high transition"
+          className="rounded-xl border border-outline-variant/30 px-5 py-3 font-label text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition"
         >
           Abbrechen
         </Link>
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-gold px-6 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-label text-sm font-semibold text-on-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
         >
+          <span className="material-symbols-outlined text-lg">save</span>
           {saving
             ? "Wird gespeichert..."
             : existingReminder
-              ? "Änderungen speichern"
+              ? "\u00C4nderungen speichern"
               : "Termin speichern"}
         </button>
       </div>

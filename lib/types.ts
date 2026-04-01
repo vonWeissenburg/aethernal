@@ -99,10 +99,10 @@ export interface TrustedPerson {
 }
 
 export const STATUS_STYLES: Record<MessageStatus, string> = {
-  draft: "bg-surface-container-high text-text-secondary",
-  scheduled: "bg-gold/10 text-gold-light",
+  draft: "bg-surface-container-high text-on-surface-variant",
+  scheduled: "bg-primary/10 text-primary",
   sent: "bg-success/10 text-success",
-  failed: "bg-error/10 text-error-light",
+  failed: "bg-error/10 text-error",
 };
 
 export const STATUS_LABELS: Record<MessageStatus, string> = {

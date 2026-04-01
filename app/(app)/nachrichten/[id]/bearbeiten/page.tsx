@@ -44,24 +44,27 @@ export default async function BearbeitenPage({
     .returns<Pick<TrustedPerson, "id" | "name" | "email">[]>();
 
   return (
-    <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-serif font-semibold text-gold-light">
-          Nachricht bearbeiten
-        </h1>
-        <Link
-          href="/nachrichten"
-          className="text-sm text-text-secondary hover:text-gold-light transition"
-        >
-          ← Zurück
-        </Link>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-3xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="font-headline text-3xl font-semibold text-primary">
+            Nachricht bearbeiten
+          </h1>
+          <Link
+            href="/nachrichten"
+            className="inline-flex items-center gap-1.5 font-label text-sm text-on-surface-variant hover:text-primary transition"
+          >
+            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            Zurück
+          </Link>
+        </div>
+        <MessageForm
+          memorials={memorials ?? []}
+          hasTrustedPerson={(trustedPersons?.length ?? 0) > 0}
+          trustedPersons={trustedPersons ?? []}
+          existingMessage={message}
+        />
       </div>
-      <MessageForm
-        memorials={memorials ?? []}
-        hasTrustedPerson={(trustedPersons?.length ?? 0) > 0}
-        trustedPersons={trustedPersons ?? []}
-        existingMessage={message}
-      />
     </div>
   );
 }

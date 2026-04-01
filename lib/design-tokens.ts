@@ -1,44 +1,37 @@
 // Design tokens for programmatic use (matching globals.css @theme)
+// Full Material Design 3 palette from Stitch designs
 export const colors = {
-  bg: {
-    primary: "#0B0D17",
-    secondary: "#141627",
-    card: "#1C1F33",
-    cardHover: "#252840",
-    input: "#1C1F33",
-  },
-  gold: {
-    DEFAULT: "#D4AF37",
-    light: "#F2CA50",
-    dim: "#E9C349",
-    dark: "#C5A028",
-    glow: "rgba(242, 202, 80, 0.15)",
-  },
-  text: {
-    primary: "#E1E1F0",
-    secondary: "#D0C5AF",
-    muted: "#99907C",
-    faint: "#4D4635",
-  },
-  surface: {
-    DEFAULT: "#11131D",
-    container: "#1D1F2A",
-    containerLow: "#191B26",
-    containerHigh: "#282934",
-    containerHighest: "#32343F",
-    bright: "#373844",
-  },
-  status: {
-    success: "#4CAF7D",
-    error: "#CF6679",
-    errorLight: "#FFB4AB",
-    warning: "#EAC249",
-  },
-  outline: {
-    DEFAULT: "#99907C",
-    variant: "#4D4635",
-  },
-  border: {
-    card: "#2A2D45",
-  },
+  primary: "#F2CA50",
+  primaryContainer: "#D4AF37",
+  onPrimary: "#3C2F00",
+  onPrimaryContainer: "#554300",
+
+  secondary: "#EAC249",
+  secondaryContainer: "#B08C10",
+
+  background: "#0B0D17",
+  surface: "#11131D",
+  surfaceContainerLowest: "#0C0E18",
+  surfaceContainerLow: "#191B26",
+  surfaceContainer: "#1D1F2A",
+  surfaceContainerHigh: "#282934",
+  surfaceContainerHighest: "#32343F",
+  surfaceBright: "#373844",
+
+  onSurface: "#E1E1F0",
+  onSurfaceVariant: "#D0C5AF",
+  onBackground: "#E1E1F0",
+
+  error: "#FFB4AB",
+  errorContainer: "#93000A",
+  onError: "#690005",
+
+  outline: "#99907C",
+  outlineVariant: "#4D4635",
+
+  success: "#4CAF7D",
+  warning: "#EAC249",
+
+  card: "#1C1F33",
+  sidebar: "#0B0D17",
 } as const;

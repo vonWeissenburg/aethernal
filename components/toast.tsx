@@ -39,16 +39,19 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ showToast }}>
       {children}
       {/* Toast container */}
-      <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none">
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto rounded-lg px-4 py-3 text-sm font-medium shadow-lg animate-fade-in backdrop-blur-xl ${
+            className={`pointer-events-auto inline-flex items-center gap-2 rounded-xl px-5 py-3 font-label text-sm font-medium shadow-xl animate-fade-in backdrop-blur-xl ${
               toast.type === "success"
-                ? "bg-success text-white"
-                : "bg-error text-white"
+                ? "bg-surface-container-high text-success border border-success/20"
+                : "bg-surface-container-high text-error border border-error/20"
             }`}
           >
+            <span className="material-symbols-outlined text-lg">
+              {toast.type === "success" ? "check_circle" : "error"}
+            </span>
             {toast.message}
           </div>
         ))}

@@ -23,9 +23,12 @@ export default async function AppLayout({
     .single();
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-bg-primary">
+    <div className="min-h-screen bg-background">
       <AppNav userName={profile?.full_name ?? null} userEmail={user.email} />
-      <main className="flex-1 pb-20 lg:pb-0">{children}</main>
+      {/* Desktop: offset by sidebar width; Mobile: offset by header + bottom nav */}
+      <main className="lg:ml-72 pt-16 lg:pt-0 pb-24 lg:pb-0">
+        {children}
+      </main>
     </div>
   );
 }

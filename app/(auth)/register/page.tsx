@@ -66,142 +66,155 @@ async function RegisterForm({
 }) {
   const { message } = await searchParams;
 
-  const inputClasses =
-    "w-full bg-surface-container-high border-none rounded-lg p-4 text-text-primary placeholder:text-text-muted/40 focus:ring-1 focus:ring-gold-light/50 transition-all";
-
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h1 className="font-serif text-3xl text-text-primary mb-2 tracking-tight">
+    <>
+      {/* Heading */}
+      <div className="text-center mb-10">
+        <h1 className="font-headline text-4xl text-on-surface mb-2 tracking-tight">
           Konto erstellen
         </h1>
-        <p className="text-text-secondary text-sm">
+        <p className="font-body text-on-surface-variant text-sm">
           Beginne deine Reise im ewigen Gedenkraum.
         </p>
       </div>
 
-      {message && (
-        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light">
-          {message}
+      <div className="space-y-8">
+        {message && (
+          <div className="rounded-lg bg-error/10 border border-error-container/30 px-4 py-3 text-sm text-error">
+            {message}
+          </div>
+        )}
+
+        {/* Form Card */}
+        <div className="bg-surface-container-low/60 p-8 rounded-xl shadow-2xl relative overflow-hidden">
+          {/* Decorative glow */}
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
+
+          <form action={signUp} className="space-y-5 relative z-10">
+            {/* Full Name */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="full_name"
+                className="font-headline text-xs text-on-surface-variant px-1"
+              >
+                Vollständiger Name
+              </label>
+              <input
+                id="full_name"
+                name="full_name"
+                type="text"
+                required
+                autoComplete="name"
+                placeholder="Elias Müller"
+                className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary transition-all duration-300"
+              />
+            </div>
+
+            {/* Email */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="email"
+                className="font-headline text-xs text-on-surface-variant px-1"
+              >
+                E-Mail Adresse
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="name@beispiel.at"
+                className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary transition-all duration-300"
+              />
+            </div>
+
+            {/* Password */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="password"
+                className="font-headline text-xs text-on-surface-variant px-1"
+              >
+                Passwort
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                placeholder="••••••••"
+                className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary transition-all duration-300"
+              />
+            </div>
+
+            {/* Confirm Password */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="confirm_password"
+                className="font-headline text-xs text-on-surface-variant px-1"
+              >
+                Passwort bestätigen
+              </label>
+              <input
+                id="confirm_password"
+                name="confirm_password"
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                placeholder="••••••••"
+                className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary transition-all duration-300"
+              />
+            </div>
+
+            {/* Terms */}
+            <p className="text-xs text-on-surface-variant leading-relaxed px-1">
+              Mit der Registrierung akzeptierst du unsere{" "}
+              <a
+                href="https://aethernal.me/agb"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline transition-all"
+              >
+                AGB
+              </a>{" "}
+              und{" "}
+              <a
+                href="https://aethernal.me/datenschutz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline transition-all"
+              >
+                Datenschutzerklärung
+              </a>
+              .
+            </p>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              className="w-full gold-gradient py-4 rounded-lg font-label font-bold text-on-primary tracking-widest uppercase text-sm mt-4 hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/10"
+            >
+              Registrieren
+            </button>
+          </form>
         </div>
-      )}
 
-      <div className="bg-surface-container/30 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/10 shadow-2xl">
-        <form action={signUp} className="space-y-5">
-          <div className="space-y-1.5">
-            <label
-              htmlFor="full_name"
-              className="font-serif text-xs text-text-secondary px-1"
+        {/* Bottom Anchor */}
+        <div className="text-center">
+          <p className="text-sm font-body text-on-surface-variant/70">
+            Bereits ein Konto?{" "}
+            <Link
+              href="/login"
+              className="text-primary font-medium ml-1 hover:text-primary-fixed-dim transition-colors"
             >
-              Vollständiger Name
-            </label>
-            <input
-              id="full_name"
-              name="full_name"
-              type="text"
-              required
-              autoComplete="name"
-              placeholder="Elias Müller"
-              className={inputClasses}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label
-              htmlFor="email"
-              className="font-serif text-xs text-text-secondary px-1"
-            >
-              E-Mail Adresse
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="email"
-              placeholder="name@beispiel.at"
-              className={inputClasses}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label
-              htmlFor="password"
-              className="font-serif text-xs text-text-secondary px-1"
-            >
-              Passwort
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              minLength={8}
-              autoComplete="new-password"
-              placeholder="Mindestens 8 Zeichen"
-              className={inputClasses}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label
-              htmlFor="confirm_password"
-              className="font-serif text-xs text-text-secondary px-1"
-            >
-              Passwort bestätigen
-            </label>
-            <input
-              id="confirm_password"
-              name="confirm_password"
-              type="password"
-              required
-              minLength={8}
-              autoComplete="new-password"
-              placeholder="Passwort wiederholen"
-              className={inputClasses}
-            />
-          </div>
-
-          <p className="text-xs text-text-secondary/60 leading-relaxed px-1">
-            Mit der Registrierung akzeptierst du unsere{" "}
-            <a
-              href="https://aethernal.me/agb"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold-light hover:underline"
-            >
-              AGB
-            </a>{" "}
-            und{" "}
-            <a
-              href="https://aethernal.me/datenschutz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gold-light hover:underline"
-            >
-              Datenschutzerklärung
-            </a>
-            .
+              Anmelden
+            </Link>
           </p>
-
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-gold-light to-gold py-4 rounded-lg font-semibold text-bg-primary tracking-widest uppercase text-sm mt-2 hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-gold/10"
-          >
-            Registrieren
-          </button>
-        </form>
+        </div>
       </div>
-
-      <p className="text-center text-sm text-text-secondary/70">
-        Bereits ein Konto?{" "}
-        <Link
-          href="/login"
-          className="text-gold-light font-medium hover:underline underline-offset-4 ml-1"
-        >
-          Anmelden
-        </Link>
-      </p>
-    </div>
+    </>
   );
 }

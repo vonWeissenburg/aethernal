@@ -113,18 +113,24 @@ export function MessageForm({
       }}
     >
       {error && (
-        <p className="text-sm text-error-light mb-6 p-3 bg-error/10 border border-error/30 rounded-lg">{error}</p>
+        <div className="flex items-start gap-3 rounded-xl bg-error/10 border border-error/30 p-4 mb-6">
+          <span className="material-symbols-outlined text-error text-[20px] mt-0.5">error</span>
+          <p className="font-body text-sm text-error">{error}</p>
+        </div>
       )}
 
-      {/* Sektion 1: Empfänger */}
-      <div className="rounded-xl bg-surface-container-high border-none p-6 mb-6">
-        <h2 className="font-serif text-xl font-semibold text-gold-light mb-4">
-          Empfänger
-        </h2>
+      {/* Section 1: Empfaenger */}
+      <div className="rounded-2xl bg-card p-6 mb-4">
+        <div className="flex items-center gap-2 mb-5">
+          <span className="material-symbols-outlined text-primary text-[22px]">person</span>
+          <h2 className="font-headline text-xl font-semibold text-on-surface">
+            Empfänger
+          </h2>
+        </div>
 
         {trustedPersons.length > 0 && (
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Aus Vertrauenspersonen wählen
             </label>
             <select
@@ -135,7 +141,7 @@ export function MessageForm({
                   setRecipientEmail(tp.email);
                 }
               }}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               defaultValue=""
             >
               <option value="">Manuell eingeben...</option>
@@ -150,7 +156,7 @@ export function MessageForm({
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Name des Empfängers *
             </label>
             <input
@@ -158,12 +164,12 @@ export function MessageForm({
               required
               value={recipientName}
               onChange={(e) => setRecipientName(e.target.value)}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               placeholder="z.B. Maria"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               E-Mail-Adresse *
             </label>
             <input
@@ -172,20 +178,20 @@ export function MessageForm({
               required
               value={recipientEmail}
               onChange={(e) => setRecipientEmail(e.target.value)}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               placeholder="maria@beispiel.at"
             />
           </div>
         </div>
         {memorials.length > 0 && (
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Gedenkprofil zuordnen (optional)
             </label>
             <select
               name="memorial_id"
               defaultValue={existingMessage?.memorial_id ?? ""}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
             >
               <option value="">Kein Profil</option>
               {memorials.map((m) => (
@@ -198,14 +204,17 @@ export function MessageForm({
         )}
       </div>
 
-      {/* Sektion 2: Inhalt */}
-      <div className="rounded-xl bg-surface-container-high border-none p-6 mb-6">
-        <h2 className="font-serif text-xl font-semibold text-gold-light mb-4">
-          Inhalt
-        </h2>
+      {/* Section 2: Inhalt */}
+      <div className="rounded-2xl bg-card p-6 mb-4">
+        <div className="flex items-center gap-2 mb-5">
+          <span className="material-symbols-outlined text-primary text-[22px]">edit_note</span>
+          <h2 className="font-headline text-xl font-semibold text-on-surface">
+            Inhalt
+          </h2>
+        </div>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Betreff *
             </label>
             <input
@@ -214,15 +223,15 @@ export function MessageForm({
               maxLength={100}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               placeholder="z.B. Zum Geburtstag, mein Schatz"
             />
-            <p className="text-xs text-text-secondary mt-1 text-right">
+            <p className="font-label text-xs text-outline mt-1.5 text-right">
               {title.length}/100
             </p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gold-light mb-1">
+            <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
               Nachricht *
             </label>
             <textarea
@@ -233,62 +242,69 @@ export function MessageForm({
               rows={8}
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all resize-y"
+              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-y"
               placeholder={
                 recipientName
                   ? `Schreibe hier deine Nachricht an ${recipientName}...`
                   : "Schreibe hier deine Nachricht..."
               }
             />
-            <p className="text-xs text-text-secondary mt-1 text-right">
+            <p className="font-label text-xs text-outline mt-1.5 text-right">
               {body.length}/{MAX_BODY}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Sektion 3: Wann senden? */}
-      <div className="rounded-xl bg-surface-container-high border-none p-6 mb-6">
-        <h2 className="font-serif text-xl font-semibold text-gold-light mb-4">
-          Wann senden?
-        </h2>
+      {/* Section 3: Wann senden? */}
+      <div className="rounded-2xl bg-card p-6 mb-4">
+        <div className="flex items-center gap-2 mb-5">
+          <span className="material-symbols-outlined text-primary text-[22px]">schedule_send</span>
+          <h2 className="font-headline text-xl font-semibold text-on-surface">
+            Wann senden?
+          </h2>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <button
             type="button"
             onClick={() => setTriggerType("date")}
-            className={`rounded-xl border-2 p-5 text-left transition ${
+            className={`rounded-2xl border-2 p-5 text-left transition ${
               triggerType === "date"
-                ? "border-gold bg-gold/5"
-                : "border-border-card bg-bg-card hover:border-gold/30"
+                ? "border-primary bg-primary/5"
+                : "border-outline-variant bg-surface hover:border-primary/30"
             }`}
           >
-            <div className="text-2xl mb-2">📅</div>
-            <h3 className="font-medium text-gold-light">Zu einem bestimmten Datum</h3>
-            <p className="text-xs text-text-secondary mt-1">
+            <span className="material-symbols-outlined text-primary text-[28px] mb-2 block">
+              calendar_today
+            </span>
+            <h3 className="font-label font-medium text-on-surface">Zu einem bestimmten Datum</h3>
+            <p className="font-body text-xs text-on-surface-variant mt-1">
               Geburtstag, Jahrestag, Weihnachten...
             </p>
           </button>
           <button
             type="button"
             onClick={() => setTriggerType("death")}
-            className={`rounded-xl border-2 p-5 text-left transition ${
+            className={`rounded-2xl border-2 p-5 text-left transition ${
               triggerType === "death"
-                ? "border-gold bg-gold/5"
-                : "border-border-card bg-bg-card hover:border-gold/30"
+                ? "border-primary bg-primary/5"
+                : "border-outline-variant bg-surface hover:border-primary/30"
             }`}
           >
-            <div className="text-2xl mb-2">🕊️</div>
-            <h3 className="font-medium text-gold-light">Nach meinem Tod</h3>
-            <p className="text-xs text-text-secondary mt-1">
+            <span className="material-symbols-outlined text-primary text-[28px] mb-2 block">
+              volunteer_activism
+            </span>
+            <h3 className="font-label font-medium text-on-surface">Nach meinem Tod</h3>
+            <p className="font-body text-xs text-on-surface-variant mt-1">
               Wird nach Bestätigung durch Vertrauensperson gesendet.
             </p>
           </button>
         </div>
 
         {triggerType === "date" && (
-          <div className="mt-4 space-y-3">
+          <div className="mt-5 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gold-light mb-1">
+              <label className="block font-label text-sm font-medium text-on-surface-variant mb-1.5">
                 Datum *
               </label>
               <input
@@ -297,66 +313,76 @@ export function MessageForm({
                 required
                 min={today}
                 defaultValue={existingMessage?.trigger_date ?? ""}
-                className="w-full rounded-lg bg-surface-container border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition-all"
+                className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               />
             </div>
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer">
               <input
                 name="repeat_yearly"
                 type="checkbox"
                 defaultChecked={existingMessage?.repeat_yearly ?? false}
-                className="rounded border-border-card text-gold-light focus:ring-gold-light"
+                className="h-5 w-5 rounded border-outline-variant bg-surface-container-low text-primary focus:ring-primary focus:ring-offset-0"
               />
-              <span className="text-sm text-gold-light">Jährlich wiederholen</span>
+              <span className="font-label text-sm text-on-surface">Jährlich wiederholen</span>
             </label>
           </div>
         )}
 
         {triggerType === "death" && (
-          <div className="mt-4">
+          <div className="mt-5">
             {hasTrustedPerson ? (
-              <div className="rounded-lg bg-gold/10 p-4">
-                <p className="text-sm text-text-secondary">
+              <div className="flex items-start gap-3 rounded-xl bg-primary/5 border border-primary/20 p-4">
+                <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
+                <p className="font-body text-sm text-on-surface-variant">
                   Diese Nachricht wird gesendet, sobald deine Vertrauensperson
                   deinen Tod bestätigt hat.
                 </p>
               </div>
             ) : (
-              <div className="rounded-lg bg-gold/10 border border-gold/30 p-4">
-                <p className="text-sm text-gold-dark font-medium">
-                  Du hast noch keine Vertrauensperson festgelegt.
-                </p>
-                <p className="text-sm text-text-secondary mt-1">
-                  Ohne Vertrauensperson können &quot;Nach dem Tod&quot;-Nachrichten nicht
-                  ausgelöst werden.
-                </p>
-                <Link
-                  href="/nachrichten?tab=vertrauensperson"
-                  className="inline-block mt-2 text-sm text-gold-light font-medium hover:text-gold transition"
-                >
-                  Vertrauensperson festlegen →
-                </Link>
+              <div className="rounded-xl bg-primary/5 border border-primary/20 p-4">
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">warning</span>
+                  <div>
+                    <p className="font-label text-sm text-primary font-medium">
+                      Du hast noch keine Vertrauensperson festgelegt.
+                    </p>
+                    <p className="font-body text-sm text-on-surface-variant mt-1">
+                      Ohne Vertrauensperson können &quot;Nach dem Tod&quot;-Nachrichten nicht
+                      ausgelöst werden.
+                    </p>
+                    <Link
+                      href="/nachrichten?tab=vertrauensperson"
+                      className="inline-flex items-center gap-1 mt-2 font-label text-sm text-primary font-medium hover:underline transition"
+                    >
+                      Vertrauensperson festlegen
+                      <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
             )}
           </div>
         )}
       </div>
 
-      {/* Sektion 4: Vorschau */}
+      {/* Section 4: Vorschau */}
       {title && body && recipientName && (
-        <div className="rounded-xl bg-surface-container-high border-none p-6 mb-6">
-          <h2 className="font-serif text-xl font-semibold text-gold-light mb-4">
-            Vorschau
-          </h2>
-          <div className="rounded-lg bg-surface-container-low border border-outline-variant/10 p-5 text-sm">
-            <p className="text-xs text-text-secondary mb-3">
+        <div className="rounded-2xl bg-card p-6 mb-4">
+          <div className="flex items-center gap-2 mb-5">
+            <span className="material-symbols-outlined text-primary text-[22px]">preview</span>
+            <h2 className="font-headline text-xl font-semibold text-on-surface">
+              Vorschau
+            </h2>
+          </div>
+          <div className="rounded-xl bg-surface-container-low border border-outline-variant p-5">
+            <p className="font-label text-xs text-outline mb-3">
               An: {recipientName}
             </p>
-            <p className="font-medium text-gold-light mb-3">{title}</p>
-            <div className="text-text-secondary whitespace-pre-wrap leading-relaxed">
+            <p className="font-headline font-medium text-on-surface mb-3">{title}</p>
+            <div className="font-body text-sm text-on-surface-variant whitespace-pre-wrap leading-relaxed">
               {body}
             </div>
-            <div className="border-t border-outline-variant/10 mt-4 pt-4 text-xs text-text-secondary">
+            <div className="border-t border-outline-variant mt-4 pt-4 font-body text-xs text-outline">
               Gesendet über Aethernal — aethernal.me
             </div>
           </div>
@@ -364,10 +390,10 @@ export function MessageForm({
       )}
 
       {/* Buttons */}
-      <div className="flex flex-wrap gap-3 justify-end">
+      <div className="flex flex-wrap gap-3 justify-end pt-2">
         <Link
           href="/nachrichten"
-          className="rounded-lg border border-border-card px-5 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-container-high transition"
+          className="rounded-full border border-outline-variant px-5 py-2.5 font-label text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition"
         >
           Abbrechen
         </Link>
@@ -375,16 +401,22 @@ export function MessageForm({
           type="submit"
           data-draft="true"
           disabled={saving}
-          className="rounded-lg border border-gold/20 px-5 py-2.5 text-sm font-medium text-gold-light hover:bg-surface-container-high transition disabled:opacity-50"
+          className="rounded-full border border-primary/30 px-5 py-2.5 font-label text-sm font-medium text-primary hover:bg-primary/10 transition disabled:opacity-50"
         >
-          Als Entwurf speichern
+          <span className="inline-flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[18px]">save</span>
+            Als Entwurf speichern
+          </span>
         </button>
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg bg-gold px-6 py-2.5 text-sm font-medium text-bg-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
+          className="rounded-full bg-primary px-6 py-2.5 font-label text-sm font-medium text-on-primary hover:brightness-110 transition shadow-md disabled:opacity-50"
         >
-          {saving ? "Wird gespeichert..." : "Nachricht planen"}
+          <span className="inline-flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[18px]">send</span>
+            {saving ? "Wird gespeichert..." : "Nachricht planen"}
+          </span>
         </button>
       </div>
     </form>

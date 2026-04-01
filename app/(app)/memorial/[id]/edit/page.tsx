@@ -205,208 +205,260 @@ export default function EditMemorialPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="text-text-secondary">Wird geladen...</div>
+        <div className="text-on-surface-variant font-body text-sm">Wird geladen...</div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-serif font-semibold text-gold-light">
-            Profil bearbeiten
-          </h1>
-          <p className="mt-1 text-text-secondary">{memorial?.name}</p>
+    <div className="min-h-screen bg-background">
+      {/* Fixed top bar */}
+      <div className="sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/10">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push(`/memorial/${id}`)}
+            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition"
+          >
+            <span className="material-symbols-outlined text-on-surface">close</span>
+          </button>
+          <h1 className="font-body text-base font-medium text-on-surface">Profil bearbeiten</h1>
         </div>
-        <button
-          onClick={() => router.push(`/memorial/${id}`)}
-          className="text-sm text-text-secondary hover:text-gold-light transition"
-        >
-          Zurück
-        </button>
       </div>
 
-      {error && (
-        <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3 text-sm text-error-light mb-6">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSave} className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
-          <button
-            type="button"
-            onClick={() => setType("human")}
-            className={`p-3 rounded-xl border-2 text-center transition text-sm ${
-              type === "human"
-                ? "border-gold bg-gold/10"
-                : "border-border-card hover:border-gold/30"
-            }`}
-          >
-            🕊️ Mensch
-          </button>
-          <button
-            type="button"
-            onClick={() => setType("animal")}
-            className={`p-3 rounded-xl border-2 text-center transition text-sm ${
-              type === "animal"
-                ? "border-gold bg-gold/10"
-                : "border-border-card hover:border-gold/30"
-            }`}
-          >
-            🐾 Tier
-          </button>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">
-            Name *
-          </label>
-          <input
-            type="text"
-            required
-            maxLength={200}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
-          />
-          {memorial && name.trim() !== memorial.name && name.trim() && (
-            <p className="text-xs text-gold-light mt-1">
-              SpiritLink-URL wird beim Speichern aktualisiert.
-            </p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">
-              Geburtsdatum
-            </label>
-            <input
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">
-              Sterbedatum
-            </label>
-            <input
-              type="date"
-              value={deathDate}
-              onChange={(e) => setDeathDate(e.target.value)}
-              className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">
-            Kurze Beschreibung
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={2}
-            maxLength={500}
-            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary focus:ring-1 focus:ring-gold-light/50 transition resize-none"
-          />
-          <p className="text-xs text-text-secondary mt-1 text-right">
-            {description.length}/500
-          </p>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-text-primary mb-1.5">
-            Biografie
-          </label>
-          <textarea
-            value={biography}
-            onChange={(e) => setBiography(e.target.value)}
-            rows={8}
-            maxLength={5000}
-            placeholder="Erzähle die Geschichte..."
-            className="w-full rounded-lg bg-surface-container-high border-none px-4 py-3 text-sm text-text-primary placeholder:text-text-muted/50 focus:ring-1 focus:ring-gold-light/50 transition resize-y"
-          />
-          <p className="text-xs text-text-secondary mt-1 text-right">
-            {biography.length}/5000
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            id="is_public"
-            checked={isPublic}
-            onChange={(e) => setIsPublic(e.target.checked)}
-            className="rounded border-border-card text-gold-light focus:ring-gold-light/30"
-          />
-          <label htmlFor="is_public" className="text-sm text-text-primary">
-            Profil öffentlich machen (SpiritLink)
-          </label>
-        </div>
-
-        {/* Photo section */}
-        <div id="fotos">
-          <label className="block text-sm font-medium text-text-primary mb-3">
-            Fotos
-          </label>
-
-          {/* Existing photos gallery */}
-          {photos.length > 0 && (
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
-              {photos.map((photo) => (
-                <div key={photo.id} className="relative group aspect-square">
-                  <Image
-                    src={photo.url}
-                    alt={photo.caption ?? ""}
-                    fill
-                    className="object-cover rounded-lg"
-                    sizes="(max-width: 640px) 33vw, 25vw"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleDeletePhoto(photo)}
-                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-error text-white text-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-md hover:bg-error/80"
-                    title="Foto löschen"
-                  >
-                    ✕
-                  </button>
+      <div className="max-w-2xl mx-auto px-4 py-6">
+        {/* Profile photo section */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="relative group cursor-pointer">
+            {memorial?.profile_photo_url ? (
+              <div className="relative w-[120px] h-[120px] rounded-full border-2 border-primary overflow-hidden">
+                <Image
+                  src={memorial.profile_photo_url}
+                  alt={memorial.name}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                  <span className="material-symbols-outlined text-white text-xl">photo_camera</span>
+                  <span className="text-xs text-white font-label mt-1">Foto ändern</span>
                 </div>
-              ))}
+              </div>
+            ) : (
+              <div className="w-[120px] h-[120px] rounded-full border-2 border-primary bg-surface-container-high flex flex-col items-center justify-center group-hover:bg-surface-container-high/80 transition">
+                <span className="material-symbols-outlined text-3xl text-on-surface-variant">photo_camera</span>
+                <span className="text-xs text-on-surface-variant font-label mt-1">Foto ändern</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {error && (
+          <div className="flex items-center gap-2 rounded-xl bg-error/10 border border-error/20 px-4 py-3 text-sm text-error font-body mb-6">
+            <span className="material-symbols-outlined text-lg">error</span>
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSave} className="space-y-5">
+          {/* Type selection */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setType("human")}
+              className={`flex items-center justify-center gap-2 p-3.5 rounded-xl border transition text-sm font-label ${
+                type === "human"
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-outline-variant/20 text-on-surface-variant hover:border-primary/30"
+              }`}
+            >
+              <span className="material-symbols-outlined text-lg">person</span>
+              Mensch
+            </button>
+            <button
+              type="button"
+              onClick={() => setType("animal")}
+              className={`flex items-center justify-center gap-2 p-3.5 rounded-xl border transition text-sm font-label ${
+                type === "animal"
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-outline-variant/20 text-on-surface-variant hover:border-primary/30"
+              }`}
+            >
+              <span className="material-symbols-outlined text-lg">pets</span>
+              Tier
+            </button>
+          </div>
+
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-label font-medium text-on-surface-variant mb-1.5">
+              Name *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={200}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
+            />
+            {memorial && name.trim() !== memorial.name && name.trim() && (
+              <p className="text-xs text-primary font-label mt-1.5">
+                SpiritLink-URL wird beim Speichern aktualisiert.
+              </p>
+            )}
+          </div>
+
+          {/* Dates */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-label font-medium text-on-surface-variant mb-1.5">
+                Geburtsdatum
+              </label>
+              <input
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+              />
             </div>
-          )}
+            <div>
+              <label className="block text-sm font-label font-medium text-on-surface-variant mb-1.5">
+                Sterbedatum
+              </label>
+              <input
+                type="date"
+                value={deathDate}
+                onChange={(e) => setDeathDate(e.target.value)}
+                className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+              />
+            </div>
+          </div>
 
-          {/* Upload */}
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handlePhotoUpload}
-            className="w-full text-sm text-text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-surface-container-high file:text-gold-light hover:file:bg-surface-bright-dark file:cursor-pointer file:transition"
-          />
-        </div>
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-label font-medium text-on-surface-variant mb-1.5">
+              Kurze Beschreibung
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              maxLength={500}
+              className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
+            />
+            <p className="text-xs font-label text-on-surface-variant mt-1 text-right">
+              {description.length}/500
+            </p>
+          </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-border-card">
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="text-sm text-error hover:text-error-light transition"
-          >
-            Profil löschen
-          </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded-lg bg-gold px-6 py-3 text-sm font-semibold text-bg-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
-          >
-            {saving ? "Wird gespeichert..." : "Speichern"}
-          </button>
-        </div>
-      </form>
+          {/* Biography */}
+          <div>
+            <label className="block text-sm font-label font-medium text-on-surface-variant mb-1.5">
+              Biografie
+            </label>
+            <textarea
+              value={biography}
+              onChange={(e) => setBiography(e.target.value)}
+              rows={8}
+              maxLength={5000}
+              placeholder="Erzähle die Geschichte..."
+              className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-y placeholder:text-on-surface-variant/40"
+            />
+            <p className="text-xs font-label text-on-surface-variant mt-1 text-right">
+              {biography.length}/5000
+            </p>
+          </div>
+
+          {/* Public toggle */}
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="is_public"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+              className="rounded border-outline-variant text-primary focus:ring-primary/30"
+            />
+            <label htmlFor="is_public" className="text-sm font-body text-on-surface">
+              Profil öffentlich machen (SpiritLink)
+            </label>
+          </div>
+
+          {/* Photo section */}
+          <div id="fotos" className="pt-2">
+            <label className="block text-sm font-label font-medium text-on-surface-variant mb-3">
+              Fotos
+            </label>
+
+            {/* Existing photos gallery */}
+            {photos.length > 0 && (
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+                {photos.map((photo) => (
+                  <div key={photo.id} className="relative group aspect-square rounded-xl overflow-hidden">
+                    <Image
+                      src={photo.url}
+                      alt={photo.caption ?? ""}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 33vw, 25vw"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePhoto(photo)}
+                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-md hover:bg-error/80"
+                      title="Foto löschen"
+                    >
+                      <span className="material-symbols-outlined text-lg">delete</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Upload */}
+            <label className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-outline-variant/30 p-6 cursor-pointer hover:bg-surface-container-high/30 transition">
+              <span className="material-symbols-outlined text-2xl text-on-surface-variant">add_photo_alternate</span>
+              <span className="text-sm font-label text-on-surface-variant">Fotos hochladen</span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+            </label>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col gap-3 pt-4">
+            <button
+              type="submit"
+              disabled={saving}
+              className="gold-gradient w-full rounded-xl px-6 py-3.5 text-sm font-label font-semibold text-on-primary transition shadow-sm disabled:opacity-50"
+            >
+              {saving ? "Wird gespeichert..." : "Speichern"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => router.push(`/memorial/${id}`)}
+              className="w-full rounded-xl px-6 py-3 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface transition"
+            >
+              Abbrechen
+            </button>
+          </div>
+
+          {/* Danger zone */}
+          <div className="pt-4 border-t border-outline-variant/10">
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="flex items-center gap-2 text-sm font-label text-error hover:text-error/80 transition"
+            >
+              <span className="material-symbols-outlined text-lg">delete_forever</span>
+              Profil löschen
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

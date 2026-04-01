@@ -49,26 +49,33 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
             onClick={() => handleClose(false)}
           />
           {/* Dialog */}
-          <div className="relative bg-surface-container rounded-xl border border-outline-variant/10 shadow-2xl max-w-sm w-full mx-4 p-6 animate-fade-in">
-            <h3 className="text-lg font-serif font-semibold text-gold-light mb-2">
-              {options.title}
-            </h3>
-            <p className="text-sm text-text-secondary mb-6 leading-relaxed">
-              {options.message}
-            </p>
-            <div className="flex justify-end gap-3">
+          <div className="relative rounded-2xl bg-card border border-outline-variant/15 shadow-2xl max-w-sm w-full mx-4 p-6 animate-fade-in">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-error/10">
+                <span className="material-symbols-outlined text-error text-xl">warning</span>
+              </div>
+              <div>
+                <h3 className="font-headline text-lg font-semibold text-on-surface mb-1">
+                  {options.title}
+                </h3>
+                <p className="font-body text-sm text-on-surface-variant leading-relaxed">
+                  {options.message}
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 mt-6">
               <button
                 onClick={() => handleClose(false)}
-                className="rounded-lg border border-border-card px-4 py-2 text-sm font-medium text-text-secondary hover:bg-surface-container-high transition"
+                className="rounded-xl border border-outline-variant/30 px-5 py-2.5 font-label text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition"
               >
                 {options.cancelLabel ?? "Abbrechen"}
               </button>
               <button
                 onClick={() => handleClose(true)}
-                className="rounded-lg bg-error px-4 py-2 text-sm font-medium text-white hover:bg-error/80 transition"
+                className="rounded-xl bg-error px-5 py-2.5 font-label text-sm font-medium text-white hover:bg-error/80 transition"
                 autoFocus
               >
-                {options.confirmLabel ?? "Löschen"}
+                {options.confirmLabel ?? "L\u00F6schen"}
               </button>
             </div>
           </div>
