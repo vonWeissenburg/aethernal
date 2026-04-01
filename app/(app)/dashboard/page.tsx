@@ -59,10 +59,10 @@ export default async function DashboardPage() {
     <div className="min-h-screen">
       {/* ===== Desktop Layout ===== */}
       <div className="hidden lg:block">
-        <div className="p-16 max-w-[1400px] mx-auto">
+        <div className="p-8 xl:p-12 max-w-[1200px] mx-auto">
           {/* Greeting */}
-          <section className="mb-16">
-            <h2 className="font-headline text-6xl font-bold text-on-surface mb-3 tracking-tight">
+          <section className="mb-10">
+            <h2 className="font-headline text-5xl font-bold text-on-surface mb-3 tracking-tight">
               Hallo{firstName ? `, ${firstName}` : ""}
             </h2>
             <p className="text-slate-400 font-body text-xl">
@@ -70,9 +70,9 @@ export default async function DashboardPage() {
             </p>
           </section>
 
-          <div className="grid grid-cols-12 gap-12">
+          <div className="grid grid-cols-12 gap-8">
             {/* Left Column */}
-            <div className="col-span-8 space-y-16">
+            <div className="col-span-8 space-y-10">
               {/* Memorial Profile Cards */}
               {memorials && memorials.length > 0 ? (
                 <div className="grid grid-cols-2 gap-8">
@@ -80,11 +80,11 @@ export default async function DashboardPage() {
                     <Link
                       key={m.id}
                       href={`/memorial/${m.id}`}
-                      className={`bg-card group relative p-10 rounded-xl hover:bg-card-hover transition-all duration-500 cursor-pointer shadow-xl ${
+                      className={`bg-card group relative p-8 rounded-xl hover:bg-card-hover transition-all duration-500 cursor-pointer shadow-xl ${
                         i === 0 ? "border-l-4 border-primary/60" : "border-l-4 border-slate-700"
                       }`}
                     >
-                      <div className="flex justify-between items-start mb-14">
+                      <div className="flex justify-between items-start mb-8">
                         <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary/20">
                           {m.profile_photo_url ? (
                             <Image
@@ -182,14 +182,14 @@ export default async function DashboardPage() {
 
             {/* Right Column: Termine Widget */}
             <div className="col-span-4">
-              <div className="bg-card rounded-xl p-10 sticky top-36 border border-white/5 shadow-2xl">
-                <h3 className="font-headline text-2xl text-on-surface mb-10 flex items-center gap-4">
+              <div className="bg-card rounded-xl p-8 sticky top-8 border border-white/5 shadow-2xl">
+                <h3 className="font-headline text-2xl text-on-surface mb-8 flex items-center gap-3">
                   <span className="material-symbols-outlined text-primary text-3xl">calendar_month</span>
                   Nächste Termine
                 </h3>
 
                 {upcomingReminders && upcomingReminders.length > 0 ? (
-                  <div className="space-y-10">
+                  <div className="space-y-8">
                     {upcomingReminders.map((r, i) => {
                       const date = new Date(r.reminder_date);
                       return (
@@ -212,7 +212,7 @@ export default async function DashboardPage() {
                   <p className="text-slate-500 text-sm">Keine anstehenden Termine.</p>
                 )}
 
-                <div className="mt-14 pt-10 border-t border-white/5">
+                <div className="mt-10 pt-8 border-t border-white/5">
                   <Link
                     href="/termine"
                     className="w-full py-4 rounded-lg border border-primary/30 text-primary font-semibold text-sm hover:bg-primary/5 transition-all block text-center"

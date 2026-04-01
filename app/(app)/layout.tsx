@@ -23,7 +23,7 @@ export default async function AppLayout({
     .single();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <AppNav userName={profile?.full_name ?? null} userEmail={user.email} />
       {/* Desktop: offset by sidebar width; Mobile: offset by header + bottom nav */}
       <main className="lg:ml-72 pt-16 lg:pt-0 pb-24 lg:pb-0">
