@@ -1,20 +1,32 @@
 # Aethernal Roadmap
 
-_Letzte Aktualisierung: 2026-06-17_
+_Letzte Aktualisierung: 2026-06-17 — folgt dem Masterplan (docs/MASTERPLAN.md)._
+Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben = als Nächstes.
 
-Diese Datei ist die Ticket-Liste. Oben steht, was als Nächstes drankommt.
-Am Ende jeder Session: Erledigtes abhaken, Nächstes nach oben.
+## Phase 1 — Nachrichten-Engine (Launch-Blocker)
+1. [ ] **E-Mail-Versand über Resend einrichten** + Supabase „Confirm email" aktivieren
+2. [ ] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): fällige Nachrichten & Erinnerungen finden und versenden
+3. [ ] **Zeitgesteuerte Nachrichten** real zustellen
+4. [ ] **Vertrauenspersonen-Flow**: Einladungs-/Bestätigungsmail + sicherer „Tod bestätigen"-Link → todesgetriggerte Nachrichten auslösen
 
-## Als Nächstes (Priorität)
-1. [ ] **E-Mail über Resend.com einrichten** → danach in Supabase "Confirm email" aktivieren → dann Nachrichten-Versand + Vertrauenspersonen-Bestätigung scharfschalten
-2. [ ] **Stripe: Account + 3 Produkte/Pläne anlegen** (Monetarisierung)
-3. [ ] **UI-Rebuild nach Google-Stitch-Design abschließen**
+## Phase 2 — Launch-Reife (Vertrauen, Recht, Politur)
+- [ ] Konto-Löschung vollständig (serverseitig inkl. Auth-Account) — DSGVO
+- [ ] Echten QR-Code generieren (SpiritLink)
+- [ ] GA4 (`G-FT3WYB9Z4T`) + Cookie-Consent (App + Landing)
+- [ ] Impressum vervollständigen (Adresse, Bezirksgericht)
+- [ ] Aufräumen: `.env.example` korrigieren, toten Link „Gedenkprofile" beheben, Onboarding-Foto-Schritt fixen/entfernen
+- [ ] UI-Rebuild nach Stitch-Design abschließen
 
-## Backlog
-- [ ] GA4 (ID `G-FT3WYB9Z4T`) + Cookie Consent + SEO finalisieren
-- [ ] Landing Page: Hero-Bild-Wasserzeichen entfernen
-- [ ] Impressum vervollständigen (Adresse, zuständiges Bezirksgericht)
-- [ ] (optional, zu entscheiden) Hosting von Hostinger-VPS/Traefik auf Vercel umziehen, um Server-Wartung zu eliminieren — siehe `DECISIONS.md`
+## Phase 3 — Launch & erste Nutzer (B2C)
+- [ ] Landing Page scharfstellen (Hero-Wasserzeichen weg, Waitlist → Anmeldung)
+- [ ] Soft-Launch, erste Nutzer, Feedback
+- [ ] (Parallel, GF) erste Bestatter-/Steinmetz-Gespräche
+
+## Phase 4 — Monetarisierung & Ökosystem (später)
+- [ ] Stripe + Freemium-Pläne (Pricing final entscheiden)
+- [ ] B2B-Bestatter-Paket (Pitch + Konditionen)
+- [ ] QR-Plaketten / Tierprodukte
+- [ ] AI-Features (Biografie- & Trauertext-Generator)
 
 ## Erledigt
-- [x] 2026-06-17 — Projektdateien aufgeräumt, Codebasis auf Next.js+Supabase festgelegt, Gehirn-Dateien angelegt
+- [x] 2026-06-17 — Projekt aufgeräumt, Stack festgelegt, Gehirn-Dateien + Workflow eingerichtet, Gesamt-Review (Code & Strategie), Masterplan neu definiert

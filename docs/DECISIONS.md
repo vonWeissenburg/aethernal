@@ -2,6 +2,13 @@
 
 _Neueste zuerst. Jede wichtige Richtungsentscheidung hier mit Datum + Begründung festhalten._
 
+## 2026-06-17 — Produkt-Strategie & Launch-Plan festgelegt
+- **Go-to-Market:** B2C zuerst (funktionierendes Produkt live, Nutzer + Feedback). B2B (Bestatter/Steinmetze) als nächste Wachstumsphase.
+- **Launch-Umfang:** Das volle Kernversprechen (Nachrichten-Engine: E-Mail + Scheduler + Todesbestätigung) muss zum Launch funktionieren — nicht nur das Gedenken.
+- **Monetarisierung:** später (Phase 4). Erst wachsen, Stripe danach.
+
+Details im Masterplan (`docs/MASTERPLAN.md`).
+
 ## 2026-06-17 — Bleiben bei Next.js + Supabase, Laravel verworfen
 Der im April 2026 angedachte Rewrite auf Laravel wird **nicht** weiterverfolgt.
 
