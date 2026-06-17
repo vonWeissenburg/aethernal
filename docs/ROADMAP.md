@@ -4,8 +4,8 @@ _Letzte Aktualisierung: 2026-06-17 — folgt dem Masterplan (docs/MASTERPLAN.md)
 Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben = als Nächstes.
 
 ## Phase 1 — Nachrichten-Engine (Launch-Blocker)
-1. [ ] **E-Mail-Versand über Resend einrichten** + Supabase „Confirm email" aktivieren
-2. [ ] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): fällige Nachrichten & Erinnerungen finden und versenden
+1. [x] **E-Mail-Versand über Resend einrichten** + Supabase „Confirm email" aktivieren ✓ (17.06.2026 — Domain aethernal.me verifiziert, Custom SMTP in Supabase aktiv, Confirm email AN)
+2. [ ] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): fällige Nachrichten & Erinnerungen finden und versenden  ← **als Nächstes**
 3. [ ] **Zeitgesteuerte Nachrichten** real zustellen
 4. [ ] **Vertrauenspersonen-Flow**: Einladungs-/Bestätigungsmail + sicherer „Tod bestätigen"-Link → todesgetriggerte Nachrichten auslösen
 
