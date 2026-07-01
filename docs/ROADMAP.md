@@ -1,11 +1,11 @@
 # Aethernal Roadmap
 
-_Letzte Aktualisierung: 2026-06-17 — folgt dem Masterplan (docs/MASTERPLAN.md)._
+_Letzte Aktualisierung: 2026-06-22 — folgt dem Masterplan (docs/MASTERPLAN.md)._
 Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben = als Nächstes.
 
 ## Phase 1 — Nachrichten-Engine (Launch-Blocker)
 1. [x] **E-Mail-Versand über Resend einrichten** + Supabase „Confirm email" aktivieren ✓ (17.06.2026 — Domain aethernal.me verifiziert, Custom SMTP in Supabase aktiv, Confirm email AN)
-2. [ ] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): fällige Nachrichten & Erinnerungen finden und versenden  ← **als Nächstes**
+2. [~] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): fällige Nachrichten & Erinnerungen finden und versenden — Code gebaut (22.06.2026: Migration `20260622_scheduler.sql`, Edge Function `send-due-messages`, Cron-SQL). **Offen: Deploy + Secrets (Resend-API-Key, FROM_EMAIL, CRON_SECRET) + Live-Test.**
 3. [ ] **Zeitgesteuerte Nachrichten** real zustellen
 4. [ ] **Vertrauenspersonen-Flow**: Einladungs-/Bestätigungsmail + sicherer „Tod bestätigen"-Link → todesgetriggerte Nachrichten auslösen
 

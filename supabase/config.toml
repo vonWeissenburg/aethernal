@@ -1,0 +1,8 @@
+# Supabase CLI Konfiguration.
+# project_id = Project-Ref aus dem Supabase-Dashboard (Settings → General).
+project_id = "DEIN_PROJECT_REF"
+
+# Die Scheduler-Function wird NICHT per JWT geschützt, sondern über das
+# CRON_SECRET im Authorization-Header (siehe index.ts). Daher verify_jwt = false.
+[functions.send-due-messages]
+verify_jwt = false
