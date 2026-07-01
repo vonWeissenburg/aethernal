@@ -2,6 +2,15 @@
 
 _Was wann gebaut/geändert wurde. Neueste zuerst._
 
+## 2026-07-01
+- Gesamt-Audit „Kopf bis Fuß" (Code, Sicherheit, Recht/LP, Docs) — Befund + Maßnahmenplan in `00_Projekt/AUDIT_2026-07-01.md`
+- Scheduler-Session vom 22.06. abgeschlossen: Code committet + gehärtet (Jahres-Trigger feuert nicht mehr vor Erstdatum, `lte`-Filter nutzen die Indexe, Batch-Deckel 500/Lauf, `checked`-Zähler korrekt)
+- Security-Fix: Open-Redirect im Auth-Callback (`next`-Parameter wird jetzt validiert)
+- Rechtstexte korrigiert: falsche Aussage „keine Weitergabe an Dritte" ersetzt durch ehrliche Auftragsverarbeiter-Liste (Supabase, Resend, Google) in `datenschutz.html` + LP-FAQ — **Live-Site braucht SCP-Redeploy der LP-Dateien**
+- Tote Download-Links repariert: Trauer-Guide-PDFs (Mensch/Tier) ins Deploy aufgenommen (waren 404)
+- `.env.example` korrigiert (echte Supabase-Variablen statt NextAuth-Reste)
+- ⚠️ Secrets-Funde in Altdateien (GitHub-Token, Supabase Service-Role-Key) → Ordner nach `!zu löschen durchsicht/` verschoben, **Rotation durch Fabian erforderlich** (Git-Historie geprüft: sauber)
+
 ## 2026-06-22
 - Scheduler gebaut (Roadmap Phase 1, Aufgabe 2): Supabase Edge Function `send-due-messages` (Deno/TS) — findet fällige `messages` (datumsgetriggert) und `reminders`, versendet über Resend, mit Doppelversand-Schutz und `repeat_yearly`-Logik
 - Migration `20260622_scheduler.sql`: Spalte `reminders.last_sent_on`, Indexe für Fällig-Abfragen, Extensions `pg_cron` + `pg_net`

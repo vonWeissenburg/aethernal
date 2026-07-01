@@ -1,11 +1,11 @@
 # Aethernal Roadmap
 
-_Letzte Aktualisierung: 2026-06-22 — folgt dem Masterplan (docs/MASTERPLAN.md)._
+_Letzte Aktualisierung: 2026-07-01 — folgt dem Masterplan (docs/MASTERPLAN.md)._
 Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben = als Nächstes.
 
 ## Phase 1 — Nachrichten-Engine (Launch-Blocker)
 1. [x] **E-Mail-Versand über Resend einrichten** + Supabase „Confirm email" aktivieren ✓ (17.06.2026 — Domain aethernal.me verifiziert, Custom SMTP in Supabase aktiv, Confirm email AN)
-2. [~] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): fällige Nachrichten & Erinnerungen finden und versenden — Code gebaut (22.06.2026: Migration `20260622_scheduler.sql`, Edge Function `send-due-messages`, Cron-SQL). **Offen: Deploy + Secrets (Resend-API-Key, FROM_EMAIL, CRON_SECRET) + Live-Test.**
+2. [~] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): Code gebaut (22.06.), committet + gehärtet (01.07.: Batch-Limit, Jahres-Trigger-Guard, indexnutzende Abfragen). **Offen — nur noch: `project_id` in `supabase/config.toml` eintragen, Secrets setzen (RESEND_API_KEY, FROM_EMAIL, CRON_SECRET), Function deployen, Migration + `setup-cron.sql` einspielen, Live-Test.**
 3. [ ] **Zeitgesteuerte Nachrichten** real zustellen
 4. [ ] **Vertrauenspersonen-Flow**: Einladungs-/Bestätigungsmail + sicherer „Tod bestätigen"-Link → todesgetriggerte Nachrichten auslösen
 
@@ -14,7 +14,9 @@ Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben
 - [ ] Echten QR-Code generieren (SpiritLink)
 - [ ] GA4 (`G-FT3WYB9Z4T`) + Cookie-Consent (App + Landing)
 - [ ] Impressum vervollständigen (Adresse, Bezirksgericht)
-- [ ] Aufräumen: `.env.example` korrigieren, toten Link „Gedenkprofile" beheben, Onboarding-Foto-Schritt fixen/entfernen
+- [ ] Aufräumen: toten Link „Gedenkprofile" beheben, Onboarding-Foto-Schritt fixen/entfernen (`.env.example` ✓ 01.07.)
+- [ ] Konto-Löschung erweitern: auch Storage-Fotos entfernen (Audit-Fund 01.07. — aktuell bleiben Uploads liegen)
+- [ ] Rechtstexte ausbauen (AGB: Zustellung/Haftung, digitaler Nachlass, Todesbestätigungs-Missbrauch, Preise; Datenschutz: Daten Verstorbener & Dritter) → Anwalts-Review, siehe `00_Projekt/AUDIT_2026-07-01.md`
 - [ ] UI-Rebuild nach Stitch-Design abschließen
 
 ## Phase 3 — Launch & erste Nutzer (B2C)
