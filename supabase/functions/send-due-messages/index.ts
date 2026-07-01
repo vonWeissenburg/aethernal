@@ -47,6 +47,8 @@ function isDue(
 ): boolean {
   if (!dateStr) return false;
   if (repeatYearly) {
+    // Nie vor dem hinterlegten Erstdatum feuern (z. B. Jahrestag, der erst nächstes Jahr beginnt).
+    if (dateStr > today) return false;
     // Feuert jedes Jahr am selben Tag/Monat ...
     if (dateStr.slice(5) !== today.slice(5)) return false;
     // ... aber nur einmal pro Jahr.
@@ -113,16 +115,19 @@ Deno.serve(async (req) => {
     .from("messages")
     .select("id, title, body, recipient_name, recipient_email, trigger_date, repeat_yearly, sent_at")
     .eq("status", "scheduled")
-    .eq("trigger_type", "date");
+    .eq("trigger_type", "date")
+    // Nur bereits erreichte Daten (nutzt messages_due_idx) + Sicherheits-Deckel pro Lauf.
+    .lte("trigger_date", today)
+    .limit(500);
 
   if (msgErr) {
     return new Response(`DB error (messages): ${msgErr.message}`, { status: 500 });
   }
 
   for (const m of messages ?? []) {
+    result.messages.checked++;
     const lastSent = m.sent_at ? String(m.sent_at).slice(0, 10) : null;
     if (!isDue(m.trigger_date, m.repeat_yearly, today, lastSent)) continue;
-    result.messages.checked++;
     try {
       await sendEmail({
         to: m.recipient_email,
@@ -151,7 +156,10 @@ Deno.serve(async (req) => {
   // 3) Fällige Erinnerungen → an den Konto-Inhaber
   const { data: reminders, error: remErr } = await supabase
     .from("reminders")
-    .select("id, user_id, title, description, reminder_date, repeat_yearly, last_sent_on");
+    .select("id, user_id, title, description, reminder_date, repeat_yearly, last_sent_on")
+    // Nur bereits erreichte Daten (nutzt reminders_due_idx) + Sicherheits-Deckel pro Lauf.
+    .lte("reminder_date", today)
+    .limit(500);
 
   if (remErr) {
     return new Response(`DB error (reminders): ${remErr.message}`, { status: 500 });
@@ -168,9 +176,9 @@ Deno.serve(async (req) => {
   }
 
   for (const r of reminders ?? []) {
+    result.reminders.checked++;
     const lastSent = r.last_sent_on ? String(r.last_sent_on).slice(0, 10) : null;
     if (!isDue(r.reminder_date, r.repeat_yearly, today, lastSent)) continue;
-    result.reminders.checked++;
     try {
       const to = await ownerEmail(r.user_id);
       if (!to) throw new Error(`Keine E-Mail für user ${r.user_id}`);

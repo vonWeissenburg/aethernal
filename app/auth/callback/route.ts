@@ -6,7 +6,10 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type");
-  const next = searchParams.get("next") ?? "/dashboard";
+  const nextParam = searchParams.get("next") ?? "/dashboard";
+  // Nur interne Pfade zulassen — verhindert Open-Redirect (z. B. ?next=.evil.com oder ?next=//evil.com).
+  const next =
+    nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/dashboard";
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.aethernal.me";
 
   const supabase = await createClient();
