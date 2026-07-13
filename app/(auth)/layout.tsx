@@ -10,7 +10,7 @@ export default function AuthLayout({
         className="fixed inset-0 pointer-events-none -z-10"
         style={{
           background:
-            "radial-gradient(circle at center, #1a1c29 0%, #0b0d17 70%)",
+            "radial-gradient(circle at center, var(--color-surface-container-low) 0%, var(--color-background) 70%)",
         }}
       />
 

@@ -298,7 +298,7 @@ export default function EditMemorialPage() {
               maxLength={200}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
+              className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
             />
             {memorial && name.trim() !== memorial.name && name.trim() && (
               <p className="text-xs text-primary font-label mt-1.5">
@@ -317,7 +317,7 @@ export default function EditMemorialPage() {
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+                className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
               />
             </div>
             <div>
@@ -328,7 +328,7 @@ export default function EditMemorialPage() {
                 type="date"
                 value={deathDate}
                 onChange={(e) => setDeathDate(e.target.value)}
-                className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+                className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
               />
             </div>
           </div>
@@ -343,7 +343,7 @@ export default function EditMemorialPage() {
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
               maxLength={500}
-              className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
+              className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
             />
             <p className="text-xs font-label text-on-surface-variant mt-1 text-right">
               {description.length}/500
@@ -361,7 +361,7 @@ export default function EditMemorialPage() {
               rows={8}
               maxLength={5000}
               placeholder="Erzähle die Geschichte..."
-              className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-y placeholder:text-on-surface-variant/40"
+              className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-y placeholder:text-on-surface-variant/40"
             />
             <p className="text-xs font-label text-on-surface-variant mt-1 text-right">
               {biography.length}/5000

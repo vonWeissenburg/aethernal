@@ -64,12 +64,23 @@
   --color-card-hover: #25283D;
   --color-sidebar: #0B0D17;
 
+  /* === Radius Scale === */
+  --radius-card: 12px;
+  --radius-button: 8px;
+
   /* === Typography === */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Noto Serif", Georgia, serif;
   --font-headline: "Noto Serif", Georgia, serif;
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-label: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* === Motion Scale === */
+:root {
+  --motion-fast: 150ms;
+  --motion-base: 250ms;
+  --motion-slow: 400ms;
 }
 
 /* === Base Styles === */
@@ -129,11 +140,11 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.2s ease-out;
+  animation: fade-in var(--motion-fast) ease-out;
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.3s ease-out;
+  animation: fade-in-up var(--motion-base) ease-out;
 }
 
 /* === Glass panel effect === */
@@ -146,7 +157,7 @@ body {
 .glass-input {
   background: rgba(29, 31, 42, 0.4);
   backdrop-filter: blur(8px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--motion-base) ease-out;
 }
 
 /* === Hide scrollbar === */
@@ -155,7 +166,7 @@ body {
 
 /* === Gold shimmer text === */
 .shimmer-text {
-  background: linear-gradient(90deg, #f2ca50, #ffe088, #f2ca50);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-fixed), var(--color-primary));
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -164,7 +175,7 @@ body {
 
 /* === Gold gradient button === */
 .gold-gradient {
-  background: linear-gradient(135deg, #f2ca50 0%, #d4af37 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%);
 }
 
 /* === Golden glow effect === */
@@ -183,7 +194,7 @@ body {
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: #f2ca50;
+  background-color: var(--color-primary);
 }
 
 /* === Form elements dark scheme === */
@@ -193,9 +204,28 @@ select {
   color-scheme: dark;
 }
 
-/* === Focus styles === */
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
+/* === Focus styles: visible focus ring on all interactive elements === */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Form fields carry their own ring convention (ring-primary/50) — softer outline, no offset */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-primary) 50%, transparent);
+  outline-offset: 0;
+}
+
+/* === Reduced motion: disable all animation/transition === */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

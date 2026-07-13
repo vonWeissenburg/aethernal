@@ -83,7 +83,7 @@ export default function AppNav({
             <h1 className="font-headline text-2xl font-bold text-primary tracking-tight">
               Aethernal
             </h1>
-            <p className="text-slate-500 text-[10px] tracking-[0.3em] uppercase mt-1.5">
+            <p className="text-on-surface-variant/70 text-[10px] tracking-[0.3em] uppercase mt-1.5">
               Digital Memorial
             </p>
           </Link>
@@ -100,7 +100,7 @@ export default function AppNav({
                 className={`flex items-center gap-4 px-4 py-3.5 text-sm tracking-wide transition-all duration-300 rounded-lg ${
                   active
                     ? "text-primary font-semibold border-r-2 border-primary bg-primary/5"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-white/5 group"
+                    : "text-on-surface-variant hover:text-on-surface hover:bg-white/5 group"
                 }`}
               >
                 <span
@@ -125,7 +125,7 @@ export default function AppNav({
               <p className="text-sm font-semibold text-on-surface truncate">
                 {userName ?? "Benutzer"}
               </p>
-              <p className="text-[10px] text-slate-500 truncate">
+              <p className="text-[10px] text-on-surface-variant/70 truncate">
                 {userEmail}
               </p>
             </div>
@@ -133,14 +133,14 @@ export default function AppNav({
           <div className="space-y-1">
             <Link
               href="/einstellungen"
-              className="flex items-center gap-4 px-4 py-2 text-slate-400 hover:text-slate-200 transition-colors duration-300"
+              className="flex items-center gap-4 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors duration-300"
             >
               <span className="material-symbols-outlined text-lg">settings</span>
               <span className="text-xs">Einstellungen</span>
             </Link>
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center gap-4 px-4 py-2 text-slate-400 hover:text-slate-200 transition-colors duration-300"
+              className="w-full flex items-center gap-4 px-4 py-2 text-on-surface-variant hover:text-on-surface transition-colors duration-300"
             >
               <span className="material-symbols-outlined text-lg">logout</span>
               <span className="text-xs">Abmelden</span>

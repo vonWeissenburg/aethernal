@@ -3,6 +3,7 @@
 _Was wann gebaut/geändert wurde. Neueste zuerst._
 
 ## 2026-07-13
+- **A0 Design-Fundament:** `globals.css` als einzige Token-Wahrheit (Radius-Skala 12/8px, Motion-Skala 150/250/400ms, sichtbarer `:focus-visible`-Gold-Ring, `prefers-reduced-motion` deaktiviert alle Animationen); `slate-*`-Fremdpalette (Dashboard, App-Nav) und hardcodierte Hex-Werte (`#1C1F33`, `#1a1c29`) durch Tokens ersetzt; ungenutzte Doppel-Wahrheit `lib/design-tokens.ts` nach `_alt/`; tsconfig schließt Deno-Function `supabase/functions` vom Next-Typecheck aus (Build war dadurch rot)
 - Redesign-/Launch-Mission-Spec-Paket angelegt (`docs/redesign/`): `00_MISSION.md` (Steuer-Datei) + Design-System, Screen-Specs (Ist→Soll), Funktions-Pakete, Schema-Referenz, `ANLEITUNG.md` — für Ausführung in Claude Code mit Fable 5, ein Arbeitspaket = ein Commit
 - Scope: alles Launch-Kritische in 2 Tracks (A Design A0–A8 / B Funktionen B0–B7); Etappe-4-Features (Stripe/AI/B2B/Plaketten) bewusst ausgeklammert; Design-Ziel „Stitch aufwerten"
 - Spec gegen echten Code verifiziert (Routen/Felder/Fremd-Paletten bestätigt)

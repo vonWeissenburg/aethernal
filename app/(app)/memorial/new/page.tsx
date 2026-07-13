@@ -149,7 +149,7 @@ export default function NewMemorialPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={type === "animal" ? "z.B. Luna" : "z.B. Maria Müller"}
-                className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
+                className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
               />
             </div>
 
@@ -163,7 +163,7 @@ export default function NewMemorialPage() {
                   type="date"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
-                  className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+                  className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
                 />
               </div>
               <div>
@@ -174,7 +174,7 @@ export default function NewMemorialPage() {
                   type="date"
                   value={deathDate}
                   onChange={(e) => setDeathDate(e.target.value)}
-                  className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+                  className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
                 />
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function NewMemorialPage() {
                 rows={3}
                 maxLength={500}
                 placeholder="Ein paar Worte über die Person oder das Tier..."
-                className="w-full bg-[#1C1F33] border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
+                className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
               />
             </div>
 

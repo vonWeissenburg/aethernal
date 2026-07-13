@@ -27,7 +27,7 @@ keine Firma, keine UID.
 - `app/(app)/` — eingeloggter Bereich: `dashboard`, `memorial`, `nachrichten`, `tagebuch`, `termine`, `vertrauenspersonen`, `onboarding`, `einstellungen`
 - `app/s/[slug]` — öffentliche Gedenkseite (SpiritLink)
 - `lib/supabase/` — `client.ts`, `server.ts`, `middleware.ts` (Supabase-Zugriff)
-- `lib/` — `types.ts`, `validation.ts`, `utils.ts`, `design-tokens.ts`
+- `lib/` — `types.ts`, `validation.ts`, `utils.ts` (Design-Tokens: einzige Wahrheit ist `app/globals.css`)
 - `supabase/migrations/` — Datenbank-Migrationen (Format `YYYYMMDD_beschreibung.sql`)
 - Landing-Page liegt als statische HTMLs im Root (`index.html`, `impressum.html`, `datenschutz.html`, `agb.html`, `partner-apply.html`)
 

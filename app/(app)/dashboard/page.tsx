@@ -65,7 +65,7 @@ export default async function DashboardPage() {
             <h2 className="font-headline text-5xl font-bold text-on-surface mb-3 tracking-tight">
               Hallo{firstName ? `, ${firstName}` : ""}
             </h2>
-            <p className="text-slate-400 font-body text-xl">
+            <p className="text-on-surface-variant font-body text-xl">
               Du hast {memorials?.length ?? 0} aktive Gedenkprofile.
             </p>
           </section>
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
                       key={m.id}
                       href={`/memorial/${m.id}`}
                       className={`bg-card group relative p-8 rounded-xl hover:bg-card-hover transition-all duration-500 cursor-pointer shadow-xl ${
-                        i === 0 ? "border-l-4 border-primary/60" : "border-l-4 border-slate-700"
+                        i === 0 ? "border-l-4 border-primary/60" : "border-l-4 border-outline-variant"
                       }`}
                     >
                       <div className="flex justify-between items-start mb-8">
@@ -103,16 +103,16 @@ export default async function DashboardPage() {
                           )}
                         </div>
                         <span className={`text-[10px] tracking-[0.2em] uppercase font-bold px-3 py-1.5 rounded-full ${
-                          m.is_public ? "text-primary bg-primary/10" : "text-slate-500 bg-white/5"
+                          m.is_public ? "text-primary bg-primary/10" : "text-on-surface-variant/70 bg-white/5"
                         }`}>
                           {m.is_public ? "Aktiv" : "Privat"}
                         </span>
                       </div>
                       <h3 className="font-headline text-3xl text-on-surface mb-1.5">{m.name}</h3>
-                      <p className="text-slate-500 text-base font-body mb-8">
+                      <p className="text-on-surface-variant/70 text-base font-body mb-8">
                         {formatLifespan(m.birth_date, m.death_date) || "Keine Daten"}
                       </p>
-                      <div className="flex items-center gap-6 text-slate-400 text-xs">
+                      <div className="flex items-center gap-6 text-on-surface-variant text-xs">
                         <span className="flex items-center gap-2">
                           <span className="material-symbols-outlined text-sm">description</span>
                           {diaryCountMap[m.id] || 0} Einträge
@@ -131,7 +131,7 @@ export default async function DashboardPage() {
                     raven
                   </span>
                   <h3 className="font-headline text-2xl text-on-surface mb-3">Noch keine Gedenkprofile</h3>
-                  <p className="text-slate-400 mb-8 max-w-md mx-auto">
+                  <p className="text-on-surface-variant mb-8 max-w-md mx-auto">
                     Erstelle dein erstes Gedenkprofil, um die Erinnerung an einen geliebten Menschen zu bewahren.
                   </p>
                   <Link
@@ -146,7 +146,7 @@ export default async function DashboardPage() {
 
               {/* Quick Actions Bar */}
               <div className="bg-card rounded-xl p-6 flex items-center gap-4 border border-white/5">
-                <span className="font-headline text-lg text-slate-400 shrink-0">Schnellzugriff</span>
+                <span className="font-headline text-lg text-on-surface-variant shrink-0">Schnellzugriff</span>
                 <div className="flex gap-3 flex-wrap justify-end flex-1">
                   <Link
                     href="/tagebuch"
@@ -194,14 +194,14 @@ export default async function DashboardPage() {
                       const date = new Date(r.reminder_date);
                       return (
                         <div key={r.id} className={`flex gap-6 relative pl-8 border-l-2 ${i === 0 ? "border-primary/30" : "border-white/10"}`}>
-                          <div className={`absolute -left-[7px] top-0 w-3 h-3 rounded-full ${i === 0 ? "bg-primary ring-8 ring-primary/5" : "bg-slate-700"}`} />
+                          <div className={`absolute -left-[7px] top-0 w-3 h-3 rounded-full ${i === 0 ? "bg-primary ring-8 ring-primary/5" : "bg-surface-container-highest"}`} />
                           <div>
-                            <p className={`text-xs font-bold tracking-[0.15em] mb-2 uppercase ${i === 0 ? "text-primary" : "text-slate-500"}`}>
+                            <p className={`text-xs font-bold tracking-[0.15em] mb-2 uppercase ${i === 0 ? "text-primary" : "text-on-surface-variant/70"}`}>
                               {date.toLocaleDateString("de-AT", { day: "2-digit", month: "short" }).toUpperCase()}
                             </p>
                             <p className="text-on-surface text-lg font-semibold mb-2">{r.title}</p>
                             {r.description && (
-                              <p className="text-slate-500 text-sm leading-relaxed">{r.description}</p>
+                              <p className="text-on-surface-variant/70 text-sm leading-relaxed">{r.description}</p>
                             )}
                           </div>
                         </div>
@@ -209,7 +209,7 @@ export default async function DashboardPage() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-slate-500 text-sm">Keine anstehenden Termine.</p>
+                  <p className="text-on-surface-variant/70 text-sm">Keine anstehenden Termine.</p>
                 )}
 
                 <div className="mt-10 pt-8 border-t border-white/5">

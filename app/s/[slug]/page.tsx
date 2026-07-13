@@ -54,7 +54,7 @@ export default async function SpiritLinkPage({
     <div
       className="min-h-screen text-on-surface"
       style={{
-        background: "radial-gradient(ellipse at 50% 0%, #1C1F33 0%, #0B0D17 60%)",
+        background: "radial-gradient(ellipse at 50% 0%, var(--color-card) 0%, var(--color-background) 60%)",
       }}
     >
       <main className="pt-16 pb-20 px-6 max-w-md mx-auto">
