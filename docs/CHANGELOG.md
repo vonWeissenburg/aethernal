@@ -2,6 +2,11 @@
 
 _Was wann gebaut/geändert wurde. Neueste zuerst._
 
+## 2026-07-13
+- Redesign-/Launch-Mission-Spec-Paket angelegt (`docs/redesign/`): `00_MISSION.md` (Steuer-Datei) + Design-System, Screen-Specs (Ist→Soll), Funktions-Pakete, Schema-Referenz, `ANLEITUNG.md` — für Ausführung in Claude Code mit Fable 5, ein Arbeitspaket = ein Commit
+- Scope: alles Launch-Kritische in 2 Tracks (A Design A0–A8 / B Funktionen B0–B7); Etappe-4-Features (Stripe/AI/B2B/Plaketten) bewusst ausgeklammert; Design-Ziel „Stitch aufwerten"
+- Spec gegen echten Code verifiziert (Routen/Felder/Fremd-Paletten bestätigt)
+
 ## 2026-07-01
 - Gesamt-Audit „Kopf bis Fuß" (Code, Sicherheit, Recht/LP, Docs) — Befund + Maßnahmenplan in `00_Projekt/AUDIT_2026-07-01.md`
 - Scheduler-Session vom 22.06. abgeschlossen: Code committet + gehärtet (Jahres-Trigger feuert nicht mehr vor Erstdatum, `lte`-Filter nutzen die Indexe, Batch-Deckel 500/Lauf, `checked`-Zähler korrekt)
