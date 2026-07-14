@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Reminder } from "@/lib/types";
-import { REMINDER_TYPE_LABELS, REMINDER_TYPE_ICONS } from "@/lib/types";
 import { ReminderList } from "./reminder-list";
 
 export const metadata = { title: "Termine & Erinnerungen" };
@@ -39,10 +38,10 @@ export default async function TerminePage() {
       {/* FAB */}
       <Link
         href="/termine/neu"
-        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-on-primary shadow-lg hover:brightness-110 transition-all active:scale-95"
-        title="Neuer Termin"
+        aria-label="Neuen Termin anlegen"
+        className="fixed bottom-24 lg:bottom-12 right-6 lg:right-12 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-on-primary shadow-2xl shadow-primary/20 hover:scale-110 active:scale-95 transition-transform duration-250 ease-out"
       >
-        <span className="material-symbols-outlined text-2xl">add</span>
+        <span className="material-symbols-outlined text-2xl" aria-hidden="true">add</span>
       </Link>
     </div>
   );

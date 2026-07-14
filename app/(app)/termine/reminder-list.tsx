@@ -6,7 +6,8 @@ import { createClient } from "@/lib/supabase/client";
 import { useToast } from "@/components/toast";
 import { useConfirm } from "@/components/confirm-dialog";
 import type { Reminder } from "@/lib/types";
-import { REMINDER_TYPE_LABELS, REMINDER_TYPE_ICONS } from "@/lib/types";
+import { REMINDER_TYPE_LABELS } from "@/lib/types";
+import EmptyState from "@/components/empty-state";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("de-AT", {
@@ -34,21 +35,6 @@ function isUpcoming(dateStr: string) {
   return diffDays >= 0 && diffDays <= 30;
 }
 
-function getBorderColor(type: string) {
-  switch (type) {
-    case "birthday":
-      return "border-l-primary";
-    case "deathday":
-      return "border-l-outline";
-    case "anniversary":
-      return "border-l-primary";
-    case "custom":
-      return "border-l-success";
-    default:
-      return "border-l-outline";
-  }
-}
-
 export function ReminderList({ reminders }: { reminders: Reminder[] }) {
   const router = useRouter();
   const { showToast } = useToast();
@@ -68,27 +54,13 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
 
   if (reminders.length === 0) {
     return (
-      <div className="rounded-2xl border-2 border-dashed border-outline-variant bg-card p-12 text-center">
-        <div className="flex justify-center mb-4">
-          <span className="material-symbols-outlined text-5xl text-outline" style={{ fontVariationSettings: "'wght' 200" }}>
-            calendar_month
-          </span>
-        </div>
-        <h3 className="font-headline text-lg font-semibold text-on-surface mb-2">
-          Noch keine Termine
-        </h3>
-        <p className="font-body text-sm text-on-surface-variant mb-6 max-w-md mx-auto">
-          Erstelle deinen ersten Termin, um an wichtige Gedenktage und
-          Jahrestage erinnert zu werden.
-        </p>
-        <Link
-          href="/termine/neu"
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-label text-sm font-semibold text-on-primary hover:brightness-110 transition shadow-sm"
-        >
-          <span className="material-symbols-outlined text-lg">add</span>
-          Neuer Termin
-        </Link>
-      </div>
+      <EmptyState
+        icon="calendar_month"
+        title="Noch keine Termine"
+        description="Erstelle deinen ersten Termin, um an wichtige Gedenktage und Jahrestage erinnert zu werden."
+        actionHref="/termine/neu"
+        actionLabel="Neuer Termin"
+      />
     );
   }
 
@@ -99,11 +71,11 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
         return (
           <div
             key={r.id}
-            className={`rounded-2xl bg-card border-l-4 ${getBorderColor(r.reminder_type)} p-4 transition hover:bg-surface-container-high`}
+            className="rounded-card bg-card border border-outline-variant/30 p-4 transition-colors duration-250 ease-out hover:bg-card-hover"
           >
             <div className="flex items-center gap-4">
               {/* Date block */}
-              <div className="flex flex-col items-center justify-center shrink-0 w-14 h-14 rounded-xl bg-surface-container-low">
+              <div className="flex flex-col items-center justify-center shrink-0 w-14 h-14 rounded-button bg-surface-container-low">
                 <span className="font-headline text-xl font-bold text-on-surface leading-none">
                   {formatDay(r.reminder_date)}
                 </span>
@@ -127,13 +99,13 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
                     {REMINDER_TYPE_LABELS[r.reminder_type]}
                   </span>
                   {r.repeat_yearly && (
-                    <span className="inline-flex items-center gap-0.5 font-label text-xs text-outline">
-                      <span className="material-symbols-outlined text-xs">repeat</span>
+                    <span className="inline-flex items-center gap-0.5 font-label text-xs text-on-surface-variant/70">
+                      <span className="material-symbols-outlined text-xs" aria-hidden="true">repeat</span>
                       J&auml;hrlich
                     </span>
                   )}
                   {r.memorials?.name && (
-                    <span className="font-label text-xs text-outline">
+                    <span className="font-label text-xs text-on-surface-variant/70">
                       {r.memorials.name}
                     </span>
                   )}
@@ -151,7 +123,7 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
                 <Link
                   href={`/termine/${r.id}/bearbeiten`}
                   className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition"
-                  title="Bearbeiten"
+                  aria-label={`Termin „${r.title}" bearbeiten`}
                 >
                   <span className="material-symbols-outlined text-lg">edit</span>
                 </Link>

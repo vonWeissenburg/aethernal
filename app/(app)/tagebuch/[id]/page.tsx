@@ -58,13 +58,16 @@ export default async function DiaryEntryPage({
           <DiaryEntryActions id={entry.id} title={entry.title} />
         </div>
 
-        <article className="bg-card rounded-xl border border-white/5 p-6 lg:p-8">
+        <article className="bg-card rounded-card border border-outline-variant/30 p-6 lg:p-8">
           {/* Header */}
           <div className="mb-6">
+            <p className="text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant/70 mb-2">
+              {formatDate(entry.entry_date)}
+            </p>
             <div className="flex items-center gap-3 mb-3">
               {entry.mood && (
                 <span
-                  className="text-2xl"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-container-high text-xl"
                   title={MOOD_LABELS[entry.mood]}
                 >
                   {MOOD_ICONS[entry.mood]}
@@ -74,24 +77,22 @@ export default async function DiaryEntryPage({
                 {entry.title ?? "Ohne Titel"}
               </h1>
             </div>
-            <div className="flex items-center gap-3 text-sm font-label text-outline">
-              <span>{formatDate(entry.entry_date)}</span>
+            <div className="flex items-center gap-3 text-sm font-label text-on-surface-variant/70">
               {entry.memorial && (
-                <>
-                  <span className="text-outline/50">|</span>
-                  <Link
-                    href={`/memorial/${entry.memorial.id}`}
-                    className="text-primary hover:brightness-110 transition"
-                  >
-                    {entry.memorial.type === "animal" ? "🐾" : "🕊️"}{" "}
-                    {entry.memorial.name}
-                  </Link>
-                </>
+                <Link
+                  href={`/memorial/${entry.memorial.id}`}
+                  className="inline-flex items-center gap-1.5 text-primary hover:brightness-110 transition-colors duration-250 ease-out"
+                >
+                  <span className="material-symbols-outlined text-sm" aria-hidden="true">
+                    {entry.memorial.type === "animal" ? "pets" : "potted_plant"}
+                  </span>
+                  {entry.memorial.name}
+                </Link>
               )}
               {entry.mood && (
                 <>
-                  <span className="text-outline/50">|</span>
-                  <span className="text-on-surface-variant">{MOOD_LABELS[entry.mood]}</span>
+                  {entry.memorial && <span className="text-on-surface-variant/40">·</span>}
+                  <span>{MOOD_LABELS[entry.mood]}</span>
                 </>
               )}
             </div>

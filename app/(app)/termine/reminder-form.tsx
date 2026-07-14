@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { validateReminder, firstError } from "@/lib/validation";
 import { useToast } from "@/components/toast";
 import type { Reminder, ReminderType } from "@/lib/types";
-import { REMINDER_TYPE_LABELS, REMINDER_TYPE_ICONS } from "@/lib/types";
+import { REMINDER_TYPE_LABELS } from "@/lib/types";
 
 interface ReminderFormProps {
   memorials: { id: string; name: string }[];
@@ -103,14 +103,14 @@ export function ReminderForm({
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <div className="flex items-center gap-2 rounded-xl bg-error/10 border border-error/20 p-3 mb-6">
+        <div className="flex items-center gap-2 rounded-button bg-error/10 border border-error/20 p-3 mb-6">
           <span className="material-symbols-outlined text-error text-lg">error</span>
           <p className="font-body text-sm text-error">{error}</p>
         </div>
       )}
 
       {/* Type selection */}
-      <div className="rounded-2xl bg-card p-6 mb-6">
+      <div className="rounded-card bg-card border border-outline-variant/30 p-6 mb-6">
         <h2 className="font-headline text-xl font-semibold text-on-surface mb-4">
           Art des Termins
         </h2>
@@ -120,7 +120,8 @@ export function ReminderForm({
               key={type}
               type="button"
               onClick={() => setReminderType(type)}
-              className={`flex flex-col items-center gap-2 rounded-xl border-2 p-4 transition ${
+              aria-pressed={reminderType === type}
+              className={`flex flex-col items-center gap-2 rounded-card border-2 p-4 transition-colors duration-250 ease-out ${
                 reminderType === type
                   ? "border-primary bg-primary/5"
                   : "border-outline-variant/30 bg-surface-container-low hover:border-primary/30"
@@ -130,6 +131,8 @@ export function ReminderForm({
                 className={`material-symbols-outlined text-2xl ${
                   reminderType === type ? "text-primary" : "text-on-surface-variant"
                 }`}
+                style={reminderType === type ? { fontVariationSettings: "'FILL' 1" } : undefined}
+                aria-hidden="true"
               >
                 {TYPE_ICONS[type]}
               </span>
@@ -142,7 +145,7 @@ export function ReminderForm({
       </div>
 
       {/* Details */}
-      <div className="rounded-2xl bg-card p-6 mb-6">
+      <div className="rounded-card bg-card border border-outline-variant/30 p-6 mb-6">
         <h2 className="font-headline text-xl font-semibold text-on-surface mb-4">
           Details
         </h2>
@@ -156,7 +159,7 @@ export function ReminderForm({
               required
               maxLength={200}
               defaultValue={existingReminder?.title ?? ""}
-              className="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+              className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               placeholder={
                 reminderType === "birthday"
                   ? "z.B. Omas Geburtstag"
@@ -177,7 +180,7 @@ export function ReminderForm({
               rows={3}
               maxLength={2000}
               defaultValue={existingReminder?.description ?? ""}
-              className="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all resize-y"
+              className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out resize-y"
               placeholder="Optionale Notizen..."
             />
           </div>
@@ -191,7 +194,7 @@ export function ReminderForm({
                 type="date"
                 required
                 defaultValue={existingReminder?.reminder_date ?? ""}
-                className="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+                className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               />
             </div>
             {memorials.length > 0 && (
@@ -202,7 +205,7 @@ export function ReminderForm({
                 <select
                   name="memorial_id"
                   defaultValue={existingReminder?.memorial_id ?? ""}
-                  className="w-full rounded-xl bg-surface-container-low border border-outline-variant/30 px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
+                  className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
                 >
                   <option value="">Kein Profil</option>
                   {memorials.map((m) => (
@@ -230,14 +233,14 @@ export function ReminderForm({
       <div className="flex flex-wrap gap-3 justify-end">
         <Link
           href="/termine"
-          className="rounded-xl border border-outline-variant/30 px-5 py-3 font-label text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition"
+          className="rounded-button border border-outline-variant/40 px-5 py-3 font-label text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors duration-250 ease-out"
         >
           Abbrechen
         </Link>
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-label text-sm font-semibold text-on-primary hover:brightness-110 transition shadow-sm disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-button bg-primary px-6 py-3 font-label text-sm font-semibold text-on-primary shadow-lg shadow-primary/10 hover:brightness-110 active:scale-[0.98] transition-all duration-250 ease-out disabled:opacity-50"
         >
           <span className="material-symbols-outlined text-lg">save</span>
           {saving
