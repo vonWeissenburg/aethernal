@@ -126,21 +126,17 @@ export function SettingsForm({
 
     setDeleting(true);
 
+    // Serverseitige L\u00F6schung (B4): entfernt Auth-Account, alle DB-Zeilen
+    // (Cascade) und Storage-Fotos \u2014 der Service-Role-Key bleibt am Server.
+    const res = await fetch("/api/account/delete", { method: "POST" });
+    if (!res.ok) {
+      const body = await res.json().catch(() => null);
+      setError(body?.error ?? "L\u00F6schen fehlgeschlagen. Bitte versuche es erneut.");
+      setDeleting(false);
+      return;
+    }
+
     const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-
-    // Delete all user data (RLS cascade handles related tables)
-    await supabase.from("memorials").delete().eq("user_id", user.id);
-    await supabase.from("messages").delete().eq("user_id", user.id);
-    await supabase.from("trusted_persons").delete().eq("user_id", user.id);
-    await supabase.from("reminders").delete().eq("user_id", user.id);
-    await supabase.from("diary_entries").delete().eq("user_id", user.id);
-    await supabase.from("profiles").delete().eq("id", user.id);
-
-    // Sign out (actual auth user deletion requires admin/service role)
     await supabase.auth.signOut();
     router.push("/login?message=" + encodeURIComponent("Dein Konto wurde gel\u00F6scht."));
   }
