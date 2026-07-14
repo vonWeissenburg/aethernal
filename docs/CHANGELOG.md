@@ -3,6 +3,7 @@
 _Was wann gebaut/geändert wurde. Neueste zuerst._
 
 ## 2026-07-14
+- **A2 Dashboard:** die zwei getrennten Desktop-/Mobile-Layout-Bäume durch einen responsiven Baum ersetzt; gemeinsame Komponenten `MemorialCard` (Gold-Left-Border, `grayscale→Farbe`-Hover, `potted_plant`-Fallback statt „raven"), `ReminderTimeline` (Gold-Punkt) und `EmptyState` (A8-Fundament) angelegt; irreführende „SpiritLink"-Quick-Action durch ehrliches „Neues Profil" ersetzt; Greeting nach Typo-Skala (4xl/6xl) + korrekte Singular-/Plural-Grammatik
 - **A1 App-Shell & Navigation:** ein Nav-Vokabular Desktop+Mobile (*Start · Gedenkprofile · Nachrichten · Tagebuch · Termine*), einheitliche Aktiv-Zustände (Desktop `border-r-2`+`bg-primary/5`, Mobile Pill+`FILL 1`), Wortmarke vereinheitlicht (Sparkle + Serif-Italic + Shimmer), Mobile-Bottom-Nav als Glass mit `rounded-t-2xl` + echtem `pb-safe` (Utility war vorher undefiniert), toter „Mehr"-Tab entfernt (Einstellungen via Avatar), Vertrauenspersonen/Einstellungen als Sekundär-Nav in der Sidebar, `aria-current`/`aria-label` ergänzt. „Gedenkprofile" zeigt bis B1 auf `/dashboard` (aktiv auf `/memorial*`).
 
 ## 2026-07-13
