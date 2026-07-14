@@ -2,6 +2,9 @@
 
 _Was wann gebaut/geändert wurde. Neueste zuerst._
 
+## 2026-07-14
+- **A1 App-Shell & Navigation:** ein Nav-Vokabular Desktop+Mobile (*Start · Gedenkprofile · Nachrichten · Tagebuch · Termine*), einheitliche Aktiv-Zustände (Desktop `border-r-2`+`bg-primary/5`, Mobile Pill+`FILL 1`), Wortmarke vereinheitlicht (Sparkle + Serif-Italic + Shimmer), Mobile-Bottom-Nav als Glass mit `rounded-t-2xl` + echtem `pb-safe` (Utility war vorher undefiniert), toter „Mehr"-Tab entfernt (Einstellungen via Avatar), Vertrauenspersonen/Einstellungen als Sekundär-Nav in der Sidebar, `aria-current`/`aria-label` ergänzt. „Gedenkprofile" zeigt bis B1 auf `/dashboard` (aktiv auf `/memorial*`).
+
 ## 2026-07-13
 - **A0 Design-Fundament:** `globals.css` als einzige Token-Wahrheit (Radius-Skala 12/8px, Motion-Skala 150/250/400ms, sichtbarer `:focus-visible`-Gold-Ring, `prefers-reduced-motion` deaktiviert alle Animationen); `slate-*`-Fremdpalette (Dashboard, App-Nav) und hardcodierte Hex-Werte (`#1C1F33`, `#1a1c29`) durch Tokens ersetzt; ungenutzte Doppel-Wahrheit `lib/design-tokens.ts` nach `_alt/`; tsconfig schließt Deno-Function `supabase/functions` vom Next-Typecheck aus (Build war dadurch rot)
 - Redesign-/Launch-Mission-Spec-Paket angelegt (`docs/redesign/`): `00_MISSION.md` (Steuer-Datei) + Design-System, Screen-Specs (Ist→Soll), Funktions-Pakete, Schema-Referenz, `ANLEITUNG.md` — für Ausführung in Claude Code mit Fable 5, ein Arbeitspaket = ein Commit

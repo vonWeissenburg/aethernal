@@ -160,6 +160,11 @@ body {
   transition: all var(--motion-base) ease-out;
 }
 
+/* === Safe-Area padding (mobile bottom nav) === */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 /* === Hide scrollbar === */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
