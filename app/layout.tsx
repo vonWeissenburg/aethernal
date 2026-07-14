@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/providers";
+import { CookieConsent } from "@/components/cookie-consent";
 import "./globals.css";
 
 import type { Viewport } from "next";
@@ -44,7 +45,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased overflow-x-hidden">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <CookieConsent />
+        </Providers>
       </body>
     </html>
   );

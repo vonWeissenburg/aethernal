@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { validateSettings, firstError } from "@/lib/validation";
 import { useToast } from "@/components/toast";
 import { useConfirm } from "@/components/confirm-dialog";
+import { AnalyticsConsentToggle } from "@/components/analytics-consent-toggle";
 import type { Profile } from "@/lib/types";
 
 export function SettingsForm({
@@ -270,35 +271,30 @@ export function SettingsForm({
             Datenschutz
           </h2>
         </div>
+        <AnalyticsConsentToggle />
         <a
-          href="/datenschutz"
-          className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15 hover:bg-surface-container-high transition"
+          href="https://aethernal.me/datenschutz"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/30 hover:bg-surface-container-high transition-colors duration-250 ease-out"
         >
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-on-surface-variant text-xl">cookie</span>
-            <span className="font-body text-sm text-on-surface">Cookie-Einstellungen</span>
-          </div>
-          <span className="material-symbols-outlined text-outline text-lg">chevron_right</span>
-        </a>
-        <a
-          href="/datenschutz"
-          className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15 hover:bg-surface-container-high transition"
-        >
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-on-surface-variant text-xl">shield</span>
+            <span className="material-symbols-outlined text-on-surface-variant text-xl" aria-hidden="true">shield</span>
             <span className="font-body text-sm text-on-surface">Datenschutzerkl&auml;rung</span>
           </div>
-          <span className="material-symbols-outlined text-outline text-lg">chevron_right</span>
+          <span className="material-symbols-outlined text-on-surface-variant/70 text-lg" aria-hidden="true">open_in_new</span>
         </a>
         <a
-          href="/agb"
-          className="flex items-center justify-between px-6 py-4 hover:bg-surface-container-high transition"
+          href="https://aethernal.me/agb"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-between px-6 py-4 hover:bg-surface-container-high transition-colors duration-250 ease-out"
         >
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-on-surface-variant text-xl">description</span>
+            <span className="material-symbols-outlined text-on-surface-variant text-xl" aria-hidden="true">description</span>
             <span className="font-body text-sm text-on-surface">Allgemeine Gesch&auml;ftsbedingungen</span>
           </div>
-          <span className="material-symbols-outlined text-outline text-lg">chevron_right</span>
+          <span className="material-symbols-outlined text-on-surface-variant/70 text-lg" aria-hidden="true">open_in_new</span>
         </a>
       </div>
 
