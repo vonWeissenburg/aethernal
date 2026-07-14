@@ -14,7 +14,7 @@ Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben
 - [ ] Echten QR-Code generieren (SpiritLink)
 - [ ] GA4 (`G-FT3WYB9Z4T`) + Cookie-Consent (App + Landing)
 - [ ] Impressum vervollständigen (Adresse, Bezirksgericht)
-- [ ] Aufräumen: toten Link „Gedenkprofile" beheben (= Redesign B1, Entscheidung Fabian: Übersichtsseite oder Menüpunkt raus); Onboarding-Foto-Schritt ✓ gefixt 14.07. (B0, Live-Test ausstehend); `.env.example` ✓ 01.07.
+- [x] Aufräumen: toter Link „Gedenkprofile" ✓ behoben 14.07. (B1 — echte Übersichtsseite `/gedenkprofile`); Onboarding-Foto-Schritt ✓ gefixt 14.07. (B0, Live-Test ausstehend); `.env.example` ✓ 01.07.
 - [ ] Konto-Löschung erweitern: auch Storage-Fotos entfernen (Audit-Fund 01.07. — aktuell bleiben Uploads liegen)
 - [ ] Rechtstexte ausbauen (AGB: Zustellung/Haftung, digitaler Nachlass, Todesbestätigungs-Missbrauch, Preise; Datenschutz: Daten Verstorbener & Dritter) → Anwalts-Review, siehe `00_Projekt/AUDIT_2026-07-01.md`
 - [x] UI-Rebuild nach Stitch-Design abschließen ✓ (14.07.2026 — Redesign Track A, Pakete A0–A8 aus `docs/redesign/`; Lighthouse-A11y-Check nach Deploy noch offen)

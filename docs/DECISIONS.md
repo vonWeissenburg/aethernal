@@ -2,6 +2,16 @@
 
 _Neueste zuerst. Jede wichtige Richtungsentscheidung hier mit Datum + Begründung festhalten._
 
+## 2026-07-14 — „Gedenkprofile" bekommt eine echte Übersichtsseite (Redesign B1)
+Der Nav-Punkt „Gedenkprofile" zeigte mangels Route per Workaround auf `/dashboard`.
+Entschieden: eigene Seite `/gedenkprofile` (Grid aller Memorials des Users,
+baut auf der bestehenden `MemorialCard` aus A2) statt den Menüpunkt zu entfernen.
+
+**Begründung:** Gibt dem Nav-Vokabular (Start · Gedenkprofile · …) eine ehrliche
+Heimat, entlastet das Dashboard und kostet dank vorhandener Komponenten fast
+nichts. Fabian hat der Empfehlung im Review zugestimmt. Revert wäre trivial
+(Seite löschen + Nav-Href zurückdrehen).
+
 ## 2026-06-22 — Scheduler als Supabase Edge Function + pg_cron
 Der tägliche Versand fälliger Nachrichten/Erinnerungen läuft als Supabase Edge
 Function (`send-due-messages`), getriggert per `pg_cron` (+ `pg_net`).

@@ -5,11 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 // Ein Nav-Vokabular für Desktop + Mobile (01_DESIGN_SYSTEM → Navigation).
-// „Gedenkprofile" hat noch keine eigene Route (Track B1) — bis dahin Ziel
-// /dashboard, aktiv aber nur auf /memorial*-Routen.
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Start", icon: "home", match: ["/dashboard"] },
-  { href: "/dashboard", label: "Gedenkprofile", icon: "account_circle", match: ["/memorial", "/gedenkprofile"] },
+  { href: "/gedenkprofile", label: "Gedenkprofile", icon: "account_circle", match: ["/memorial", "/gedenkprofile"] },
   { href: "/nachrichten", label: "Nachrichten", icon: "mail", match: ["/nachrichten"] },
   { href: "/tagebuch", label: "Tagebuch", icon: "menu_book", match: ["/tagebuch"] },
   { href: "/termine", label: "Termine", icon: "event", match: ["/termine"] },
