@@ -4,6 +4,7 @@ import { formatDate, formatLifespan } from "@/lib/utils";
 import type { Memorial, MemorialPhoto, DiaryEntry } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
+import CopyLinkButton from "@/components/copy-link-button";
 
 export async function generateMetadata({
   params,
@@ -57,27 +58,34 @@ export default async function MemorialDetailPage({
     .limit(5)
     .returns<DiaryEntry[]>();
 
+  const { count: diaryCount } = await supabase
+    .from("diary_entries")
+    .select("*", { count: "exact", head: true })
+    .eq("memorial_id", id);
+
   const photoCount = photos?.length ?? 0;
-  const diaryCount = diaryEntries?.length ?? 0;
   const spiritLinkUrl = `${process.env.NEXT_PUBLIC_APP_URL}/s/${memorial.slug}`;
 
   return (
     <div className="min-h-screen bg-background">
       {/* Top bar */}
-      <div className="sticky top-0 z-30 flex items-center gap-3 px-4 py-3 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/10">
+      <div className="sticky top-0 z-30 flex items-center gap-3 px-4 py-3 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30">
         <Link
           href="/dashboard"
-          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition"
+          aria-label="Zurück zum Dashboard"
+          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition-colors duration-250 ease-out"
         >
-          <span className="material-symbols-outlined text-on-surface">arrow_back</span>
+          <span className="material-symbols-outlined text-on-surface" aria-hidden="true">arrow_back</span>
         </Link>
         <h1 className="font-body text-base font-medium text-on-surface">Gedenkprofil</h1>
       </div>
 
       {/* Hero section */}
-      <div className="flex flex-col items-center pt-8 pb-6 px-4">
+      <div className="flex flex-col items-center pt-10 pb-6 px-4 relative">
+        <div className="absolute inset-x-0 top-0 h-64 pointer-events-none golden-glow" aria-hidden="true" />
+
         {memorial.profile_photo_url ? (
-          <div className="relative w-[120px] h-[120px] rounded-full border-2 border-primary overflow-hidden">
+          <div className="relative w-[140px] h-[140px] rounded-full border-2 border-primary overflow-hidden shadow-[0_0_40px_rgba(242,202,80,0.15)]">
             <Image
               src={memorial.profile_photo_url}
               alt={memorial.name}
@@ -86,30 +94,30 @@ export default async function MemorialDetailPage({
             />
           </div>
         ) : (
-          <div className="w-[120px] h-[120px] rounded-full border-2 border-primary bg-surface-container-high flex items-center justify-center">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant">
-              {memorial.type === "animal" ? "pets" : "person"}
+          <div className="w-[140px] h-[140px] rounded-full border-2 border-primary bg-surface-container-high flex items-center justify-center shadow-[0_0_40px_rgba(242,202,80,0.15)]">
+            <span className="material-symbols-outlined text-5xl text-primary/70" aria-hidden="true">
+              {memorial.type === "animal" ? "pets" : "potted_plant"}
             </span>
           </div>
         )}
 
-        <h2 className="mt-4 text-2xl font-headline font-semibold text-on-surface">
+        <h2 className="mt-5 text-3xl font-headline font-semibold text-on-surface text-center">
           {memorial.name}
         </h2>
 
         {(memorial.birth_date || memorial.death_date) && (
-          <p className="mt-1 text-sm font-body text-on-surface-variant">
+          <p className="mt-2 text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant">
             {formatLifespan(memorial.birth_date, memorial.death_date)}
           </p>
         )}
 
         {memorial.description && (
-          <p className="mt-3 text-sm font-body text-on-surface-variant text-center max-w-md leading-relaxed">
-            {memorial.description}
+          <p className="mt-4 font-headline italic text-on-surface-variant/80 text-center max-w-md leading-relaxed">
+            „{memorial.description}"
           </p>
         )}
 
-        <div className="flex items-center gap-2 mt-3">
+        <div className="flex items-center gap-2 mt-4">
           <span
             className={`inline-flex items-center gap-1 text-xs font-label px-2.5 py-1 rounded-full ${
               memorial.is_public
@@ -117,7 +125,7 @@ export default async function MemorialDetailPage({
                 : "bg-surface-container-high text-on-surface-variant"
             }`}
           >
-            <span className="material-symbols-outlined text-sm">
+            <span className="material-symbols-outlined text-sm" aria-hidden="true">
               {memorial.is_public ? "public" : "lock"}
             </span>
             {memorial.is_public ? "Öffentlich" : "Privat"}
@@ -126,19 +134,22 @@ export default async function MemorialDetailPage({
       </div>
 
       {/* Tab bar */}
-      <div className="flex border-b border-outline-variant/10 px-4">
-        <button className="active-underline flex-1 py-3 text-sm font-label font-medium text-primary text-center">
+      <div className="flex border-b border-outline-variant/30 px-4">
+        <span
+          aria-current="page"
+          className="active-underline flex-1 py-3 text-sm font-label font-medium text-primary text-center"
+        >
           Übersicht
-        </button>
+        </span>
         <Link
           href={`/memorial/${id}/edit#fotos`}
-          className="flex-1 py-3 text-sm font-label font-medium text-on-surface-variant text-center hover:text-on-surface transition"
+          className="flex-1 py-3 text-sm font-label font-medium text-on-surface-variant text-center hover:text-on-surface transition-colors duration-250 ease-out"
         >
           Fotos
         </Link>
         <Link
           href={`/tagebuch/neu?memorial=${id}`}
-          className="flex-1 py-3 text-sm font-label font-medium text-on-surface-variant text-center hover:text-on-surface transition"
+          className="flex-1 py-3 text-sm font-label font-medium text-on-surface-variant text-center hover:text-on-surface transition-colors duration-250 ease-out"
         >
           Tagebuch
         </Link>
@@ -146,64 +157,75 @@ export default async function MemorialDetailPage({
 
       {/* Overview tab content */}
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
-        {/* SpiritLink card */}
+        {/* SpiritLink card — Layout bereit für echten QR + Web-Share (B5) */}
         {memorial.is_public && (
-          <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
+          <div className="bg-surface-container-low rounded-card p-6 border border-outline-variant/30">
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-primary">qr_code_2</span>
+              <span className="material-symbols-outlined text-primary" aria-hidden="true">qr_code_2</span>
               <h3 className="font-headline text-base font-semibold text-on-surface">SpiritLink</h3>
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* QR placeholder */}
-              <div className="w-16 h-16 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-3xl text-on-surface-variant">qr_code</span>
+            <div className="flex items-center gap-4">
+              {/* QR-Platz (echter QR folgt mit B5) */}
+              <div className="w-24 h-24 rounded-button bg-surface-container-high flex flex-col items-center justify-center gap-1 shrink-0">
+                <span className="material-symbols-outlined text-3xl text-on-surface-variant" aria-hidden="true">qr_code</span>
+                <span className="text-[9px] font-label uppercase tracking-[0.15em] text-on-surface-variant/70">
+                  QR folgt
+                </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-label text-on-surface-variant mb-1">Öffentlicher Link</p>
-                <p className="text-sm font-body text-on-surface truncate">{spiritLinkUrl}</p>
+                <p className="text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant mb-1.5">
+                  Öffentlicher Link
+                </p>
+                <p className="text-sm font-mono text-on-surface truncate">{spiritLinkUrl}</p>
               </div>
             </div>
 
-            <a
-              href={spiritLinkUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl bg-primary/10 border border-primary/20 px-4 py-2.5 text-sm font-label font-medium text-primary hover:bg-primary/20 transition"
-            >
-              <span className="material-symbols-outlined text-lg">share</span>
-              Teilen
-            </a>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <CopyLinkButton
+                url={spiritLinkUrl}
+                className="flex items-center justify-center gap-2 rounded-button bg-primary/10 border border-primary/20 px-4 py-2.5 text-sm font-label font-medium text-primary hover:bg-primary/20 transition-colors duration-250 ease-out"
+              />
+              <a
+                href={spiritLinkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 rounded-button border border-outline-variant/40 px-4 py-2.5 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-250 ease-out"
+              >
+                <span className="material-symbols-outlined text-lg" aria-hidden="true">open_in_new</span>
+                Öffnen
+              </a>
+            </div>
           </div>
         )}
 
-        {/* Stats card */}
-        <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
+        {/* Stats card (Serif-Zahlen + Uppercase-Mini-Label) */}
+        <div className="bg-surface-container-low rounded-card p-6 border border-outline-variant/30">
           <h3 className="font-headline text-base font-semibold text-on-surface mb-4">Statistiken</h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
-              <span className="material-symbols-outlined text-2xl text-primary mb-1">auto_stories</span>
-              <p className="text-xl font-headline font-semibold text-on-surface">{diaryCount}</p>
-              <p className="text-xs font-label text-on-surface-variant">Einträge</p>
+              <span className="material-symbols-outlined text-2xl text-primary mb-1" aria-hidden="true">auto_stories</span>
+              <p className="text-2xl font-headline font-semibold text-on-surface">{diaryCount ?? 0}</p>
+              <p className="text-[10px] font-label uppercase tracking-[0.15em] text-on-surface-variant">Einträge</p>
+            </div>
+            <div className="text-center" title="Zählung verfügbar, sobald der Nachrichten-Versand live ist">
+              <span className="material-symbols-outlined text-2xl text-primary/50 mb-1" aria-hidden="true">mail</span>
+              <p className="text-2xl font-headline font-semibold text-on-surface-variant/50">–</p>
+              <p className="text-[10px] font-label uppercase tracking-[0.15em] text-on-surface-variant/70">Nachrichten</p>
             </div>
             <div className="text-center">
-              <span className="material-symbols-outlined text-2xl text-primary mb-1">mail</span>
-              <p className="text-xl font-headline font-semibold text-on-surface">0</p>
-              <p className="text-xs font-label text-on-surface-variant">Nachrichten</p>
-            </div>
-            <div className="text-center">
-              <span className="material-symbols-outlined text-2xl text-primary mb-1">photo_library</span>
-              <p className="text-xl font-headline font-semibold text-on-surface">{photoCount}</p>
-              <p className="text-xs font-label text-on-surface-variant">Fotos</p>
+              <span className="material-symbols-outlined text-2xl text-primary mb-1" aria-hidden="true">photo_library</span>
+              <p className="text-2xl font-headline font-semibold text-on-surface">{photoCount}</p>
+              <p className="text-[10px] font-label uppercase tracking-[0.15em] text-on-surface-variant">Fotos</p>
             </div>
           </div>
         </div>
 
         {/* Biography */}
         {memorial.biography && (
-          <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
+          <div className="bg-surface-container-low rounded-card p-6 border border-outline-variant/30">
             <div className="flex items-center gap-2 mb-3">
-              <span className="material-symbols-outlined text-primary">menu_book</span>
+              <span className="material-symbols-outlined text-primary" aria-hidden="true">menu_book</span>
               <h3 className="font-headline text-base font-semibold text-on-surface">Biografie</h3>
             </div>
             <p className="text-sm font-body text-on-surface-variant leading-relaxed whitespace-pre-line">
@@ -213,15 +235,15 @@ export default async function MemorialDetailPage({
         )}
 
         {/* Photo gallery preview */}
-        <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
+        <div className="bg-surface-container-low rounded-card p-6 border border-outline-variant/30">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">photo_library</span>
+              <span className="material-symbols-outlined text-primary" aria-hidden="true">photo_library</span>
               <h3 className="font-headline text-base font-semibold text-on-surface">Fotos</h3>
             </div>
             <Link
               href={`/memorial/${id}/edit#fotos`}
-              className="text-xs font-label text-primary hover:text-primary/80 transition"
+              className="text-xs font-label text-primary hover:text-primary/80 transition-colors duration-250 ease-out"
             >
               Verwalten
             </Link>
@@ -232,21 +254,26 @@ export default async function MemorialDetailPage({
               {photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="relative aspect-square rounded-lg overflow-hidden bg-surface-container-high"
+                  className="group relative aspect-square rounded-button overflow-hidden bg-surface-container-high"
                 >
                   <Image
                     src={photo.url}
                     alt={photo.caption ?? ""}
                     fill
-                    className="object-cover"
+                    className="object-cover grayscale group-hover:grayscale-0 transition-[filter] duration-400 ease-out"
                     sizes="(max-width: 640px) 33vw, 25vw"
                   />
+                  {photo.caption && (
+                    <span className="absolute inset-x-0 bottom-0 bg-black/60 px-2 py-1 text-[10px] font-label text-white truncate">
+                      {photo.caption}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-outline-variant/30 p-8 text-center">
-              <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 mb-2">add_photo_alternate</span>
+            <div className="rounded-card border border-dashed border-outline-variant/40 p-8 text-center">
+              <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 mb-2" aria-hidden="true">add_photo_alternate</span>
               <p className="text-sm font-body text-on-surface-variant">
                 Noch keine Fotos hochgeladen.
               </p>
@@ -255,15 +282,15 @@ export default async function MemorialDetailPage({
         </div>
 
         {/* Recent diary entries */}
-        <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
+        <div className="bg-surface-container-low rounded-card p-6 border border-outline-variant/30">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">auto_stories</span>
+              <span className="material-symbols-outlined text-primary" aria-hidden="true">auto_stories</span>
               <h3 className="font-headline text-base font-semibold text-on-surface">Tagebuch</h3>
             </div>
             <Link
               href={`/tagebuch/neu?memorial=${id}`}
-              className="text-xs font-label text-primary hover:text-primary/80 transition"
+              className="text-xs font-label text-primary hover:text-primary/80 transition-colors duration-250 ease-out"
             >
               Neuer Eintrag
             </Link>
@@ -275,7 +302,7 @@ export default async function MemorialDetailPage({
                 <Link
                   key={entry.id}
                   href={`/tagebuch/${entry.id}`}
-                  className="block rounded-xl bg-surface-container-high/50 p-4 hover:bg-surface-container-high transition"
+                  className="block rounded-button bg-surface-container-high/50 p-4 hover:bg-surface-container-high transition-colors duration-250 ease-out"
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <h4 className="text-sm font-label font-medium text-on-surface">
@@ -292,16 +319,16 @@ export default async function MemorialDetailPage({
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-outline-variant/30 p-8 text-center">
-              <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 mb-2">edit_note</span>
+            <div className="rounded-card border border-dashed border-outline-variant/40 p-8 text-center">
+              <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 mb-2" aria-hidden="true">edit_note</span>
               <p className="text-sm font-body text-on-surface-variant mb-3">
                 Noch keine Tagebucheinträge. Halte deine Erinnerungen fest.
               </p>
               <Link
                 href={`/tagebuch/neu?memorial=${id}`}
-                className="inline-flex items-center gap-1 text-sm font-label text-primary hover:text-primary/80 transition"
+                className="inline-flex items-center gap-1 text-sm font-label text-primary hover:text-primary/80 transition-colors duration-250 ease-out"
               >
-                <span className="material-symbols-outlined text-lg">add</span>
+                <span className="material-symbols-outlined text-lg" aria-hidden="true">add</span>
                 Neuer Eintrag
               </Link>
             </div>
@@ -311,9 +338,9 @@ export default async function MemorialDetailPage({
         {/* Edit button */}
         <Link
           href={`/memorial/${id}/edit`}
-          className="flex items-center justify-center gap-2 w-full rounded-xl border border-primary/30 px-5 py-3 text-sm font-label font-medium text-primary hover:bg-primary/10 transition"
+          className="flex items-center justify-center gap-2 w-full rounded-button border border-primary/30 px-5 py-3 text-sm font-label font-medium text-primary hover:bg-primary/10 transition-colors duration-250 ease-out"
         >
-          <span className="material-symbols-outlined text-lg">edit</span>
+          <span className="material-symbols-outlined text-lg" aria-hidden="true">edit</span>
           Bearbeiten
         </Link>
       </div>

@@ -85,7 +85,7 @@ export default function NewMemorialPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-6">
-        <div className="bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
+        <div className="bg-surface-container-low rounded-card p-6 border border-outline-variant/30">
           <div className="flex items-center gap-3 mb-2">
             <span className="material-symbols-outlined text-primary text-2xl">add_circle</span>
             <h2 className="text-xl font-headline font-semibold text-on-surface">
@@ -97,8 +97,8 @@ export default function NewMemorialPage() {
           </p>
 
           {error && (
-            <div className="flex items-center gap-2 rounded-xl bg-error/10 border border-error/20 px-4 py-3 text-sm text-error font-body mb-6">
-              <span className="material-symbols-outlined text-lg">error</span>
+            <div className="flex items-center gap-2 rounded-button bg-error/10 border border-error/20 px-4 py-3 text-sm text-error font-body mb-6">
+              <span className="material-symbols-outlined text-lg" aria-hidden="true">error</span>
               {error}
             </div>
           )}
@@ -113,7 +113,7 @@ export default function NewMemorialPage() {
                 <button
                   type="button"
                   onClick={() => setType("human")}
-                  className={`flex flex-col items-center gap-1.5 p-4 rounded-xl border transition ${
+                  className={`flex flex-col items-center gap-1.5 p-4 rounded-button border transition-colors duration-250 ease-out ${
                     type === "human"
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-outline-variant/20 text-on-surface-variant hover:border-primary/30"
@@ -125,7 +125,7 @@ export default function NewMemorialPage() {
                 <button
                   type="button"
                   onClick={() => setType("animal")}
-                  className={`flex flex-col items-center gap-1.5 p-4 rounded-xl border transition ${
+                  className={`flex flex-col items-center gap-1.5 p-4 rounded-button border transition-colors duration-250 ease-out ${
                     type === "animal"
                       ? "border-primary bg-primary/10 text-primary"
                       : "border-outline-variant/20 text-on-surface-variant hover:border-primary/30"
@@ -149,7 +149,7 @@ export default function NewMemorialPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={type === "animal" ? "z.B. Luna" : "z.B. Maria Müller"}
-                className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
+                className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
               />
             </div>
 
@@ -163,7 +163,7 @@ export default function NewMemorialPage() {
                   type="date"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
-                  className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+                  className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
                 />
               </div>
               <div>
@@ -174,7 +174,7 @@ export default function NewMemorialPage() {
                   type="date"
                   value={deathDate}
                   onChange={(e) => setDeathDate(e.target.value)}
-                  className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+                  className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
                 />
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function NewMemorialPage() {
                 rows={3}
                 maxLength={500}
                 placeholder="Ein paar Worte über die Person oder das Tier..."
-                className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
+                className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
               />
             </div>
 
@@ -199,7 +199,7 @@ export default function NewMemorialPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="gold-gradient w-full rounded-xl px-6 py-3.5 text-sm font-label font-semibold text-on-primary transition shadow-sm disabled:opacity-50"
+                className="gold-gradient w-full rounded-button px-6 py-3.5 text-sm font-label font-semibold text-on-primary shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all duration-250 ease-out disabled:opacity-50"
               >
                 {loading ? "Wird erstellt..." : "Profil erstellen"}
               </button>
@@ -207,7 +207,7 @@ export default function NewMemorialPage() {
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="w-full rounded-xl px-6 py-3 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface transition"
+                className="w-full rounded-button px-6 py-3 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface transition-colors duration-250 ease-out"
               >
                 Abbrechen
               </button>

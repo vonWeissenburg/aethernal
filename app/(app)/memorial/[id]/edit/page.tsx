@@ -226,9 +226,14 @@ export default function EditMemorialPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-6">
-        {/* Profile photo section */}
+        {/* Profilfoto — echter Button, Upload-Funktion kommt mit B0 */}
         <div className="flex flex-col items-center mb-8">
-          <div className="relative group cursor-pointer">
+          <button
+            type="button"
+            disabled
+            aria-label="Profilfoto ändern (bald verfügbar)"
+            className="relative rounded-full disabled:cursor-not-allowed"
+          >
             {memorial?.profile_photo_url ? (
               <div className="relative w-[120px] h-[120px] rounded-full border-2 border-primary overflow-hidden">
                 <Image
@@ -237,23 +242,22 @@ export default function EditMemorialPage() {
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                  <span className="material-symbols-outlined text-white text-xl">photo_camera</span>
-                  <span className="text-xs text-white font-label mt-1">Foto ändern</span>
-                </div>
               </div>
             ) : (
-              <div className="w-[120px] h-[120px] rounded-full border-2 border-primary bg-surface-container-high flex flex-col items-center justify-center group-hover:bg-surface-container-high/80 transition">
-                <span className="material-symbols-outlined text-3xl text-on-surface-variant">photo_camera</span>
+              <div className="w-[120px] h-[120px] rounded-full border-2 border-outline-variant/60 border-dashed bg-surface-container-high flex flex-col items-center justify-center">
+                <span className="material-symbols-outlined text-3xl text-on-surface-variant" aria-hidden="true">photo_camera</span>
                 <span className="text-xs text-on-surface-variant font-label mt-1">Foto ändern</span>
               </div>
             )}
-          </div>
+          </button>
+          <p className="mt-3 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant/70">
+            Profilfoto-Upload bald verfügbar
+          </p>
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 rounded-xl bg-error/10 border border-error/20 px-4 py-3 text-sm text-error font-body mb-6">
-            <span className="material-symbols-outlined text-lg">error</span>
+          <div className="flex items-center gap-2 rounded-button bg-error/10 border border-error/20 px-4 py-3 text-sm text-error font-body mb-6">
+            <span className="material-symbols-outlined text-lg" aria-hidden="true">error</span>
             {error}
           </div>
         )}
@@ -264,7 +268,7 @@ export default function EditMemorialPage() {
             <button
               type="button"
               onClick={() => setType("human")}
-              className={`flex items-center justify-center gap-2 p-3.5 rounded-xl border transition text-sm font-label ${
+              className={`flex items-center justify-center gap-2 p-3.5 rounded-button border transition-colors duration-250 ease-out text-sm font-label ${
                 type === "human"
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-outline-variant/20 text-on-surface-variant hover:border-primary/30"
@@ -276,7 +280,7 @@ export default function EditMemorialPage() {
             <button
               type="button"
               onClick={() => setType("animal")}
-              className={`flex items-center justify-center gap-2 p-3.5 rounded-xl border transition text-sm font-label ${
+              className={`flex items-center justify-center gap-2 p-3.5 rounded-button border transition-colors duration-250 ease-out text-sm font-label ${
                 type === "animal"
                   ? "border-primary bg-primary/10 text-primary"
                   : "border-outline-variant/20 text-on-surface-variant hover:border-primary/30"
@@ -298,7 +302,7 @@ export default function EditMemorialPage() {
               maxLength={200}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
+              className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
             />
             {memorial && name.trim() !== memorial.name && name.trim() && (
               <p className="text-xs text-primary font-label mt-1.5">
@@ -317,7 +321,7 @@ export default function EditMemorialPage() {
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+                className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
               />
             </div>
             <div>
@@ -328,7 +332,7 @@ export default function EditMemorialPage() {
                 type="date"
                 value={deathDate}
                 onChange={(e) => setDeathDate(e.target.value)}
-                className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
+                className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition"
               />
             </div>
           </div>
@@ -343,7 +347,7 @@ export default function EditMemorialPage() {
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
               maxLength={500}
-              className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
+              className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-none placeholder:text-on-surface-variant/40"
             />
             <p className="text-xs font-label text-on-surface-variant mt-1 text-right">
               {description.length}/500
@@ -361,7 +365,7 @@ export default function EditMemorialPage() {
               rows={8}
               maxLength={5000}
               placeholder="Erzähle die Geschichte..."
-              className="w-full bg-card border-none rounded-xl px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-y placeholder:text-on-surface-variant/40"
+              className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition resize-y placeholder:text-on-surface-variant/40"
             />
             <p className="text-xs font-label text-on-surface-variant mt-1 text-right">
               {biography.length}/5000
@@ -403,10 +407,10 @@ export default function EditMemorialPage() {
                     <button
                       type="button"
                       onClick={() => handleDeletePhoto(photo)}
-                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-md hover:bg-error/80"
-                      title="Foto löschen"
+                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm text-white flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-visible:opacity-100 transition shadow-md hover:bg-error/80"
+                      aria-label="Foto löschen"
                     >
-                      <span className="material-symbols-outlined text-lg">delete</span>
+                      <span className="material-symbols-outlined text-lg" aria-hidden="true">delete</span>
                     </button>
                   </div>
                 ))}
@@ -414,8 +418,8 @@ export default function EditMemorialPage() {
             )}
 
             {/* Upload */}
-            <label className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-outline-variant/30 p-6 cursor-pointer hover:bg-surface-container-high/30 transition">
-              <span className="material-symbols-outlined text-2xl text-on-surface-variant">add_photo_alternate</span>
+            <label className="flex flex-col items-center justify-center gap-2 rounded-card border border-dashed border-outline-variant/40 p-6 cursor-pointer hover:bg-surface-container-high/30 transition-colors duration-250 ease-out">
+              <span className="material-symbols-outlined text-2xl text-on-surface-variant" aria-hidden="true">add_photo_alternate</span>
               <span className="text-sm font-label text-on-surface-variant">Fotos hochladen</span>
               <input
                 type="file"
@@ -432,7 +436,7 @@ export default function EditMemorialPage() {
             <button
               type="submit"
               disabled={saving}
-              className="gold-gradient w-full rounded-xl px-6 py-3.5 text-sm font-label font-semibold text-on-primary transition shadow-sm disabled:opacity-50"
+              className="gold-gradient w-full rounded-button px-6 py-3.5 text-sm font-label font-semibold text-on-primary shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all duration-250 ease-out disabled:opacity-50"
             >
               {saving ? "Wird gespeichert..." : "Speichern"}
             </button>
@@ -440,20 +444,28 @@ export default function EditMemorialPage() {
             <button
               type="button"
               onClick={() => router.push(`/memorial/${id}`)}
-              className="w-full rounded-xl px-6 py-3 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface transition"
+              className="w-full rounded-button px-6 py-3 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface transition-colors duration-250 ease-out"
             >
               Abbrechen
             </button>
           </div>
 
-          {/* Danger zone */}
-          <div className="pt-4 border-t border-outline-variant/10">
+          {/* Danger-Zone — visuell klar abgesetzt */}
+          <div className="mt-8 rounded-card border border-error/20 bg-error/5 p-6">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-error text-lg" aria-hidden="true">warning</span>
+              <h3 className="font-headline text-sm font-semibold text-error">Gefahrenzone</h3>
+            </div>
+            <p className="text-xs font-body text-on-surface-variant leading-relaxed mb-4">
+              Das Löschen entfernt dieses Gedenkprofil mit allen Fotos,
+              Tagebucheinträgen und Daten unwiderruflich.
+            </p>
             <button
               type="button"
               onClick={handleDelete}
-              className="flex items-center gap-2 text-sm font-label text-error hover:text-error/80 transition"
+              className="flex items-center gap-2 rounded-button border border-error/40 px-4 py-2.5 text-sm font-label font-medium text-error hover:bg-error/10 transition-colors duration-250 ease-out"
             >
-              <span className="material-symbols-outlined text-lg">delete_forever</span>
+              <span className="material-symbols-outlined text-lg" aria-hidden="true">delete_forever</span>
               Profil löschen
             </button>
           </div>
