@@ -4,7 +4,9 @@ import { formatDate, formatLifespan } from "@/lib/utils";
 import type { Memorial, MemorialPhoto, DiaryEntry } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
+import QRCode from "qrcode";
 import CopyLinkButton from "@/components/copy-link-button";
+import ShareLinkButton from "@/components/share-link-button";
 
 export async function generateMetadata({
   params,
@@ -65,6 +67,15 @@ export default async function MemorialDetailPage({
 
   const photoCount = photos?.length ?? 0;
   const spiritLinkUrl = `${process.env.NEXT_PUBLIC_APP_URL}/s/${memorial.slug}`;
+
+  // Echter, scannbarer QR-Code (B5) — serverseitig generiert
+  const qrDataUrl = memorial.is_public
+    ? await QRCode.toDataURL(spiritLinkUrl, {
+        width: 480,
+        margin: 1,
+        color: { dark: "#0B0D17", light: "#FFFFFF" },
+      })
+    : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -166,25 +177,46 @@ export default async function MemorialDetailPage({
             </div>
 
             <div className="flex items-center gap-4">
-              {/* QR-Platz (echter QR folgt mit B5) */}
-              <div className="w-24 h-24 rounded-button bg-surface-container-high flex flex-col items-center justify-center gap-1 shrink-0">
-                <span className="material-symbols-outlined text-3xl text-on-surface-variant" aria-hidden="true">qr_code</span>
-                <span className="text-[9px] font-label uppercase tracking-[0.15em] text-on-surface-variant/70">
-                  QR folgt
-                </span>
+              {/* Echter QR-Code */}
+              <div className="w-24 h-24 rounded-button bg-white p-1.5 shrink-0">
+                {qrDataUrl && (
+                  <Image
+                    src={qrDataUrl}
+                    alt={`QR-Code für ${spiritLinkUrl}`}
+                    width={96}
+                    height={96}
+                    unoptimized
+                    className="w-full h-full"
+                  />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant mb-1.5">
                   Öffentlicher Link
                 </p>
-                <p className="text-sm font-mono text-on-surface truncate">{spiritLinkUrl}</p>
+                <p className="text-sm font-mono text-on-surface truncate mb-2">{spiritLinkUrl}</p>
+                {qrDataUrl && (
+                  <a
+                    href={qrDataUrl}
+                    download={`spiritlink-${memorial.slug}.png`}
+                    className="inline-flex items-center gap-1 text-xs font-label text-primary hover:text-primary/80 transition-colors duration-250 ease-out"
+                  >
+                    <span className="material-symbols-outlined text-sm" aria-hidden="true">download</span>
+                    QR-Code herunterladen
+                  </a>
+                )}
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-3">
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              <ShareLinkButton
+                url={spiritLinkUrl}
+                title={`Gedenkseite für ${memorial.name}`}
+                className="flex items-center justify-center gap-2 rounded-button bg-primary/10 border border-primary/20 px-4 py-2.5 text-sm font-label font-medium text-primary hover:bg-primary/20 transition-colors duration-250 ease-out"
+              />
               <CopyLinkButton
                 url={spiritLinkUrl}
-                className="flex items-center justify-center gap-2 rounded-button bg-primary/10 border border-primary/20 px-4 py-2.5 text-sm font-label font-medium text-primary hover:bg-primary/20 transition-colors duration-250 ease-out"
+                className="flex items-center justify-center gap-2 rounded-button border border-outline-variant/40 px-4 py-2.5 text-sm font-label font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-250 ease-out"
               />
               <a
                 href={spiritLinkUrl}

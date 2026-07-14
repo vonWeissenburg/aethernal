@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
-import { generateSlug } from "@/lib/utils";
 import { validateMemorial, firstError } from "@/lib/validation";
 import { useToast } from "@/components/toast";
 import { useConfirm } from "@/components/confirm-dialog";
@@ -90,6 +89,8 @@ export default function EditMemorialPage() {
 
     const supabase = createClient();
 
+    // Der Slug bleibt nach Erstellung bewusst stabil — geteilte Links und
+    // gedruckte QR-Codes dürfen nie brechen (B5, siehe DECISIONS.md).
     const updateData: Record<string, unknown> = {
       name: name.trim(),
       type,
@@ -100,10 +101,6 @@ export default function EditMemorialPage() {
       is_public: isPublic,
       updated_at: new Date().toISOString(),
     };
-
-    if (memorial && name.trim() !== memorial.name) {
-      updateData.slug = generateSlug(name.trim());
-    }
 
     const { error: updateError } = await supabase
       .from("memorials")
@@ -289,8 +286,9 @@ export default function EditMemorialPage() {
               className="w-full bg-surface-container border-none rounded-button px-4 py-3.5 text-sm font-body text-on-surface focus:ring-2 focus:ring-primary/50 transition placeholder:text-on-surface-variant/40"
             />
             {memorial && name.trim() !== memorial.name && name.trim() && (
-              <p className="text-xs text-primary font-label mt-1.5">
-                SpiritLink-URL wird beim Speichern aktualisiert.
+              <p className="text-xs text-on-surface-variant font-label mt-1.5">
+                Die SpiritLink-URL bleibt unverändert, damit geteilte Links und
+                QR-Codes gültig bleiben.
               </p>
             )}
           </div>

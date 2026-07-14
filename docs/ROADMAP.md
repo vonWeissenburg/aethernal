@@ -11,7 +11,7 @@ Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben
 
 ## Phase 2 — Launch-Reife (Vertrauen, Recht, Politur)
 - [ ] Konto-Löschung vollständig (serverseitig inkl. Auth-Account) — DSGVO
-- [ ] Echten QR-Code generieren (SpiritLink)
+- [x] Echten QR-Code generieren (SpiritLink) ✓ (14.07.2026 — B5: QR + Download + Web-Share; Slug jetzt stabil, kein Link-Bruch bei Umbenennung)
 - [ ] GA4 (`G-FT3WYB9Z4T`) + Cookie-Consent (App + Landing)
 - [ ] Impressum vervollständigen (Adresse, Bezirksgericht)
 - [x] Aufräumen: toter Link „Gedenkprofile" ✓ behoben 14.07. (B1 — echte Übersichtsseite `/gedenkprofile`); Onboarding-Foto-Schritt ✓ gefixt 14.07. (B0, Live-Test ausstehend); `.env.example` ✓ 01.07.

@@ -2,6 +2,17 @@
 
 _Neueste zuerst. Jede wichtige Richtungsentscheidung hier mit Datum + Begründung festhalten._
 
+## 2026-07-14 — SpiritLink-Slug bleibt nach Erstellung stabil (Redesign B5)
+Bisher wurde der Slug bei jeder Namensänderung neu generiert → alle geteilten
+Links und QR-Codes brachen still. Entschieden: **Slug ist nach Erstellung
+unveränderlich**; das Edit-Formular weist bei Namensänderung darauf hin.
+
+**Begründung:** Die SpiritLink-URL ist ein dauerhafter Identifikator. Gedruckte
+QR-Codes (Phase 4: physische Plaketten auf Grabsteinen!) dürfen niemals brechen —
+das wiegt schwerer als eine URL, die dem neuen Namen entspricht. Verworfene
+Alternative: Alias-Tabelle mit Redirects (Migration + mehr Komplexität; kann
+später nachgerüstet werden, falls umbenennbare Slugs gewünscht sind).
+
 ## 2026-07-14 — „Gedenkprofile" bekommt eine echte Übersichtsseite (Redesign B1)
 Der Nav-Punkt „Gedenkprofile" zeigte mangels Route per Workaround auf `/dashboard`.
 Entschieden: eigene Seite `/gedenkprofile` (Grid aller Memorials des Users,
