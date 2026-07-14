@@ -113,14 +113,14 @@ export function MessageForm({
       }}
     >
       {error && (
-        <div className="flex items-start gap-3 rounded-xl bg-error/10 border border-error/30 p-4 mb-6">
-          <span className="material-symbols-outlined text-error text-[20px] mt-0.5">error</span>
+        <div className="flex items-start gap-3 rounded-button bg-error/10 border border-error/30 p-4 mb-6">
+          <span className="material-symbols-outlined text-error text-[20px] mt-0.5" aria-hidden="true">error</span>
           <p className="font-body text-sm text-error">{error}</p>
         </div>
       )}
 
       {/* Section 1: Empfaenger */}
-      <div className="rounded-2xl bg-card p-6 mb-4">
+      <div className="rounded-card bg-card border border-outline-variant/30 p-6 mb-4">
         <div className="flex items-center gap-2 mb-5">
           <span className="material-symbols-outlined text-primary text-[22px]">person</span>
           <h2 className="font-headline text-xl font-semibold text-on-surface">
@@ -141,7 +141,7 @@ export function MessageForm({
                   setRecipientEmail(tp.email);
                 }
               }}
-              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               defaultValue=""
             >
               <option value="">Manuell eingeben...</option>
@@ -164,7 +164,7 @@ export function MessageForm({
               required
               value={recipientName}
               onChange={(e) => setRecipientName(e.target.value)}
-              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               placeholder="z.B. Maria"
             />
           </div>
@@ -178,7 +178,7 @@ export function MessageForm({
               required
               value={recipientEmail}
               onChange={(e) => setRecipientEmail(e.target.value)}
-              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               placeholder="maria@beispiel.at"
             />
           </div>
@@ -191,7 +191,7 @@ export function MessageForm({
             <select
               name="memorial_id"
               defaultValue={existingMessage?.memorial_id ?? ""}
-              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
             >
               <option value="">Kein Profil</option>
               {memorials.map((m) => (
@@ -205,7 +205,7 @@ export function MessageForm({
       </div>
 
       {/* Section 2: Inhalt */}
-      <div className="rounded-2xl bg-card p-6 mb-4">
+      <div className="rounded-card bg-card border border-outline-variant/30 p-6 mb-4">
         <div className="flex items-center gap-2 mb-5">
           <span className="material-symbols-outlined text-primary text-[22px]">edit_note</span>
           <h2 className="font-headline text-xl font-semibold text-on-surface">
@@ -223,7 +223,7 @@ export function MessageForm({
               maxLength={100}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               placeholder="z.B. Zum Geburtstag, mein Schatz"
             />
             <p className="font-label text-xs text-outline mt-1.5 text-right">
@@ -242,7 +242,7 @@ export function MessageForm({
               rows={8}
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-y"
+              className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out resize-y"
               placeholder={
                 recipientName
                   ? `Schreibe hier deine Nachricht an ${recipientName}...`
@@ -257,45 +257,72 @@ export function MessageForm({
       </div>
 
       {/* Section 3: Wann senden? */}
-      <div className="rounded-2xl bg-card p-6 mb-4">
+      <div className="rounded-card bg-card border border-outline-variant/30 p-6 mb-4">
         <div className="flex items-center gap-2 mb-5">
           <span className="material-symbols-outlined text-primary text-[22px]">schedule_send</span>
           <h2 className="font-headline text-xl font-semibold text-on-surface">
             Wann senden?
           </h2>
         </div>
+        {/* Trigger-Karten: Datum = Gold, „Nach dem Tod" = Tertiär-Blau */}
         <div className="grid gap-4 sm:grid-cols-2">
           <button
             type="button"
             onClick={() => setTriggerType("date")}
-            className={`rounded-2xl border-2 p-5 text-left transition ${
+            aria-pressed={triggerType === "date"}
+            className={`relative overflow-hidden rounded-card border-2 p-5 text-left transition-colors duration-250 ease-out ${
               triggerType === "date"
                 ? "border-primary bg-primary/5"
-                : "border-outline-variant bg-surface hover:border-primary/30"
+                : "border-outline-variant/40 bg-surface hover:border-primary/30"
             }`}
           >
-            <span className="material-symbols-outlined text-primary text-[28px] mb-2 block">
+            <span
+              className="material-symbols-outlined absolute -bottom-4 -right-4 text-[80px] text-on-surface/5 pointer-events-none"
+              aria-hidden="true"
+            >
               calendar_today
             </span>
-            <h3 className="font-label font-medium text-on-surface">Zu einem bestimmten Datum</h3>
-            <p className="font-body text-xs text-on-surface-variant mt-1">
+            <span
+              className={`material-symbols-outlined text-[28px] mb-2 block ${
+                triggerType === "date" ? "text-primary" : "text-on-surface-variant"
+              }`}
+              style={triggerType === "date" ? { fontVariationSettings: "'FILL' 1" } : undefined}
+              aria-hidden="true"
+            >
+              calendar_today
+            </span>
+            <h3 className="font-label font-medium text-on-surface relative">Zu einem bestimmten Datum</h3>
+            <p className="font-body text-xs text-on-surface-variant mt-1 relative">
               Geburtstag, Jahrestag, Weihnachten...
             </p>
           </button>
           <button
             type="button"
             onClick={() => setTriggerType("death")}
-            className={`rounded-2xl border-2 p-5 text-left transition ${
+            aria-pressed={triggerType === "death"}
+            className={`relative overflow-hidden rounded-card border-2 p-5 text-left transition-colors duration-250 ease-out ${
               triggerType === "death"
-                ? "border-primary bg-primary/5"
-                : "border-outline-variant bg-surface hover:border-primary/30"
+                ? "border-tertiary bg-tertiary/5"
+                : "border-outline-variant/40 bg-surface hover:border-tertiary/40"
             }`}
           >
-            <span className="material-symbols-outlined text-primary text-[28px] mb-2 block">
+            <span
+              className="material-symbols-outlined absolute -bottom-4 -right-4 text-[80px] text-on-surface/5 pointer-events-none"
+              aria-hidden="true"
+            >
               volunteer_activism
             </span>
-            <h3 className="font-label font-medium text-on-surface">Nach meinem Tod</h3>
-            <p className="font-body text-xs text-on-surface-variant mt-1">
+            <span
+              className={`material-symbols-outlined text-[28px] mb-2 block ${
+                triggerType === "death" ? "text-tertiary" : "text-on-surface-variant"
+              }`}
+              style={triggerType === "death" ? { fontVariationSettings: "'FILL' 1" } : undefined}
+              aria-hidden="true"
+            >
+              volunteer_activism
+            </span>
+            <h3 className="font-label font-medium text-on-surface relative">Nach meinem Tod</h3>
+            <p className="font-body text-xs text-on-surface-variant mt-1 relative">
               Wird nach Bestätigung durch Vertrauensperson gesendet.
             </p>
           </button>
@@ -313,7 +340,7 @@ export function MessageForm({
                 required
                 min={today}
                 defaultValue={existingMessage?.trigger_date ?? ""}
-                className="w-full rounded-xl bg-surface-container-low border border-outline-variant px-4 py-3 font-body text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                className="w-full rounded-button bg-surface-container border-none px-4 py-3.5 font-body text-sm text-on-surface focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               />
             </div>
             <label className="flex items-center gap-3 cursor-pointer">
@@ -331,19 +358,19 @@ export function MessageForm({
         {triggerType === "death" && (
           <div className="mt-5">
             {hasTrustedPerson ? (
-              <div className="flex items-start gap-3 rounded-xl bg-primary/5 border border-primary/20 p-4">
-                <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
+              <div className="flex items-start gap-3 rounded-button bg-tertiary/5 border border-tertiary/20 p-4">
+                <span className="material-symbols-outlined text-tertiary text-[20px] mt-0.5" aria-hidden="true">check_circle</span>
                 <p className="font-body text-sm text-on-surface-variant">
                   Diese Nachricht wird gesendet, sobald deine Vertrauensperson
                   deinen Tod bestätigt hat.
                 </p>
               </div>
             ) : (
-              <div className="rounded-xl bg-primary/5 border border-primary/20 p-4">
+              <div className="rounded-button bg-tertiary/5 border border-tertiary/20 p-4">
                 <div className="flex items-start gap-3">
-                  <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">warning</span>
+                  <span className="material-symbols-outlined text-tertiary text-[20px] mt-0.5" aria-hidden="true">warning</span>
                   <div>
-                    <p className="font-label text-sm text-primary font-medium">
+                    <p className="font-label text-sm text-tertiary font-medium">
                       Du hast noch keine Vertrauensperson festgelegt.
                     </p>
                     <p className="font-body text-sm text-on-surface-variant mt-1">
@@ -352,10 +379,10 @@ export function MessageForm({
                     </p>
                     <Link
                       href="/nachrichten?tab=vertrauensperson"
-                      className="inline-flex items-center gap-1 mt-2 font-label text-sm text-primary font-medium hover:underline transition"
+                      className="inline-flex items-center gap-1 mt-2 font-label text-sm text-tertiary font-medium hover:underline"
                     >
                       Vertrauensperson festlegen
-                      <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                      <span className="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
                     </Link>
                   </div>
                 </div>
@@ -365,25 +392,49 @@ export function MessageForm({
         )}
       </div>
 
-      {/* Section 4: Vorschau */}
+      {/* Section 4: Live-Vorschau als würdige E-Mail-Karte */}
       {title && body && recipientName && (
-        <div className="rounded-2xl bg-card p-6 mb-4">
+        <div className="rounded-card bg-card border border-outline-variant/30 p-6 mb-4">
           <div className="flex items-center gap-2 mb-5">
-            <span className="material-symbols-outlined text-primary text-[22px]">preview</span>
+            <span className="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">preview</span>
             <h2 className="font-headline text-xl font-semibold text-on-surface">
-              Vorschau
+              So kommt deine Nachricht an
             </h2>
           </div>
-          <div className="rounded-xl bg-surface-container-low border border-outline-variant p-5">
-            <p className="font-label text-xs text-outline mb-3">
-              An: {recipientName}
-            </p>
-            <p className="font-headline font-medium text-on-surface mb-3">{title}</p>
-            <div className="font-body text-sm text-on-surface-variant whitespace-pre-wrap leading-relaxed">
-              {body}
+          <div className="rounded-card bg-surface-container-lowest border border-outline-variant/40 overflow-hidden">
+            {/* Mail-Kopf */}
+            <div className="px-6 py-4 border-b border-outline-variant/30 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <span
+                  className="material-symbols-outlined text-primary text-lg"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                  aria-hidden="true"
+                >
+                  auto_awesome
+                </span>
+                <span className="font-headline italic text-primary text-sm">Aethernal</span>
+              </div>
+              <p className="font-label text-[10px] uppercase tracking-[0.15em] text-on-surface-variant/70 truncate">
+                An: {recipientName}
+              </p>
             </div>
-            <div className="border-t border-outline-variant mt-4 pt-4 font-body text-xs text-outline">
-              Gesendet über Aethernal — aethernal.me
+            {/* Mail-Inhalt */}
+            <div className="px-6 py-6">
+              <p className="font-headline text-lg text-on-surface mb-4">{title}</p>
+              <div className="font-body text-sm text-on-surface-variant whitespace-pre-wrap leading-relaxed">
+                {body}
+              </div>
+            </div>
+            {/* Mail-Fuß mit Ornament-Divider */}
+            <div className="px-6 pb-5">
+              <div className="flex items-center gap-3 mb-3" aria-hidden="true">
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-outline-variant/60 to-transparent" />
+                <span className="material-symbols-outlined text-primary/50 text-base">potted_plant</span>
+                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-outline-variant/60 to-transparent" />
+              </div>
+              <p className="text-center font-body text-xs text-on-surface-variant/70">
+                Gesendet über Aethernal · aethernal.me
+              </p>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { useToast } from "@/components/toast";
 import { useConfirm } from "@/components/confirm-dialog";
 import type { Message } from "@/lib/types";
 import { STATUS_STYLES, STATUS_LABELS } from "@/lib/types";
+import EmptyState from "@/components/empty-state";
 
 export function MessageList({ messages }: { messages: Message[] }) {
   const router = useRouter();
@@ -27,25 +28,13 @@ export function MessageList({ messages }: { messages: Message[] }) {
 
   if (messages.length === 0) {
     return (
-      <div className="rounded-2xl border-2 border-dashed border-outline-variant bg-surface p-12 text-center">
-        <span className="material-symbols-outlined text-5xl text-on-surface-variant mb-4 block">
-          drafts
-        </span>
-        <h3 className="font-headline text-lg font-semibold text-on-surface mb-2">
-          Noch keine Nachrichten geplant
-        </h3>
-        <p className="font-body text-sm text-on-surface-variant mb-6 max-w-md mx-auto">
-          Schreibe deine erste Nachricht an einen geliebten Menschen. Sie wird
-          zugestellt, wenn die Zeit gekommen ist.
-        </p>
-        <Link
-          href="/nachrichten/neu"
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-label text-sm font-medium text-on-primary hover:brightness-110 transition shadow-md"
-        >
-          <span className="material-symbols-outlined text-[20px]">add</span>
-          Neue Nachricht
-        </Link>
-      </div>
+      <EmptyState
+        icon="drafts"
+        title="Noch keine Nachrichten geplant"
+        description="Schreibe deine erste Nachricht an einen geliebten Menschen. Sie wird zugestellt, wenn die Zeit gekommen ist."
+        actionHref="/nachrichten/neu"
+        actionLabel="Neue Nachricht"
+      />
     );
   }
 
@@ -56,7 +45,7 @@ export function MessageList({ messages }: { messages: Message[] }) {
         {messages.map((m) => (
           <div
             key={m.id}
-            className="group rounded-2xl bg-card p-5 transition hover:bg-surface-container-high"
+            className="group rounded-card bg-card border border-outline-variant/30 p-5 transition-colors duration-250 ease-out hover:bg-card-hover"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
@@ -74,8 +63,12 @@ export function MessageList({ messages }: { messages: Message[] }) {
                   An: {m.recipient_name}
                 </p>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
-                  <span className="inline-flex items-center gap-1 font-body text-xs text-outline">
-                    <span className="material-symbols-outlined text-[16px]">
+                  <span
+                    className={`inline-flex items-center gap-1 font-body text-xs ${
+                      m.trigger_type === "date" ? "text-on-surface-variant" : "text-tertiary"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
                       {m.trigger_type === "date" ? "calendar_today" : "volunteer_activism"}
                     </span>
                     {m.trigger_type === "date"
@@ -124,10 +117,10 @@ export function MessageList({ messages }: { messages: Message[] }) {
       {/* FAB */}
       <Link
         href="/nachrichten/neu"
-        className="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-on-primary shadow-lg hover:brightness-110 transition z-10"
-        title="Neue Nachricht"
+        aria-label="Neue Nachricht schreiben"
+        className="fixed bottom-24 lg:bottom-12 right-6 lg:right-12 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-on-primary shadow-2xl shadow-primary/20 hover:scale-110 active:scale-95 transition-transform duration-250 ease-out z-40"
       >
-        <span className="material-symbols-outlined text-[28px]">add</span>
+        <span className="material-symbols-outlined text-[28px]" aria-hidden="true">add</span>
       </Link>
     </div>
   );

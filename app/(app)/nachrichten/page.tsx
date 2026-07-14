@@ -2,9 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Message, TrustedPerson } from "@/lib/types";
-import { STATUS_STYLES, STATUS_LABELS } from "@/lib/types";
 import { MessageList } from "./message-list";
-import { TrustedPersonSection } from "./trusted-person-section";
+import { TrustedPersons } from "@/components/trusted-persons";
 
 export const metadata = { title: "Nachrichten" };
 
@@ -81,13 +80,14 @@ export default async function NachrichtenPage({
           </Link>
         </div>
 
-        {/* Email notice */}
+        {/* Ehrlicher Status-Hinweis (entfernen, sobald der Scheduler live ist) */}
         {activeTab === "nachrichten" && (
-          <div className="flex items-start gap-3 rounded-xl bg-primary/5 border border-primary/20 p-4 mb-6">
-            <span className="material-symbols-outlined text-primary text-[20px] mt-0.5">info</span>
+          <div className="flex items-start gap-3 rounded-button bg-surface-container-low border border-outline-variant/30 p-4 mb-6">
+            <span className="material-symbols-outlined text-on-surface-variant text-[20px] mt-0.5" aria-hidden="true">info</span>
             <p className="font-body text-xs text-on-surface-variant">
-              Der E-Mail-Versand wird in Kürze aktiviert. Du kannst bereits
-              Nachrichten erstellen und planen.
+              Der automatische E-Mail-Versand ist noch nicht aktiv. Deine
+              Nachrichten werden sicher gespeichert und zugestellt, sobald der
+              Versand startet.
             </p>
           </div>
         )}
@@ -95,7 +95,7 @@ export default async function NachrichtenPage({
         {activeTab === "nachrichten" ? (
           <MessageList messages={messages ?? []} />
         ) : (
-          <TrustedPersonSection trustedPersons={trustedPersons ?? []} />
+          <TrustedPersons trustedPersons={trustedPersons ?? []} />
         )}
       </div>
     </div>

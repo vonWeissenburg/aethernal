@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { TrustedPerson } from "@/lib/types";
-import { TrustedPersonList } from "./trusted-person-list";
+import { TrustedPersons } from "@/components/trusted-persons";
 
 export const metadata = { title: "Vertrauenspersonen" };
 
@@ -31,7 +31,7 @@ export default async function VertrauenspersonenPage() {
         </p>
       </div>
 
-      <TrustedPersonList trustedPersons={trustedPersons ?? []} />
+      <TrustedPersons trustedPersons={trustedPersons ?? []} />
     </div>
   );
 }
