@@ -108,9 +108,10 @@ Deno.serve(async (req) => {
     today,
     messages: { checked: 0, sent: 0, failed: 0 },
     reminders: { checked: 0, sent: 0, failed: 0 },
+    death: { reports: 0, sent: 0, failed: 0 },
   };
 
-  // 2) Fällige Nachrichten (nur datumsgetriggert; 'death' kommt mit Aufgabe 4)
+  // 2) Fällige Nachrichten (datumsgetriggert; 'death' siehe Abschnitt 4)
   const { data: messages, error: msgErr } = await supabase
     .from("messages")
     .select("id, title, body, recipient_name, recipient_email, trigger_date, repeat_yearly, sent_at")
@@ -194,6 +195,69 @@ Deno.serve(async (req) => {
     } catch (e) {
       result.reminders.failed++;
       console.error(`Reminder ${r.id} failed:`, e);
+    }
+  }
+
+  // 4) Bestätigte Todesfälle nach Ablauf der Karenzzeit (B3) → death-Nachrichten
+  //    über DENSELBEN Versand-Weg. Bewusst weich abgesichert: existiert die
+  //    Tabelle (noch) nicht, darf das den Datums-Versand oben nicht brechen.
+  const { data: dueReports, error: drErr } = await supabase
+    .from("death_reports")
+    .select("id, user_id")
+    .is("cancelled_at", null)
+    .is("processed_at", null)
+    .lte("effective_at", new Date().toISOString())
+    .limit(50);
+
+  if (drErr) {
+    console.error("death_reports query failed (Migration eingespielt?):", drErr.message);
+  } else {
+    for (const report of dueReports ?? []) {
+      result.death.reports++;
+
+      const { data: deathMessages, error: dmErr } = await supabase
+        .from("messages")
+        .select("id, title, body, recipient_name, recipient_email")
+        .eq("user_id", report.user_id)
+        .eq("trigger_type", "death")
+        .eq("status", "scheduled")
+        .limit(200);
+
+      if (dmErr) {
+        console.error(`death messages query failed (report ${report.id}):`, dmErr.message);
+        continue; // Report bleibt unverarbeitet → nächster Lauf versucht es erneut
+      }
+
+      for (const m of deathMessages ?? []) {
+        try {
+          await sendEmail({
+            to: m.recipient_email,
+            subject: m.title,
+            html: `<p>Hallo ${escapeHtml(m.recipient_name)},</p>` +
+              `<div>${escapeHtml(m.body).replace(/\n/g, "<br>")}</div>` +
+              `<p style="margin-top:24px;color:#888;font-size:12px">` +
+              `Diese Nachricht wurde über Aethernal zugestellt.</p>`,
+          });
+          // death-Nachrichten sind einmalig → sofort 'sent' (Doppelversand-Schutz,
+          // auch wenn der Lauf danach abbricht und der Report offen bleibt).
+          await supabase
+            .from("messages")
+            .update({ status: "sent", sent_at: new Date().toISOString() })
+            .eq("id", m.id);
+          result.death.sent++;
+        } catch (e) {
+          result.death.failed++;
+          await supabase.from("messages").update({ status: "failed" }).eq("id", m.id);
+          console.error(`Death message ${m.id} failed:`, e);
+        }
+      }
+
+      // Erst nach allen Zustellversuchen abschließen. Fehlgeschlagene Nachrichten
+      // stehen auf 'failed' (kein Doppelversand; manuelle Nachsorge möglich).
+      await supabase
+        .from("death_reports")
+        .update({ processed_at: new Date().toISOString() })
+        .eq("id", report.id);
     }
   }
 

@@ -55,23 +55,18 @@ im Dev-Server zu sichten und Live-Tests selbst zu fahren.
 - [ ] **QR-Code (B5)** einmal mit dem Handy scannen.
 - [ ] **Lighthouse** auf Dashboard + SpiritLink: Accessibility ≥ 90 (A8-Akzeptanz).
 
-## 4. B3 Todesbestätigung — deine Entscheidungen (der Kern, danach baue ich)
+## 4. B3 Todesbestätigung — GEBAUT (Karenzzeit-Modell) → dein Review
 
-Die Spec verlangt ausdrücklich Abstimmung vor Umsetzung. Entscheide bitte:
+B3 ist nach Modell 2 umgesetzt (Details in `DECISIONS.md`): Melde-Link per
+E-Mail-Anforderung (48 h) → Zwei-Schritt-Bestätigung → **7 Tage Karenzzeit**
+mit Warn-Mail + Widerrufslink an dich → erst dann versendet der Scheduler die
+death-Nachrichten. Deine Punkte:
 
-**A) Missbrauchsschutz-Modell** — mein Vorschlag ist Modell 2:
-1. *Einfach:* 1 bestätigte Vertrauensperson bestätigt → Nachrichten gehen sofort raus. (Schnell, aber eine Falschbestätigung wirkt sofort — größter anzunehmender Schaden.)
-2. *Karenzzeit (Empfehlung):* Bestätigung startet eine **Frist von z. B. 7 Tagen**. Der Nutzer bekommt sofort E-Mails („Dein Tod wurde gemeldet — wenn das falsch ist, klicke hier"). Ein Login oder Widerrufs-Klick bricht ab. Erst nach Ablauf gehen die Nachrichten raus. (Guter Schutz, moderater Aufwand.)
-3. *Mehrere Personen:* ≥ 2 bestätigte Vertrauenspersonen müssen unabhängig bestätigen. (Stärkster Schutz, aber viele Nutzer haben nur 1 Person → Feature faktisch tot. Ggf. als Option pro Konto.)
-
-**B) Karenzzeit-Dauer** (wenn Modell 2): 3 / 7 / 14 Tage?
-
-**C) Wortlaut** (Texte, die ich dir zur Freigabe vorlege, sobald A/B feststehen):
-Bestätigungsseite für die Vertrauensperson (pietätvoll, aber unmissverständlich),
-Warn-Mails an den Nutzer, Widerrufsseite, Mail an Empfänger der Nachrichten.
-
-**D) Rechtlich klären** (siehe Punkt 5): Haftung bei Falschbestätigung, was
-passiert mit dem Konto nach bestätigtem Tod (einfrieren? Gedenkmodus?).
+- [ ] **Karenzzeit-Dauer absegnen oder ändern** (aktuell 7 Tage — eine Konstante: `GRACE_PERIOD_DAYS` in `lib/death-flow.ts`).
+- [ ] **Wortlaute reviewen** (alles meine Vorschläge): Seiten unter `app/vertrauen/todesfall/**` (Melden/Bestätigen/Widerruf) + Warn-Mail an den Nutzer (in `…/bestaetigen/page.tsx`) + Melde-Link-Mail (in `…/todesfall/page.tsx`) + B2-Einladungsmail (`app/api/trusted-persons/invite/route.ts`).
+- [ ] **End-to-End-Test** (nach Punkt 2/3): death-Nachricht anlegen → Vertrauensperson bestätigt Rolle → fordert Melde-Link an → meldet → Warn-Mail kommt bei dir an → (a) Widerruf testen, (b) Karenz ablaufen lassen (zum Testen `effective_at` in der DB vorziehen) → Nachricht kommt an, kein Doppelversand beim nächsten Cron-Lauf.
+- [ ] **Produktfrage offen:** Was passiert mit dem Konto nach verarbeitetem Todesfall (einfrieren? Gedenkmodus? nichts)? Aktuell: nichts — nur die Nachrichten gehen raus.
+- [ ] **Rechtlich klären** (siehe Punkt 5): Haftung bei Falschbestätigung.
 
 ## 5. Recht & Texte (Mensch/Anwalt, aus Audit P3 — vor Launch)
 

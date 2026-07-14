@@ -2,6 +2,28 @@
 
 _Neueste zuerst. Jede wichtige Richtungsentscheidung hier mit Datum + Begründung festhalten._
 
+## 2026-07-14 — Todesbestätigung: Karenzzeit-Modell, 7 Tage (Redesign B3)
+Umgesetzt nach dem in `docs/OFFEN_FUER_FABIAN.md` vorgeschlagenen **Modell 2**
+(Fabian folgte der Empfehlung; Wortlaute stehen zum finalen Review):
+
+1. Bestätigte Vertrauensperson fordert unter `/vertrauen/todesfall` per
+   E-Mail einen Melde-Link an (48 h gültig, nur Token-Hash in der DB,
+   identische Antwort bei unbekannter Adresse — kein Enumeration-Leck).
+2. Meldung per Zwei-Schritt-Bestätigung → `death_reports`-Zeile mit
+   `effective_at = jetzt + 7 Tage` (nur EIN aktiver Report pro Nutzer).
+3. Der Nutzer bekommt sofort eine Warn-Mail mit Widerrufslink
+   („Ich lebe — Meldung widerrufen", gültig bis `effective_at`).
+4. Erst nach Ablauf versendet die BESTEHENDE Scheduler-Function die
+   `death`-Nachrichten (neue Sektion 4, gleiche Send-Routine, Status-Flip
+   als Doppelversand-Schutz; fehlende Tabelle bricht den Datums-Versand
+   nicht). Kein zweiter Versand-Weg.
+
+**Verworfen:** Sofort-Auslösung (eine Falschbestätigung wäre irreversibel)
+und Pflicht-Mehrfachbestätigung (viele Nutzer haben nur eine Vertrauensperson
+→ Kernversprechen faktisch tot; kann später als Option pro Konto kommen).
+**Offen:** Was mit dem Konto nach verarbeitetem Todesfall passiert
+(Gedenkmodus/Einfrieren) — Produktentscheidung Fabian.
+
 ## 2026-07-14 — Vertrauenspersonen-Bestätigung: Token-Hash + Zwei-Schritt-Confirm (Redesign B2)
 Einladungs-Flow gebaut: Mail über Resend (Next-API-Route, kein zweiter
 Versand-Weg neben dem Scheduler nötig — Einladungen sind interaktiv, nicht

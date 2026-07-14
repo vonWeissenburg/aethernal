@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import { redirect } from "next/navigation";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { VertrauenShell, StatusCard } from "../shell";
 
 export const metadata = { title: "Vertrauensperson bestätigen" };
 
@@ -101,8 +102,16 @@ export default async function ConfirmTrustedPersonPage({
         icon="verified"
         iconClass="text-success"
         title="Danke für dein Vertrauen"
-        text="Du bist jetzt als Vertrauensperson bestätigt. Es gibt nichts weiter zu tun — solltest du gebraucht werden, melden wir uns per E-Mail."
-      />
+        text="Du bist jetzt als Vertrauensperson bestätigt. Es gibt nichts weiter zu tun."
+      >
+        <p className="mt-4 font-body text-xs text-on-surface-variant/70 leading-relaxed">
+          Im Ernstfall kannst du unter{" "}
+          <a href="/vertrauen/todesfall" className="text-primary hover:underline">
+            app.aethernal.me/vertrauen/todesfall
+          </a>{" "}
+          einen Todesfall melden.
+        </p>
+      </StatusCard>
     );
   } else if (status === "abgelaufen") {
     content = (
@@ -198,60 +207,5 @@ export default async function ConfirmTrustedPersonPage({
     }
   }
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 py-12">
-      {/* Hintergrund */}
-      <div
-        className="fixed inset-0 pointer-events-none -z-10"
-        style={{
-          background:
-            "radial-gradient(circle at center, var(--color-surface-container-low) 0%, var(--color-background) 70%)",
-        }}
-      />
-
-      {/* Wortmarke */}
-      <div className="flex items-center gap-2 mb-10">
-        <span
-          className="material-symbols-outlined text-2xl text-primary"
-          style={{ fontVariationSettings: "'FILL' 1" }}
-          aria-hidden="true"
-        >
-          auto_awesome
-        </span>
-        <span className="font-headline italic text-2xl font-bold tracking-tight shimmer-text">
-          Aethernal
-        </span>
-      </div>
-
-      <div className="w-full max-w-md">{content}</div>
-
-      <p className="mt-10 font-label text-[10px] text-on-surface-variant/60 tracking-[0.2em] uppercase">
-        Ewige Erinnerung
-      </p>
-    </div>
-  );
-}
-
-function StatusCard({
-  icon,
-  iconClass,
-  title,
-  text,
-}: {
-  icon: string;
-  iconClass: string;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="glass-panel rounded-card border border-outline-variant/30 shadow-2xl p-8 text-center">
-      <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-surface-container-high flex items-center justify-center">
-        <span className={`material-symbols-outlined text-3xl ${iconClass}`} aria-hidden="true">
-          {icon}
-        </span>
-      </div>
-      <h1 className="font-headline text-2xl text-on-surface mb-3">{title}</h1>
-      <p className="font-body text-sm text-on-surface-variant leading-relaxed">{text}</p>
-    </div>
-  );
+  return <VertrauenShell>{content}</VertrauenShell>;
 }

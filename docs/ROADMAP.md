@@ -7,7 +7,7 @@ Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben
 1. [x] **E-Mail-Versand über Resend einrichten** + Supabase „Confirm email" aktivieren ✓ (17.06.2026 — Domain aethernal.me verifiziert, Custom SMTP in Supabase aktiv, Confirm email AN)
 2. [~] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): Code gebaut (22.06.), committet + gehärtet (01.07.: Batch-Limit, Jahres-Trigger-Guard, indexnutzende Abfragen). **Offen — nur noch: `project_id` in `supabase/config.toml` eintragen, Secrets setzen (RESEND_API_KEY, FROM_EMAIL, CRON_SECRET), Function deployen, Migration + `setup-cron.sql` einspielen, Live-Test.**
 3. [ ] **Zeitgesteuerte Nachrichten** real zustellen
-4. [~] **Vertrauenspersonen-Flow**: Einladungs-/Bestätigungsmail ✓ Code komplett 14.07. (B2 — Migration + Invite-Mail + Bestätigungsseite; Live-Test braucht Secrets). **Offen: Todesbestätigung (B3) — Entscheidungen Fabian, siehe `docs/OFFEN_FUER_FABIAN.md` Punkt 4**
+4. [~] **Vertrauenspersonen-Flow**: ✓ Code komplett 14.07. — Einladung/Bestätigung (B2) UND Todesbestätigung (B3, Karenzzeit-Modell 7 Tage, Scheduler erweitert). **Offen: Fabians Wortlaut-Review + Secrets + Migrationen + End-to-End-Test** (`docs/OFFEN_FUER_FABIAN.md`)
 
 ## Phase 2 — Launch-Reife (Vertrauen, Recht, Politur)
 - [~] Konto-Löschung vollständig (serverseitig inkl. Auth-Account) — DSGVO — ✓ Code komplett 14.07. (B4, inkl. Storage-Fotos; Live-Test braucht `SUPABASE_SERVICE_ROLE_KEY` am Server)
