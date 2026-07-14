@@ -65,6 +65,11 @@ export default async function MemorialDetailPage({
     .select("*", { count: "exact", head: true })
     .eq("memorial_id", id);
 
+  const { count: messageCount } = await supabase
+    .from("messages")
+    .select("*", { count: "exact", head: true })
+    .eq("memorial_id", id);
+
   const photoCount = photos?.length ?? 0;
   const spiritLinkUrl = `${process.env.NEXT_PUBLIC_APP_URL}/s/${memorial.slug}`;
 
@@ -240,10 +245,10 @@ export default async function MemorialDetailPage({
               <p className="text-2xl font-headline font-semibold text-on-surface">{diaryCount ?? 0}</p>
               <p className="text-[10px] font-label uppercase tracking-[0.15em] text-on-surface-variant">Einträge</p>
             </div>
-            <div className="text-center" title="Zählung verfügbar, sobald der Nachrichten-Versand live ist">
-              <span className="material-symbols-outlined text-2xl text-primary/50 mb-1" aria-hidden="true">mail</span>
-              <p className="text-2xl font-headline font-semibold text-on-surface-variant/50">–</p>
-              <p className="text-[10px] font-label uppercase tracking-[0.15em] text-on-surface-variant/70">Nachrichten</p>
+            <div className="text-center">
+              <span className="material-symbols-outlined text-2xl text-primary mb-1" aria-hidden="true">mail</span>
+              <p className="text-2xl font-headline font-semibold text-on-surface">{messageCount ?? 0}</p>
+              <p className="text-[10px] font-label uppercase tracking-[0.15em] text-on-surface-variant">Nachrichten</p>
             </div>
             <div className="text-center">
               <span className="material-symbols-outlined text-2xl text-primary mb-1" aria-hidden="true">photo_library</span>
