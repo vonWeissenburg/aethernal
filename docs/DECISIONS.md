@@ -2,6 +2,18 @@
 
 _Neueste zuerst. Jede wichtige Richtungsentscheidung hier mit Datum + Begründung festhalten._
 
+## 2026-07-14 — Vertrauenspersonen-Bestätigung: Token-Hash + Zwei-Schritt-Confirm (Redesign B2)
+Einladungs-Flow gebaut: Mail über Resend (Next-API-Route, kein zweiter
+Versand-Weg neben dem Scheduler nötig — Einladungen sind interaktiv, nicht
+zeitgesteuert), Bestätigung über öffentliche Seite `/vertrauen/bestaetigen`.
+
+**Sicherheitsentscheidungen:**
+- In der DB liegt nur der **SHA-256-Hash** des Tokens — ein DB-Leak verrät keine gültigen Links. Token: 32 Zufalls-Bytes, 14 Tage gültig, einmalig (Hash wird bei Bestätigung genullt).
+- **Zwei-Schritt-Bestätigung** (Seite zeigt Button, erst POST bestätigt) — Mail-Scanner, die Links vorab abrufen, lösen nichts aus.
+- **E-Mail-Änderung resettet die Bestätigung** (DB-Trigger): verhindert, dass eine bestätigte Person durch E-Mail-Tausch untergeschoben wird — wichtig für die Todesbestätigung (B3).
+- `trusted_persons`-RLS von `FOR ALL` in getrennte Policies gezogen (Audit-Hinweis); die Bestätigung läuft serverseitig mit Service-Role, keine anonyme Policy nötig.
+- Bewusste Restlücke: Der Inhaber kann `confirmed` seiner eigenen Vertrauensperson per Update theoretisch selbst setzen (RLS kann Spalten nicht ausnehmen). Schadenspotenzial betrifft nur ihn selbst; B3 kann das bei Bedarf über einen Trigger härten.
+
 ## 2026-07-14 — SpiritLink-Slug bleibt nach Erstellung stabil (Redesign B5)
 Bisher wurde der Slug bei jeder Namensänderung neu generiert → alle geteilten
 Links und QR-Codes brachen still. Entschieden: **Slug ist nach Erstellung

@@ -23,11 +23,28 @@ export function TrustedPersons({
   const [error, setError] = useState("");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
+  // Einladungs-Mail mit Bestätigungs-Link (B2)
+  async function sendInvite(id: string, email: string) {
+    const res = await fetch("/api/trusted-persons/invite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) {
+      showToast(`Einladung an ${email} gesendet`);
+      router.refresh();
+      return;
+    }
+    const body = await res.json().catch(() => null);
+    showToast(body?.error ?? "Einladung konnte nicht gesendet werden.", "error");
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
 
-    const form = new FormData(e.currentTarget);
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
     const name = (form.get("name") as string).trim();
     const email = (form.get("email") as string).trim();
     const relationship = (form.get("relationship") as string) || null;
@@ -48,16 +65,23 @@ export function TrustedPersons({
 
     const data = { name, email, relationship: relationship?.trim() || null };
 
+    let newId: string | null = null;
+    let emailChanged = false;
     let err;
     if (editingId) {
+      emailChanged = editingPerson?.email !== email;
       ({ error: err } = await supabase
         .from("trusted_persons")
         .update(data)
         .eq("id", editingId));
     } else {
-      ({ error: err } = await supabase
+      const { data: inserted, error: insertError } = await supabase
         .from("trusted_persons")
-        .insert({ ...data, user_id: user.id }));
+        .insert({ ...data, user_id: user.id })
+        .select("id")
+        .single();
+      err = insertError;
+      newId = inserted?.id ?? null;
     }
 
     if (err) {
@@ -67,7 +91,16 @@ export function TrustedPersons({
     }
 
     showToast(editingId ? "Vertrauensperson aktualisiert" : "Vertrauensperson hinzugefügt");
-    e.currentTarget.reset();
+
+    // Einladung: automatisch nach dem Anlegen; nach E-Mail-Änderung erneut
+    // (die DB setzt die Bestätigung bei E-Mail-Wechsel zurück).
+    if (newId) {
+      await sendInvite(newId, email);
+    } else if (editingId && emailChanged) {
+      await sendInvite(editingId, email);
+    }
+
+    formEl.reset();
     setEditingId(null);
     setSaving(false);
     router.refresh();
@@ -168,7 +201,19 @@ export function TrustedPersons({
                     <span className="material-symbols-outlined text-xl" aria-hidden="true">more_vert</span>
                   </button>
                   {openMenuId === tp.id && (
-                    <div className="absolute right-0 top-10 z-20 min-w-[160px] rounded-card bg-surface-container-high border border-outline-variant/30 shadow-xl py-1 animate-fade-in">
+                    <div className="absolute right-0 top-10 z-20 min-w-[200px] rounded-card bg-surface-container-high border border-outline-variant/30 shadow-xl py-1 animate-fade-in">
+                      {!tp.confirmed && (
+                        <button
+                          onClick={() => {
+                            sendInvite(tp.id, tp.email);
+                            setOpenMenuId(null);
+                          }}
+                          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-body text-on-surface hover:bg-surface-container-low transition-colors duration-250 ease-out"
+                        >
+                          <span className="material-symbols-outlined text-lg text-on-surface-variant" aria-hidden="true">forward_to_inbox</span>
+                          Einladung senden
+                        </button>
+                      )}
                       <button
                         onClick={() => {
                           setEditingId(tp.id);
@@ -288,14 +333,6 @@ export function TrustedPersons({
         </form>
       </div>
 
-      {/* Ehrlicher Status-Hinweis (entfällt mit B2) */}
-      <div className="mt-6 rounded-button bg-surface-container-low border border-outline-variant/30 p-4 flex items-start gap-3">
-        <span className="material-symbols-outlined text-on-surface-variant text-lg mt-0.5" aria-hidden="true">info</span>
-        <p className="font-body text-xs text-on-surface-variant">
-          Die Bestätigungs-E-Mail an Vertrauenspersonen ist noch nicht aktiv —
-          der Status bleibt bis dahin „Ausstehend".
-        </p>
-      </div>
     </div>
   );
 }

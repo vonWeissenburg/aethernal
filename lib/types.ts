@@ -95,6 +95,8 @@ export interface TrustedPerson {
   email: string;
   relationship: string | null;
   confirmed: boolean;
+  invited_at?: string | null;
+  confirmed_at?: string | null;
   created_at: string;
 }
 

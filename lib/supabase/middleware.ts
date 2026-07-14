@@ -34,7 +34,8 @@ export async function updateSession(request: NextRequest) {
   // Public routes
   const publicRoutes = ["/login", "/register", "/reset-password", "/auth/callback"];
   const isPublic = publicRoutes.some((r) => pathname.startsWith(r));
-  const isSpiritLink = pathname.startsWith("/s/");
+  // Öffentlich ohne Login: SpiritLink-Seiten + Vertrauenspersonen-Bestätigung (B2)
+  const isSpiritLink = pathname.startsWith("/s/") || pathname.startsWith("/vertrauen/");
 
   // Not logged in → redirect to login (unless public)
   if (!user && !isPublic && !isSpiritLink) {
