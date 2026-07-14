@@ -95,18 +95,18 @@ export function MessageList({ messages }: { messages: Message[] }) {
                 {(m.status === "draft" || m.status === "scheduled") && (
                   <Link
                     href={`/nachrichten/${m.id}/bearbeiten`}
-                    className="rounded-full p-2 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition"
-                    title="Bearbeiten"
+                    className="rounded-full p-2 text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors duration-250 ease-out"
+                    aria-label={`Nachricht „${m.title}" bearbeiten`}
                   >
-                    <span className="material-symbols-outlined text-[20px]">edit</span>
+                    <span className="material-symbols-outlined text-[20px]" aria-hidden="true">edit</span>
                   </Link>
                 )}
                 <button
                   onClick={() => handleDelete(m)}
-                  className="rounded-full p-2 text-on-surface-variant hover:text-error hover:bg-error/10 transition"
-                  title="Löschen"
+                  className="rounded-full p-2 text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors duration-250 ease-out"
+                  aria-label={`Nachricht „${m.title}" löschen`}
                 >
-                  <span className="material-symbols-outlined text-[20px]">delete</span>
+                  <span className="material-symbols-outlined text-[20px]" aria-hidden="true">delete</span>
                 </button>
               </div>
             </div>

@@ -42,7 +42,7 @@ export default function AuthLayout({
       <footer className="pb-8 text-center w-full max-w-xs">
         <div className="flex flex-col items-center gap-4">
           <div className="h-px w-12 bg-outline-variant/30" />
-          <p className="text-[10px] font-label text-on-surface-variant/40 tracking-[0.2em] uppercase">
+          <p className="text-[10px] font-label text-on-surface-variant/60 tracking-[0.2em] uppercase">
             Ewige Erinnerung &bull; Aethernal
           </p>
         </div>

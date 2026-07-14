@@ -82,7 +82,7 @@ export default async function MemorialDetailPage({
 
       {/* Hero section */}
       <div className="flex flex-col items-center pt-10 pb-6 px-4 relative">
-        <div className="absolute inset-x-0 top-0 h-64 pointer-events-none golden-glow" aria-hidden="true" />
+        <div className="absolute inset-x-0 top-0 h-64 pointer-events-none golden-glow animate-glow-pulse" aria-hidden="true" />
 
         {memorial.profile_photo_url ? (
           <div className="relative w-[140px] h-[140px] rounded-full border-2 border-primary overflow-hidden shadow-[0_0_40px_rgba(242,202,80,0.15)]">

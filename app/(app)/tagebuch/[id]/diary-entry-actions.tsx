@@ -28,17 +28,17 @@ export function DiaryEntryActions({ id, title }: { id: string; title: string | n
     <div className="flex items-center gap-1">
       <Link
         href={`/tagebuch/${id}/bearbeiten`}
-        className="inline-flex items-center justify-center h-10 w-10 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary/10 transition"
-        title="Bearbeiten"
+        className="inline-flex items-center justify-center h-10 w-10 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors duration-250 ease-out"
+        aria-label="Eintrag bearbeiten"
       >
-        <span className="material-symbols-outlined text-[20px]">edit</span>
+        <span className="material-symbols-outlined text-[20px]" aria-hidden="true">edit</span>
       </Link>
       <button
         onClick={handleDelete}
-        className="inline-flex items-center justify-center h-10 w-10 rounded-full text-on-surface-variant hover:text-error hover:bg-error/10 transition"
-        title="Löschen"
+        className="inline-flex items-center justify-center h-10 w-10 rounded-full text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors duration-250 ease-out"
+        aria-label="Eintrag löschen"
       >
-        <span className="material-symbols-outlined text-[20px]">delete</span>
+        <span className="material-symbols-outlined text-[20px]" aria-hidden="true">delete</span>
       </button>
     </div>
   );

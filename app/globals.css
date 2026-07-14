@@ -139,12 +139,22 @@ body {
   100% { background-position: 200% center; }
 }
 
+/* Sanftes Gold-Glow-Pulsieren — der EINE ruhige Signature-Moment (A8) */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 .animate-fade-in {
   animation: fade-in var(--motion-fast) ease-out;
 }
 
 .animate-fade-in-up {
   animation: fade-in-up var(--motion-base) ease-out;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 4s ease-in-out infinite;
 }
 
 /* === Glass panel effect === */

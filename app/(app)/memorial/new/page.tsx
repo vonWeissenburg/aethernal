@@ -77,9 +77,10 @@ export default function NewMemorialPage() {
       <div className="sticky top-0 z-30 flex items-center gap-3 px-4 py-3 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/10">
         <button
           onClick={() => router.back()}
-          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition"
+          aria-label="Zurück"
+          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition-colors duration-250 ease-out"
         >
-          <span className="material-symbols-outlined text-on-surface">arrow_back</span>
+          <span className="material-symbols-outlined text-on-surface" aria-hidden="true">arrow_back</span>
         </button>
         <h1 className="font-body text-base font-medium text-on-surface">Neues Gedenkprofil</h1>
       </div>

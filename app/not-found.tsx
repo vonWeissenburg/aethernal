@@ -17,13 +17,14 @@ export default function NotFound() {
       </div>
 
       <div className="max-w-2xl w-full text-center">
-        {/* Dove icon (muted) */}
+        {/* Ornament icon (muted) */}
         <div className="relative mb-12 opacity-15">
           <span
             className="material-symbols-outlined text-on-surface-variant"
             style={{ fontSize: "140px", fontVariationSettings: "'wght' 100" }}
+            aria-hidden="true"
           >
-            dove
+            potted_plant
           </span>
         </div>
 
@@ -40,9 +41,9 @@ export default function NotFound() {
           {/* Gold CTA button */}
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-xl bg-primary text-on-primary font-label font-semibold transition-all duration-300 hover:brightness-110 active:scale-95 shadow-lg"
+            className="inline-flex items-center gap-2 px-10 py-4 rounded-button bg-primary text-on-primary font-label font-semibold transition-all duration-250 ease-out hover:brightness-110 active:scale-95 shadow-lg shadow-primary/10"
           >
-            <span className="material-symbols-outlined text-xl">home</span>
+            <span className="material-symbols-outlined text-xl" aria-hidden="true">home</span>
             Zum Dashboard
           </Link>
 
@@ -63,11 +64,11 @@ export default function NotFound() {
       <footer className="fixed bottom-12 w-full text-center pointer-events-none">
         <div className="flex flex-col items-center gap-2 opacity-30">
           <div className="h-px w-8 bg-outline-variant mb-2" />
-          <span className="font-headline text-xl font-bold tracking-[0.2em] text-primary">
+          <span className="font-headline italic text-xl font-bold tracking-[0.2em] text-primary">
             Aethernal
           </span>
           <span className="font-label text-[10px] tracking-[0.4em] uppercase text-on-surface-variant">
-            Digital Sanctuary
+            Ewige Erinnerung
           </span>
         </div>
       </footer>

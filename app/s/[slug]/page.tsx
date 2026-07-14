@@ -60,7 +60,7 @@ export default async function SpiritLinkPage({
     >
       {/* Leiser, sakraler Hintergrund (CD-Naturbild kann hier später als Layer ergänzt werden) */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] golden-glow" />
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[400px] golden-glow animate-glow-pulse" />
         <div className="absolute bottom-[10%] left-[8%] w-72 h-72 bg-tertiary-container/5 rounded-full blur-[120px]" />
       </div>
 
@@ -187,7 +187,7 @@ export default async function SpiritLinkPage({
           >
             Eigenes Gedenkprofil erstellen
           </a>
-          <p className="mt-10 font-label text-[9px] text-on-surface-variant/40 tracking-[0.2em] uppercase">
+          <p className="mt-10 font-label text-[9px] text-on-surface-variant/60 tracking-[0.2em] uppercase">
             Ewige Erinnerung
           </p>
         </footer>

@@ -217,9 +217,10 @@ export default function EditMemorialPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push(`/memorial/${id}`)}
-            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition"
+            aria-label="Bearbeiten schließen"
+            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-container-high transition-colors duration-250 ease-out"
           >
-            <span className="material-symbols-outlined text-on-surface">close</span>
+            <span className="material-symbols-outlined text-on-surface" aria-hidden="true">close</span>
           </button>
           <h1 className="font-body text-base font-medium text-on-surface">Profil bearbeiten</h1>
         </div>

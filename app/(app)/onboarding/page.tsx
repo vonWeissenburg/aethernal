@@ -404,7 +404,7 @@ export default function OnboardingPage() {
             <div className="absolute inset-0 pointer-events-none golden-glow z-0" />
 
             <div className="relative z-10 mb-12 flex items-center justify-center">
-              <div className="absolute w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-glow-pulse" />
               <div className="relative flex flex-col items-center">
                 <div className="w-24 h-24 rounded-full bg-surface-container-high flex items-center justify-center border border-primary/20 shadow-2xl">
                   <span

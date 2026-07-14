@@ -122,17 +122,17 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
               <div className="flex items-center gap-1 shrink-0">
                 <Link
                   href={`/termine/${r.id}/bearbeiten`}
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors duration-250 ease-out"
                   aria-label={`Termin „${r.title}" bearbeiten`}
                 >
-                  <span className="material-symbols-outlined text-lg">edit</span>
+                  <span className="material-symbols-outlined text-lg" aria-hidden="true">edit</span>
                 </Link>
                 <button
                   onClick={() => handleDelete(r)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant hover:text-error hover:bg-error/10 transition"
-                  title="L&ouml;schen"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors duration-250 ease-out"
+                  aria-label={`Termin „${r.title}" löschen`}
                 >
-                  <span className="material-symbols-outlined text-lg">delete</span>
+                  <span className="material-symbols-outlined text-lg" aria-hidden="true">delete</span>
                 </button>
               </div>
             </div>
