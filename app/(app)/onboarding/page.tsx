@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { generateSlug } from "@/lib/utils";
 import { validateMemorial, firstError } from "@/lib/validation";
+import { uploadProfilePhoto, validateProfilePhoto } from "@/lib/profile-photo";
+import { useToast } from "@/components/toast";
 
 const TOTAL_STEPS = 4;
 
@@ -99,9 +102,36 @@ export default function OnboardingPage() {
   const [birthDate, setBirthDate] = useState("");
   const [deathDate, setDeathDate] = useState("");
   const [description, setDescription] = useState("");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { showToast } = useToast();
+
+  function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    const invalid = validateProfilePhoto(file);
+    if (invalid) {
+      setError(invalid);
+      return;
+    }
+
+    setError(null);
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  }
+
+  function handlePhotoRemove() {
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoFile(null);
+    setPhotoPreview(null);
+  }
 
   function handleStep1Next() {
     const errors = validateMemorial({
@@ -162,20 +192,33 @@ export default function OnboardingPage() {
       return;
     }
 
-    const { error: memError } = await supabase.from("memorials").insert({
-      user_id: user.id,
-      name: name.trim(),
-      slug: generateSlug(name.trim()),
-      type,
-      description: description.trim() || null,
-      birth_date: birthDate || null,
-      death_date: deathDate || null,
-    });
+    const { data: newMemorial, error: memError } = await supabase
+      .from("memorials")
+      .insert({
+        user_id: user.id,
+        name: name.trim(),
+        slug: generateSlug(name.trim()),
+        type,
+        description: description.trim() || null,
+        birth_date: birthDate || null,
+        death_date: deathDate || null,
+      })
+      .select("id")
+      .single();
 
-    if (memError) {
-      setError(memError.message);
+    if (memError || !newMemorial) {
+      setError(memError?.message ?? "Fehler beim Erstellen.");
       setLoading(false);
       return;
+    }
+
+    // Optionales Profilfoto — dieselbe Funktion wie in der Profil-Bearbeitung (B0).
+    // Ein Fehler hier blockiert das Onboarding nicht.
+    if (photoFile) {
+      const result = await uploadProfilePhoto(supabase, user.id, newMemorial.id, photoFile);
+      if (result.error) {
+        showToast("Profilfoto konnte nicht hochgeladen werden — du kannst es später im Profil ergänzen.", "error");
+      }
     }
 
     await supabase
@@ -347,7 +390,7 @@ export default function OnboardingPage() {
         </>
       )}
 
-      {/* Step 2: Foto — ehrlich optional, Upload kommt mit B0 */}
+      {/* Step 2: Foto — optional, Upload beim Abschluss (B0) */}
       {step === 2 && (
         <>
           <ProgressHeader step={2} onBack={() => setStep(1)} />
@@ -361,27 +404,76 @@ export default function OnboardingPage() {
                 Ein Foto sagt mehr als tausend Worte
               </h1>
               <p className="text-on-surface-variant font-body font-light max-w-sm mx-auto">
-                Der Foto-Upload ist hier bald möglich. Du kannst Fotos jederzeit
-                später im Gedenkprofil hinzufügen.
+                Wähle ein Bild für das Gedenkprofil — du kannst es jederzeit
+                später ändern.
               </p>
             </div>
 
-            <div className="relative">
-              <div className="absolute -inset-4 bg-primary/5 rounded-full blur-3xl" />
-              <div className="relative w-56 h-56 rounded-full border-2 border-dashed border-outline-variant/60 bg-surface-container-low flex flex-col items-center justify-center">
-                <div className="bg-surface-container-high p-6 rounded-full mb-4">
-                  <span
-                    className="material-symbols-outlined text-on-surface-variant text-5xl"
-                    aria-hidden="true"
-                  >
-                    photo_camera
+            {error && (
+              <div className="rounded-button bg-error/10 border border-error-container/30 px-4 py-3 text-sm text-error mb-6">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => photoInputRef.current?.click()}
+              aria-label={photoPreview ? "Foto ändern" : "Foto auswählen"}
+              className="relative group rounded-full"
+            >
+              <div className="absolute -inset-4 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-400 ease-out" />
+              {photoPreview ? (
+                <div className="relative w-56 h-56 rounded-full border-2 border-primary overflow-hidden">
+                  <Image
+                    src={photoPreview}
+                    alt="Ausgewähltes Profilfoto"
+                    fill
+                    unoptimized
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-250 ease-out">
+                    <span className="material-symbols-outlined text-white text-3xl" aria-hidden="true">photo_camera</span>
+                    <span className="font-label text-xs text-white tracking-widest uppercase mt-2">Foto ändern</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative w-56 h-56 rounded-full border-2 border-dashed border-primary/40 bg-surface-container-low flex flex-col items-center justify-center group-hover:border-primary group-hover:bg-surface-container transition-colors duration-250 ease-out">
+                  <div className="bg-primary/10 p-6 rounded-full mb-4">
+                    <span className="material-symbols-outlined text-primary text-5xl" aria-hidden="true">
+                      photo_camera
+                    </span>
+                  </div>
+                  <span className="font-label text-sm text-primary tracking-widest uppercase">
+                    Foto auswählen
                   </span>
                 </div>
-                <span className="font-label text-[10px] text-on-surface-variant tracking-[0.2em] uppercase">
-                  Bald verfügbar
-                </span>
-              </div>
-            </div>
+              )}
+            </button>
+
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={handlePhotoSelect}
+              className="hidden"
+              aria-hidden="true"
+              tabIndex={-1}
+            />
+
+            {photoPreview ? (
+              <button
+                type="button"
+                onClick={handlePhotoRemove}
+                className="mt-6 inline-flex items-center gap-1 text-xs font-label text-on-surface-variant hover:text-error transition-colors duration-250 ease-out"
+              >
+                <span className="material-symbols-outlined text-sm" aria-hidden="true">delete</span>
+                Foto entfernen
+              </button>
+            ) : (
+              <p className="mt-6 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant/70">
+                JPG, PNG oder WebP · max. 10 MB
+              </p>
+            )}
           </main>
 
           <footer className="w-full max-w-lg mx-auto px-8 pb-12 relative z-10">

@@ -8,6 +8,7 @@ import { generateSlug } from "@/lib/utils";
 import { validateMemorial, firstError } from "@/lib/validation";
 import { useToast } from "@/components/toast";
 import { useConfirm } from "@/components/confirm-dialog";
+import { ProfilePhotoUpload } from "@/components/profile-photo-upload";
 import type { Memorial, MemorialPhoto } from "@/lib/types";
 
 export default function EditMemorialPage() {
@@ -227,33 +228,15 @@ export default function EditMemorialPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-6">
-        {/* Profilfoto — echter Button, Upload-Funktion kommt mit B0 */}
-        <div className="flex flex-col items-center mb-8">
-          <button
-            type="button"
-            disabled
-            aria-label="Profilfoto ändern (bald verfügbar)"
-            className="relative rounded-full disabled:cursor-not-allowed"
-          >
-            {memorial?.profile_photo_url ? (
-              <div className="relative w-[120px] h-[120px] rounded-full border-2 border-primary overflow-hidden">
-                <Image
-                  src={memorial.profile_photo_url}
-                  alt={memorial.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ) : (
-              <div className="w-[120px] h-[120px] rounded-full border-2 border-outline-variant/60 border-dashed bg-surface-container-high flex flex-col items-center justify-center">
-                <span className="material-symbols-outlined text-3xl text-on-surface-variant" aria-hidden="true">photo_camera</span>
-                <span className="text-xs text-on-surface-variant font-label mt-1">Foto ändern</span>
-              </div>
-            )}
-          </button>
-          <p className="mt-3 text-[10px] font-label uppercase tracking-[0.2em] text-on-surface-variant/70">
-            Profilfoto-Upload bald verfügbar
-          </p>
+        {/* Profilfoto (B0) */}
+        <div className="mb-8">
+          {memorial && (
+            <ProfilePhotoUpload
+              memorialId={memorial.id}
+              memorialName={memorial.name}
+              initialUrl={memorial.profile_photo_url}
+            />
+          )}
         </div>
 
         {error && (
