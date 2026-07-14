@@ -67,29 +67,29 @@ async function ResetForm({
 
       <div className="space-y-8">
         {message && (
-          <div className="rounded-lg bg-error/10 border border-error-container/30 px-4 py-3 text-sm text-error">
+          <div className="rounded-button bg-error/10 border border-error-container/30 px-4 py-3 text-sm text-error">
             {message}
           </div>
         )}
 
         {success && (
-          <div className="rounded-lg bg-success/10 border border-success/30 px-4 py-3 text-sm text-success">
+          <div className="rounded-button bg-success/10 border border-success/30 px-4 py-3 text-sm text-success">
             {success}
           </div>
         )}
 
-        <div className="bg-surface-container/30 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/10 shadow-2xl">
+        <div className="glass-panel p-8 rounded-card border border-outline-variant/30 shadow-2xl">
           <form action={resetPassword} className="space-y-6">
             <div className="space-y-2">
               <label
                 htmlFor="email"
                 className="font-label text-xs uppercase tracking-widest text-on-surface-variant ml-1"
               >
-                E-Mail Adresse
+                E-Mail-Adresse
               </label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
-                  <span className="material-symbols-outlined text-xl">mail</span>
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors duration-250 ease-out">
+                  <span className="material-symbols-outlined text-xl" aria-hidden="true">mail</span>
                 </div>
                 <input
                   id="email"
@@ -98,14 +98,14 @@ async function ResetForm({
                   required
                   autoComplete="email"
                   placeholder="name@beispiel.at"
-                  className="glass-input block w-full pl-11 pr-4 py-4 rounded-lg border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary/50 bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/40"
+                  className="block w-full pl-11 pr-4 py-4 rounded-button border-none bg-surface-container text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full gold-gradient text-on-primary font-semibold py-4 rounded-lg shadow-lg hover:brightness-110 active:scale-[0.98] transition-all duration-300 uppercase tracking-widest text-sm"
+              className="w-full gold-gradient text-on-primary font-semibold py-4 rounded-button shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all duration-250 ease-out uppercase tracking-widest text-sm"
             >
               Link senden
             </button>

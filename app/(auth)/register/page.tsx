@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { validateRegistration, firstError } from "@/lib/validation";
 import Link from "next/link";
 
 export const metadata = { title: "Registrieren" };
@@ -17,18 +18,14 @@ export default function RegisterPage({
     const password = formData.get("password") as string;
     const confirmPassword = formData.get("confirm_password") as string;
 
-    if (password !== confirmPassword) {
-      redirect(
-        "/register?message=" +
-          encodeURIComponent("Die Passwörter stimmen nicht überein.")
-      );
-    }
-
-    if (password.length < 8) {
-      redirect(
-        "/register?message=" +
-          encodeURIComponent("Das Passwort muss mindestens 8 Zeichen lang sein.")
-      );
+    const errors = validateRegistration({
+      full_name: fullName,
+      email,
+      password,
+      confirm_password: confirmPassword,
+    });
+    if (errors.length > 0) {
+      redirect("/register?message=" + encodeURIComponent(firstError(errors)));
     }
 
     const supabase = await createClient();
@@ -70,32 +67,32 @@ async function RegisterForm({
     <>
       {/* Heading */}
       <div className="text-center mb-10">
-        <h1 className="font-headline text-4xl text-on-surface mb-2 tracking-tight">
+        <h1 className="font-headline text-3xl md:text-4xl text-on-surface mb-2 tracking-tight">
           Konto erstellen
         </h1>
         <p className="font-body text-on-surface-variant text-sm">
-          Beginne deine Reise im ewigen Gedenkraum.
+          Beginne, Erinnerungen zu bewahren.
         </p>
       </div>
 
       <div className="space-y-8">
         {message && (
-          <div className="rounded-lg bg-error/10 border border-error-container/30 px-4 py-3 text-sm text-error">
+          <div className="rounded-button bg-error/10 border border-error-container/30 px-4 py-3 text-sm text-error">
             {message}
           </div>
         )}
 
         {/* Form Card */}
-        <div className="bg-surface-container-low/60 p-8 rounded-xl shadow-2xl relative overflow-hidden">
+        <div className="glass-panel p-8 rounded-card border border-outline-variant/30 shadow-2xl relative overflow-hidden">
           {/* Decorative glow */}
           <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
 
           <form action={signUp} className="space-y-5 relative z-10">
             {/* Full Name */}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label
                 htmlFor="full_name"
-                className="font-headline text-xs text-on-surface-variant px-1"
+                className="font-label text-xs uppercase tracking-widest text-on-surface-variant ml-1"
               >
                 Vollständiger Name
               </label>
@@ -106,17 +103,17 @@ async function RegisterForm({
                 required
                 autoComplete="name"
                 placeholder="Elias Müller"
-                className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary transition-all duration-300"
+                className="w-full bg-surface-container border-none rounded-button p-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               />
             </div>
 
             {/* Email */}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="font-headline text-xs text-on-surface-variant px-1"
+                className="font-label text-xs uppercase tracking-widest text-on-surface-variant ml-1"
               >
-                E-Mail Adresse
+                E-Mail-Adresse
               </label>
               <input
                 id="email"
@@ -125,15 +122,15 @@ async function RegisterForm({
                 required
                 autoComplete="email"
                 placeholder="name@beispiel.at"
-                className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary transition-all duration-300"
+                className="w-full bg-surface-container border-none rounded-button p-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               />
             </div>
 
             {/* Password */}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="font-headline text-xs text-on-surface-variant px-1"
+                className="font-label text-xs uppercase tracking-widest text-on-surface-variant ml-1"
               >
                 Passwort
               </label>
@@ -145,15 +142,15 @@ async function RegisterForm({
                 minLength={8}
                 autoComplete="new-password"
                 placeholder="••••••••"
-                className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary transition-all duration-300"
+                className="w-full bg-surface-container border-none rounded-button p-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               />
             </div>
 
             {/* Confirm Password */}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label
                 htmlFor="confirm_password"
-                className="font-headline text-xs text-on-surface-variant px-1"
+                className="font-label text-xs uppercase tracking-widest text-on-surface-variant ml-1"
               >
                 Passwort bestätigen
               </label>
@@ -165,7 +162,7 @@ async function RegisterForm({
                 minLength={8}
                 autoComplete="new-password"
                 placeholder="••••••••"
-                className="w-full bg-surface-container-high border-none rounded-lg p-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-1 focus:ring-primary transition-all duration-300"
+                className="w-full bg-surface-container border-none rounded-button p-4 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
               />
             </div>
 
@@ -176,7 +173,7 @@ async function RegisterForm({
                 href="https://aethernal.me/agb"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline transition-all"
+                className="text-primary hover:underline"
               >
                 AGB
               </a>{" "}
@@ -185,7 +182,7 @@ async function RegisterForm({
                 href="https://aethernal.me/datenschutz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline transition-all"
+                className="text-primary hover:underline"
               >
                 Datenschutzerklärung
               </a>
@@ -195,7 +192,7 @@ async function RegisterForm({
             {/* Submit */}
             <button
               type="submit"
-              className="w-full gold-gradient py-4 rounded-lg font-label font-bold text-on-primary tracking-widest uppercase text-sm mt-4 hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/10"
+              className="w-full gold-gradient text-on-primary font-semibold py-4 rounded-button shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all duration-250 ease-out uppercase tracking-widest text-sm mt-4"
             >
               Registrieren
             </button>
@@ -208,7 +205,7 @@ async function RegisterForm({
             Bereits ein Konto?{" "}
             <Link
               href="/login"
-              className="text-primary font-medium ml-1 hover:text-primary-fixed-dim transition-colors"
+              className="text-primary font-medium ml-1 hover:underline underline-offset-4"
             >
               Anmelden
             </Link>

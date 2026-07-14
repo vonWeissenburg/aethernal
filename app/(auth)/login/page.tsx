@@ -42,30 +42,24 @@ async function LoginForm({
 
   return (
     <>
-      {/* Hero Branding Section */}
-      <div className="text-center mb-12">
-        <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-primary/20 to-transparent border border-primary/10">
-          <span className="material-symbols-outlined text-5xl text-primary">
-            all_inclusive
-          </span>
-        </div>
-        <h1 className="font-headline text-3xl md:text-4xl text-on-surface mb-3 tracking-tight">
-          Aethernal
+      {/* Heading */}
+      <div className="text-center mb-10">
+        <h1 className="font-headline text-3xl md:text-4xl text-on-surface mb-2 tracking-tight">
+          Willkommen zurück
         </h1>
-        <p className="font-headline italic text-on-surface-variant text-lg opacity-80">
-          Erinnerungen für die Ewigkeit
+        <p className="font-body text-on-surface-variant text-sm">
+          Melde dich an, um deinen Gedenkraum zu öffnen.
         </p>
       </div>
 
-      {/* Login Container */}
       <div className="w-full space-y-8">
         {message && (
-          <div className="rounded-lg bg-error/10 border border-error-container/30 px-4 py-3 text-sm text-error">
+          <div className="rounded-button bg-error/10 border border-error-container/30 px-4 py-3 text-sm text-error">
             {message}
           </div>
         )}
 
-        <div className="bg-surface-container/30 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/10 shadow-2xl">
+        <div className="glass-panel p-8 rounded-card border border-outline-variant/30 shadow-2xl">
           <form action={signIn} className="space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
@@ -73,11 +67,11 @@ async function LoginForm({
                 htmlFor="email"
                 className="font-label text-xs uppercase tracking-widest text-on-surface-variant ml-1"
               >
-                E-Mail Adresse
+                E-Mail-Adresse
               </label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
-                  <span className="material-symbols-outlined text-xl">mail</span>
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors duration-250 ease-out">
+                  <span className="material-symbols-outlined text-xl" aria-hidden="true">mail</span>
                 </div>
                 <input
                   id="email"
@@ -86,7 +80,7 @@ async function LoginForm({
                   required
                   autoComplete="email"
                   placeholder="name@beispiel.at"
-                  className="glass-input block w-full pl-11 pr-4 py-4 rounded-lg border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary/50 bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/40"
+                  className="block w-full pl-11 pr-4 py-4 rounded-button border-none bg-surface-container text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
                 />
               </div>
             </div>
@@ -100,8 +94,8 @@ async function LoginForm({
                 Passwort
               </label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors">
-                  <span className="material-symbols-outlined text-xl">lock</span>
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant group-focus-within:text-primary transition-colors duration-250 ease-out">
+                  <span className="material-symbols-outlined text-xl" aria-hidden="true">lock</span>
                 </div>
                 <input
                   id="password"
@@ -110,7 +104,7 @@ async function LoginForm({
                   required
                   autoComplete="current-password"
                   placeholder="••••••••"
-                  className="glass-input block w-full pl-11 pr-4 py-4 rounded-lg border-0 ring-1 ring-outline-variant/20 focus:ring-2 focus:ring-primary/50 bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/40"
+                  className="block w-full pl-11 pr-4 py-4 rounded-button border-none bg-surface-container text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/50 transition-all duration-250 ease-out"
                 />
               </div>
             </div>
@@ -118,7 +112,7 @@ async function LoginForm({
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full gold-gradient text-on-primary font-semibold py-4 rounded-lg shadow-lg hover:brightness-110 active:scale-[0.98] transition-all duration-300 uppercase tracking-widest text-sm"
+              className="w-full gold-gradient text-on-primary font-semibold py-4 rounded-button shadow-lg shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all duration-250 ease-out uppercase tracking-widest text-sm"
             >
               Anmelden
             </button>
@@ -127,19 +121,10 @@ async function LoginForm({
             <div className="text-center">
               <Link
                 href="/reset-password"
-                className="text-sm text-on-surface-variant hover:text-primary transition-colors"
+                className="text-sm text-on-surface-variant hover:text-primary transition-colors duration-250 ease-out"
               >
                 Passwort vergessen?
               </Link>
-            </div>
-
-            {/* Divider */}
-            <div className="relative flex items-center py-2">
-              <div className="flex-grow border-t border-outline-variant/10" />
-              <span className="flex-shrink mx-4 text-xs font-label text-on-surface-variant/40 uppercase tracking-widest">
-                oder
-              </span>
-              <div className="flex-grow border-t border-outline-variant/10" />
             </div>
           </form>
         </div>

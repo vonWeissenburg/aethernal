@@ -167,6 +167,29 @@ export function validateDiaryEntry(data: {
   );
 }
 
+export function validateRegistration(data: {
+  full_name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+}): ValidationError[] {
+  const errors = collect(
+    required(data.full_name, "full_name", "Name"),
+    maxLen(data.full_name, 100, "full_name", "Name"),
+    required(data.email, "email", "E-Mail-Adresse"),
+    required(data.password, "password", "Passwort"),
+    minLen(data.password, 8, "password", "Passwort"),
+  );
+  if (data.email?.trim()) {
+    const emailErr = validEmail(data.email.trim(), "email");
+    if (emailErr) errors.push(emailErr);
+  }
+  if (data.password !== data.confirm_password) {
+    errors.push(err("confirm_password", "Die Passwörter stimmen nicht überein."));
+  }
+  return errors;
+}
+
 export function validateSettings(data: {
   full_name?: string;
   password?: string;
