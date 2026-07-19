@@ -51,7 +51,8 @@ async function findInvite(token: string) {
   return {
     state: "valid" as const,
     personName: data.name as string,
-    ownerName: (profile?.full_name as string | null)?.trim() || "einem Aethernal-Mitglied",
+    // Steht auf der Seite als Subjekt („… hat dich eingetragen") — Nominativ
+    ownerName: (profile?.full_name as string | null)?.trim() || "Ein Aethernal-Mitglied",
   };
 }
 

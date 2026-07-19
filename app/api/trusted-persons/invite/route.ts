@@ -52,7 +52,10 @@ export async function POST(request: Request) {
     .select("full_name")
     .eq("id", user.id)
     .single();
-  const ownerName = profile?.full_name?.trim() || "Ein Aethernal-Mitglied";
+  const fullName = profile?.full_name?.trim();
+  // Fallback je grammatischem Kontext: Nominativ (Betreff, Subjekt) vs. nach „von" (Dativ)
+  const ownerName = fullName || "Ein Aethernal-Mitglied";
+  const ownerNameVon = fullName || "einem Aethernal-Mitglied";
 
   const token = randomBytes(32).toString("hex");
   const tokenHash = createHash("sha256").update(token).digest("hex");
@@ -83,7 +86,7 @@ export async function POST(request: Request) {
       from: fromEmail,
       to: tp.email,
       subject: `${ownerName} möchte dich als Vertrauensperson eintragen`,
-      html: buildInviteHtml({ personName: tp.name, ownerName, confirmUrl }),
+      html: buildInviteHtml({ personName: tp.name, ownerName, ownerNameVon, confirmUrl }),
     }),
   });
 
@@ -101,10 +104,12 @@ export async function POST(request: Request) {
 function buildInviteHtml({
   personName,
   ownerName,
+  ownerNameVon,
   confirmUrl,
 }: {
   personName: string;
   ownerName: string;
+  ownerNameVon: string;
   confirmUrl: string;
 }) {
   return `<!DOCTYPE html>
@@ -121,7 +126,7 @@ function buildInviteHtml({
         <p style="font-size:16px;line-height:1.6;margin:0 0 24px;">
           Aethernal bewahrt Erinnerungen und Nachrichten an geliebte Menschen.
           Als Vertrauensperson wirst du im Ernstfall gebeten, den Tod von
-          ${escapeHtml(ownerName)} zu bestätigen — erst dann werden die dafür
+          ${escapeHtml(ownerNameVon)} zu bestätigen — erst dann werden die dafür
           vorgesehenen Nachrichten zugestellt.
         </p>
         <p style="text-align:center;margin:0 0 24px;">

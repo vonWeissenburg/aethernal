@@ -59,7 +59,8 @@ export default async function DeathReportRequestPage({
             .select("full_name")
             .eq("id", person.user_id)
             .single();
-          const ownerName = profile?.full_name?.trim() || "einem Aethernal-Mitglied";
+          // Steht in der Mail nach „Für …" (Akkusativ)
+          const ownerName = profile?.full_name?.trim() || "ein Aethernal-Mitglied";
 
           links.push(
             `<p style="font-size:15px;line-height:1.6;margin:0 0 8px;">Für <strong>${escapeHtml(ownerName)}</strong>:</p>` +
