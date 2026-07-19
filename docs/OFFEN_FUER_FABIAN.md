@@ -36,7 +36,7 @@ Stand (`fb01c89`), Smoke-Test grün.
 
 - [x] **Scheduler:** ✅ 19.07. End-to-End getestet — Testnachricht (date-Trigger, heute) UND Test-Erinnerung angelegt, Function manuell getriggert → beide versendet (`sent:1`/`sent:1`, Status-Flip + `last_sent_on` korrekt), Testdaten wieder entfernt. Empfänger-Postfach (Gmail) bitte einmal gegenchecken.
 - [ ] **B0 Profilfoto:** hochladen → erscheint auf Detail/Dashboard/SpiritLink? Entfernen → weg (auch im Storage-Bucket prüfen).
-- [ ] **B2 Einladung:** Vertrauensperson anlegen → Mail kommt → Link öffnen → „Rolle bestätigen" → Status „Bestätigt". Danach E-Mail der Person ändern → Status muss auf „Ausstehend" zurückspringen.
+- [x] **B2 Einladung:** ✅ 19.07. live getestet (Death-Journey-Probe): Anlegen → Invite-Route → Mail kam → Bestätigungslink → `confirmed=true`, Token einmalig entwertet. **Rest offen:** E-Mail der Person ändern → Status muss auf „Ausstehend" zurückspringen (Trigger-Test).
 - [ ] **B4 Konto-Löschung:** mit einem WEGWERF-Testkonto! Danach prüfen: Login unmöglich, keine DB-Zeilen, Storage-Ordner leer.
 - [ ] **QR-Code (B5)** einmal mit dem Handy scannen.
 - [ ] **Lighthouse** auf Dashboard + SpiritLink: Accessibility ≥ 90 (A8-Akzeptanz).
@@ -50,7 +50,7 @@ death-Nachrichten. Deine Punkte:
 
 - [ ] **Karenzzeit-Dauer absegnen oder ändern** (aktuell 7 Tage — eine Konstante: `GRACE_PERIOD_DAYS` in `lib/death-flow.ts`).
 - [ ] **Wortlaute reviewen** (alles meine Vorschläge): Seiten unter `app/vertrauen/todesfall/**` (Melden/Bestätigen/Widerruf) + Warn-Mail an den Nutzer (in `…/bestaetigen/page.tsx`) + Melde-Link-Mail (in `…/todesfall/page.tsx`) + B2-Einladungsmail (`app/api/trusted-persons/invite/route.ts`).
-- [ ] **End-to-End-Test** (nach Punkt 2/3): death-Nachricht anlegen → Vertrauensperson bestätigt Rolle → fordert Melde-Link an → meldet → Warn-Mail kommt bei dir an → (a) Widerruf testen, (b) Karenz ablaufen lassen (zum Testen `effective_at` in der DB vorziehen) → Nachricht kommt an, kein Doppelversand beim nächsten Cron-Lauf.
+- [x] **End-to-End-Test** ✅ 19.07. komplett bestanden (Wegwerf-Konto + Plus-Aliasse, danach rückstandsfrei entfernt): Einladung → Bestätigung → Melde-Link (48h, einmalig) → Meldung → Karenz exakt +7 Tage → Warn-Mail kam an → (a) Widerruf: `cancelled_at` gesetzt, Scheduler ignoriert stornierten Report nachweislich AUCH bei überfälligem `effective_at`; (b) zweiter Report nach Widerruf möglich, `effective_at` vorgezogen → Zustellung an Empfänger (`death sent:1`), `processed_at` gesetzt, zweiter Lauf `sent:0` (kein Doppelversand). Dabei gefundener Bug (profiles leer → „Ein Aethernal-Mitglied") gefixt: Migration `20260719_profiles_signup_trigger.sql` + kasus-sichere Fallbacks (`abf87be`).
 - [ ] **Produktfrage offen:** Was passiert mit dem Konto nach verarbeitetem Todesfall (einfrieren? Gedenkmodus? nichts)? Aktuell: nichts — nur die Nachrichten gehen raus.
 - [ ] **Rechtlich klären** (siehe Punkt 5): Haftung bei Falschbestätigung.
 
