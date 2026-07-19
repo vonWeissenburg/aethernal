@@ -34,7 +34,7 @@ Stand (`fb01c89`), Smoke-Test grün.
 
 ## 3. Live-Tests — 🟢 BEREIT, NÄCHSTER SCHRITT (sag Bescheid, ich mache sie gern mit dir)
 
-- [ ] **Scheduler:** Testnachricht mit Datum „heute" anlegen → kommt die Mail? Erinnerung testen.
+- [x] **Scheduler:** ✅ 19.07. End-to-End getestet — Testnachricht (date-Trigger, heute) UND Test-Erinnerung angelegt, Function manuell getriggert → beide versendet (`sent:1`/`sent:1`, Status-Flip + `last_sent_on` korrekt), Testdaten wieder entfernt. Empfänger-Postfach (Gmail) bitte einmal gegenchecken.
 - [ ] **B0 Profilfoto:** hochladen → erscheint auf Detail/Dashboard/SpiritLink? Entfernen → weg (auch im Storage-Bucket prüfen).
 - [ ] **B2 Einladung:** Vertrauensperson anlegen → Mail kommt → Link öffnen → „Rolle bestätigen" → Status „Bestätigt". Danach E-Mail der Person ändern → Status muss auf „Ausstehend" zurückspringen.
 - [ ] **B4 Konto-Löschung:** mit einem WEGWERF-Testkonto! Danach prüfen: Login unmöglich, keine DB-Zeilen, Storage-Ordner leer.
