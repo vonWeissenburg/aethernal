@@ -37,9 +37,9 @@ Stand (`fb01c89`), Smoke-Test grün.
 - [x] **Scheduler:** ✅ 19.07. End-to-End getestet — Testnachricht (date-Trigger, heute) UND Test-Erinnerung angelegt, Function manuell getriggert → beide versendet (`sent:1`/`sent:1`, Status-Flip + `last_sent_on` korrekt), Testdaten wieder entfernt. Empfänger-Postfach (Gmail) bitte einmal gegenchecken.
 - [ ] **B0 Profilfoto:** hochladen → erscheint auf Detail/Dashboard/SpiritLink? Entfernen → weg (auch im Storage-Bucket prüfen).
 - [x] **B2 Einladung:** ✅ 19.07. komplett getestet: Anlegen → Invite-Route → Mail kam → Bestätigungslink → `confirmed=true`, Token einmalig entwertet. E-Mail-Änderungs-Trigger ebenfalls verifiziert: E-Mail-Wechsel resettet `confirmed`/`confirmed_at`/`invited_at`/Token; Updates ohne E-Mail-Änderung lassen die Bestätigung unangetastet.
-- [ ] **B4 Konto-Löschung:** mit einem WEGWERF-Testkonto! Danach prüfen: Login unmöglich, keine DB-Zeilen, Storage-Ordner leer.
+- [x] **B4 Konto-Löschung:** ✅ 19.07. über die echte App-Route getestet (Wegwerf-Konto mit Memorial, Nachricht, Tagebuch, Storage-Foto): Auth-User 404, alle DB-Zeilen weg (Cascade), Storage-Ordner leer, Login unmöglich (400).
 - [ ] **QR-Code (B5)** einmal mit dem Handy scannen.
-- [ ] **Lighthouse** auf Dashboard + SpiritLink: Accessibility ≥ 90 (A8-Akzeptanz).
+- [x] **Lighthouse** ✅ 19.07. authentifiziert gemessen (Demo-Account): Accessibility 94/94/92 (Dashboard/Memorial/Nachrichten) — **A8-Akzeptanz ≥ 90 erfüllt.** Performance 55/66/83; Top-Bremsen: Server-TTFB (1,8 s auf dem Dashboard) und LCP ~9,5 s. Details im Bericht/CHANGELOG.
 
 ## 4. B3 Todesbestätigung — GEBAUT (Karenzzeit-Modell) → dein Review
 
