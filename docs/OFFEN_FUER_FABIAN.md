@@ -36,7 +36,7 @@ Stand (`fb01c89`), Smoke-Test grün.
 
 - [x] **Scheduler:** ✅ 19.07. End-to-End getestet — Testnachricht (date-Trigger, heute) UND Test-Erinnerung angelegt, Function manuell getriggert → beide versendet (`sent:1`/`sent:1`, Status-Flip + `last_sent_on` korrekt), Testdaten wieder entfernt. Empfänger-Postfach (Gmail) bitte einmal gegenchecken.
 - [ ] **B0 Profilfoto:** hochladen → erscheint auf Detail/Dashboard/SpiritLink? Entfernen → weg (auch im Storage-Bucket prüfen).
-- [x] **B2 Einladung:** ✅ 19.07. live getestet (Death-Journey-Probe): Anlegen → Invite-Route → Mail kam → Bestätigungslink → `confirmed=true`, Token einmalig entwertet. **Rest offen:** E-Mail der Person ändern → Status muss auf „Ausstehend" zurückspringen (Trigger-Test).
+- [x] **B2 Einladung:** ✅ 19.07. komplett getestet: Anlegen → Invite-Route → Mail kam → Bestätigungslink → `confirmed=true`, Token einmalig entwertet. E-Mail-Änderungs-Trigger ebenfalls verifiziert: E-Mail-Wechsel resettet `confirmed`/`confirmed_at`/`invited_at`/Token; Updates ohne E-Mail-Änderung lassen die Bestätigung unangetastet.
 - [ ] **B4 Konto-Löschung:** mit einem WEGWERF-Testkonto! Danach prüfen: Login unmöglich, keine DB-Zeilen, Storage-Ordner leer.
 - [ ] **QR-Code (B5)** einmal mit dem Handy scannen.
 - [ ] **Lighthouse** auf Dashboard + SpiritLink: Accessibility ≥ 90 (A8-Akzeptanz).

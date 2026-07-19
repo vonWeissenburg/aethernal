@@ -1,17 +1,39 @@
 -- ============================================================
--- AETHERNAL — Supabase Schema
+-- AETHERNAL — Supabase Schema (Baseline)
 -- Run this in Supabase SQL Editor (Dashboard → SQL Editor)
+--
+-- Stand 19.07.2026: read-only gegen das echte Prod-Schema abgeglichen
+-- (Introspektion via information_schema/pg_catalog). Abweichungen und
+-- der in Prod zusätzlich vorhandene Legacy-Bestand der früheren
+-- App-Iteration sind in docs/SCHEMA_DRIFT_2026-07-19.md dokumentiert.
+-- Spätere Schema-Änderungen liegen in supabase/migrations/.
 -- ============================================================
 
 -- 1) Profiles (extends auth.users)
+-- ACHTUNG: Diese Tabelle stammt in Prod aus der früheren App-Iteration und
+-- ist deshalb breiter als die App sie braucht — insbesondere `email NOT NULL`
+-- (Duplikat von auth.users.email; der Signup-Trigger MUSS sie befüllen,
+-- sonst scheitert er). Definition entspricht Prod.
+do $$ begin
+  create type public.guide_type as enum ('mensch', 'tier');
+exception when duplicate_object then null;
+end $$;
+
 create table if not exists public.profiles (
   id uuid references auth.users on delete cascade primary key,
+  email text not null,
   full_name text,
+  display_name text,
   avatar_url text,
+  phone text,
+  locale text default 'de-AT',
   onboarding_done boolean default false,
+  guide_type public.guide_type,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
+
+create index if not exists idx_profiles_email on public.profiles (email);
 
 alter table public.profiles enable row level security;
 
@@ -22,12 +44,18 @@ create policy "Users can update own profile"
 create policy "Users can insert own profile"
   on public.profiles for insert with check (auth.uid() = id);
 
--- Auto-create profile on signup
+-- Auto-create profile on signup — gefixte Fassung vom 19.07.2026
+-- (siehe supabase/migrations/20260719_profiles_signup_trigger.sql):
+-- befüllt auch `email`, idempotent, Signup scheitert nie an der Profilanlage.
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, full_name)
-  values (new.id, new.raw_user_meta_data->>'full_name');
+  insert into public.profiles (id, email, full_name)
+  values (new.id, new.email, new.raw_user_meta_data->>'full_name')
+  on conflict (id) do nothing;
+  return new;
+exception when others then
+  raise log 'handle_new_user failed: %', SQLERRM;
   return new;
 end;
 $$ language plpgsql security definer;
