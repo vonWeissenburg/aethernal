@@ -2,6 +2,33 @@
 
 _Neueste zuerst. Jede wichtige Richtungsentscheidung hier mit Datum + Begründung festhalten._
 
+## 2026-07-19 — Zustell-Mail für hinterlassene Nachrichten: persönlicher Rahmen (Fabian)
+Finaler Wortlaut der death-Zustellmail (umgesetzt in `send-due-messages`):
+Absender-Anzeigename **„{Name} über Aethernal"** (im Postfach steht der Name
+der verstorbenen Person, nicht „noreply"), Anrede, dann exakt: _„diese
+Nachricht hat {Name} zu Lebzeiten für dich geschrieben — mit dem Wunsch, dass
+sie dich nach {Name}s Tod erreicht. Aethernal überbringt sie dir heute."_ →
+Nachricht mit linker Goldlinie abgesetzt → Abschluss _„In stiller
+Verbundenheit, Aethernal"_. **Begründung:** benennt die Verstorbene beim Namen,
+macht klar, dass es ihre Worte zu Lebzeiten sind, keine
+„Paketverfolgungs"-Fußzeile; gender-neutral über den Namens-Genitiv.
+**Fallback ohne Profilname:** genitivfreie Formulierung („… nach dem Tod des
+Absenders …"), Absender nur „Aethernal".
+
+## 2026-07-19 — Karenzzeit bleibt 7 Tage (Fabian)
+Nach bestandener End-to-End-Probe bestätigt. **Begründung:** Kürzer riskiert,
+dass ein fälschlich Totgemeldeter die Warn-Mail nicht rechtzeitig sieht;
+länger lässt Hinterbliebene unnötig warten. (`GRACE_PERIOD_DAYS` in
+`lib/death-flow.ts`.)
+
+## 2026-07-19 — Konto nach verarbeitetem Todesfall: „verstorben" markieren, NICHT löschen (Fabian)
+Löschen wäre falsch — das Produkt bewahrt Erinnerung. **Wichtiger Teil:** Der
+Scheduler muss nach verarbeitetem Todesfall die **jährlichen Erinnerungen an
+den Kontoinhaber stoppen** (sonst mailt der Cron einer verstorbenen Person
+„Denk an deinen Jahrestag"). **Status: entschieden, noch NICHT gebaut** —
+eigener Arbeitsbatch (Markierung am Profil + Reminder-Filter im Scheduler +
+ggf. UI-Kennzeichnung).
+
 ## 2026-07-14 — Todesbestätigung: Karenzzeit-Modell, 7 Tage (Redesign B3)
 Umgesetzt nach dem in `docs/OFFEN_FUER_FABIAN.md` vorgeschlagenen **Modell 2**
 (Fabian folgte der Empfehlung; Wortlaute stehen zum finalen Review):

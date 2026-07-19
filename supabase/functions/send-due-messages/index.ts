@@ -62,7 +62,7 @@ function isDue(
 }
 
 /** Eine E-Mail über Resend versenden. Wirft bei Fehler. */
-async function sendEmail(opts: { to: string; subject: string; html: string }) {
+async function sendEmail(opts: { to: string; subject: string; html: string; from?: string }) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -70,7 +70,7 @@ async function sendEmail(opts: { to: string; subject: string; html: string }) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: Deno.env.get("FROM_EMAIL"),
+      from: opts.from ?? Deno.env.get("FROM_EMAIL"),
       to: [opts.to],
       subject: opts.subject,
       html: opts.html,
@@ -80,6 +80,67 @@ async function sendEmail(opts: { to: string; subject: string; html: string }) {
     const detail = await res.text();
     throw new Error(`Resend ${res.status}: ${detail}`);
   }
+}
+
+/** Reine Versand-Adresse aus FROM_EMAIL ("Aethernal <noreply@…>" → "noreply@…"). */
+function fromAddress(): string {
+  const raw = Deno.env.get("FROM_EMAIL") ?? "";
+  const m = raw.match(/<([^>]+)>/);
+  return m ? m[1] : raw;
+}
+
+/** Absender mit persönlichem Anzeigenamen: "Anna Testfall über Aethernal <noreply@…>". */
+function personalFrom(ownerName: string | null): string | undefined {
+  if (!ownerName) return undefined; // Fallback: FROM_EMAIL ("Aethernal <…>")
+  const safe = ownerName.replace(/["<>]/g, "").trim();
+  return safe ? `${safe} über Aethernal <${fromAddress()}>` : undefined;
+}
+
+/** Deutscher Namens-Genitiv: "Anna" → "Annas", aber "Klaus" → "Klaus'". */
+function genitiv(name: string): string {
+  return /[sßxz]$/i.test(name.trim()) ? `${name.trim()}’` : `${name.trim()}s`;
+}
+
+/** Würdiger Mail-Rahmen (identische Optik wie lib/death-flow.ts mailShell). */
+function mailShell(inner: string): string {
+  return `<!DOCTYPE html>
+<html lang="de">
+  <body style="margin:0;padding:0;background:#f6f4ef;font-family:Georgia,'Times New Roman',serif;color:#2e2a20;">
+    <div style="max-width:560px;margin:0 auto;padding:40px 24px;">
+      <p style="text-align:center;font-style:italic;font-size:20px;color:#8a6d1a;margin:0 0 32px;">&#10024; Aethernal</p>
+      <div style="background:#ffffff;border:1px solid #e5dfd0;border-radius:12px;padding:32px;">
+        ${inner}
+      </div>
+    </div>
+  </body>
+</html>`;
+}
+
+/**
+ * Zustell-Mail für eine hinterlassene Nachricht (Entscheidung 19.07.2026):
+ * benennt die verstorbene Person, macht klar, dass es ihre Worte zu Lebzeiten
+ * sind, setzt die Nachricht mit Goldlinie ab und schließt würdig — keine
+ * "Paketverfolgungs"-Fußzeile. Ohne Owner-Namen: genitivfreie Formulierung.
+ */
+function buildDeliveryHtml(opts: {
+  recipientName: string;
+  body: string;
+  ownerName: string | null;
+}): string {
+  const intro = opts.ownerName
+    ? `diese Nachricht hat ${escapeHtml(opts.ownerName)} zu Lebzeiten für dich geschrieben — ` +
+      `mit dem Wunsch, dass sie dich nach ${escapeHtml(genitiv(opts.ownerName))} Tod erreicht. ` +
+      `Aethernal überbringt sie dir heute.`
+    : `diese Nachricht wurde zu Lebzeiten für dich geschrieben — ` +
+      `mit dem Wunsch, dass sie dich nach dem Tod des Absenders erreicht. ` +
+      `Aethernal überbringt sie dir heute.`;
+  return mailShell(
+    `<p style="font-size:16px;line-height:1.6;margin:0 0 16px;">Hallo ${escapeHtml(opts.recipientName)},</p>` +
+      `<p style="font-size:16px;line-height:1.6;margin:0 0 24px;">${intro}</p>` +
+      `<div style="border-left:3px solid #D4AF37;padding-left:16px;margin:0 0 24px;font-size:16px;line-height:1.7;">` +
+      `${escapeHtml(opts.body).replace(/\n/g, "<br>")}</div>` +
+      `<p style="font-size:16px;line-height:1.6;margin:0;">In stiller Verbundenheit,<br>Aethernal</p>`,
+  );
 }
 
 function escapeHtml(s: string): string {
@@ -111,10 +172,24 @@ Deno.serve(async (req) => {
     death: { reports: 0, sent: 0, failed: 0 },
   };
 
+  // Owner-Namen (profiles.full_name) cachen — für Absender-Anzeigenamen
+  const nameCache = new Map<string, string | null>();
+  async function ownerName(userId: string): Promise<string | null> {
+    if (nameCache.has(userId)) return nameCache.get(userId)!;
+    const { data } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", userId)
+      .single();
+    const name = data?.full_name?.trim() || null;
+    nameCache.set(userId, name);
+    return name;
+  }
+
   // 2) Fällige Nachrichten (datumsgetriggert; 'death' siehe Abschnitt 4)
   const { data: messages, error: msgErr } = await supabase
     .from("messages")
-    .select("id, title, body, recipient_name, recipient_email, trigger_date, repeat_yearly, sent_at")
+    .select("id, user_id, title, body, recipient_name, recipient_email, trigger_date, repeat_yearly, sent_at")
     .eq("status", "scheduled")
     .eq("trigger_type", "date")
     // Nur bereits erreichte Daten (nutzt messages_due_idx) + Sicherheits-Deckel pro Lauf.
@@ -133,6 +208,7 @@ Deno.serve(async (req) => {
       await sendEmail({
         to: m.recipient_email,
         subject: m.title,
+        from: personalFrom(await ownerName(m.user_id)),
         html: `<p>Hallo ${escapeHtml(m.recipient_name)},</p>` +
           `<div>${escapeHtml(m.body).replace(/\n/g, "<br>")}</div>` +
           `<p style="margin-top:24px;color:#888;font-size:12px">` +
@@ -228,15 +304,21 @@ Deno.serve(async (req) => {
         continue; // Report bleibt unverarbeitet → nächster Lauf versucht es erneut
       }
 
+      // Name der verstorbenen Person — für Absender ("Anna über Aethernal")
+      // und den Rahmen der Zustell-Mail (Entscheidung 19.07.2026).
+      const deceasedName = await ownerName(report.user_id);
+
       for (const m of deathMessages ?? []) {
         try {
           await sendEmail({
             to: m.recipient_email,
             subject: m.title,
-            html: `<p>Hallo ${escapeHtml(m.recipient_name)},</p>` +
-              `<div>${escapeHtml(m.body).replace(/\n/g, "<br>")}</div>` +
-              `<p style="margin-top:24px;color:#888;font-size:12px">` +
-              `Diese Nachricht wurde über Aethernal zugestellt.</p>`,
+            from: personalFrom(deceasedName),
+            html: buildDeliveryHtml({
+              recipientName: m.recipient_name,
+              body: m.body,
+              ownerName: deceasedName,
+            }),
           });
           // death-Nachrichten sind einmalig → sofort 'sent' (Doppelversand-Schutz,
           // auch wenn der Lauf danach abbricht und der Report offen bleibt).
