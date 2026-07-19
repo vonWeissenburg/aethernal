@@ -1,13 +1,13 @@
 # Aethernal Roadmap
 
-_Letzte Aktualisierung: 2026-07-01 — folgt dem Masterplan (docs/MASTERPLAN.md)._
+_Letzte Aktualisierung: 2026-07-19 — folgt dem Masterplan (docs/MASTERPLAN.md)._
 Ziel des nächsten Meilensteins: **B2C-Launch mit vollem Kernversprechen.** Oben = als Nächstes.
 
 ## Phase 1 — Nachrichten-Engine (Launch-Blocker)
 1. [x] **E-Mail-Versand über Resend einrichten** + Supabase „Confirm email" aktivieren ✓ (17.06.2026 — Domain aethernal.me verifiziert, Custom SMTP in Supabase aktiv, Confirm email AN)
-2. [~] **Scheduler bauen** (Supabase Edge Function + täglicher Cron): Code gebaut (22.06.), committet + gehärtet (01.07.: Batch-Limit, Jahres-Trigger-Guard, indexnutzende Abfragen). **Offen — nur noch: `project_id` in `supabase/config.toml` eintragen, Secrets setzen (RESEND_API_KEY, FROM_EMAIL, CRON_SECRET), Function deployen, Migration + `setup-cron.sql` einspielen, Live-Test.**
-3. [ ] **Zeitgesteuerte Nachrichten** real zustellen
-4. [~] **Vertrauenspersonen-Flow**: ✓ Code komplett 14.07. — Einladung/Bestätigung (B2) UND Todesbestätigung (B3, Karenzzeit-Modell 7 Tage, Scheduler erweitert). **Offen: Fabians Wortlaut-Review + Secrets + Migrationen + End-to-End-Test** (`docs/OFFEN_FUER_FABIAN.md`)
+2. [x] **Scheduler bauen** (Supabase Edge Function + täglicher Cron) ✓ **SCHARFGESCHALTET 16./19.07.2026** (Etappe 0, `docs/DEPLOY_PROTOKOLL_2026-07-19.md`): Function deployed, Secrets gesetzt, alle 3 Migrationen eingespielt, Cron-Job aktiv (täglich 06:00 UTC), Smoke-Test grün (HTTP 200, manuell mit CRON_SECRET)
+3. [~] **Zeitgesteuerte Nachrichten** real zustellen — Infrastruktur LIVE (19.07.), **offen: Live-Test mit echter Testnachricht** (`docs/OFFEN_FUER_FABIAN.md` Punkt 3), danach B7-Rest („Versand nicht aktiv"-Hinweise entfernen)
+4. [~] **Vertrauenspersonen-Flow**: ✓ Code komplett 14.07. — Einladung/Bestätigung (B2) UND Todesbestätigung (B3, Karenzzeit-Modell 7 Tage, Scheduler erweitert); Migrationen + Secrets ✓ live 19.07. **Offen: Fabians Wortlaut-Review + End-to-End-Test** (`docs/OFFEN_FUER_FABIAN.md`)
 
 ## Phase 2 — Launch-Reife (Vertrauen, Recht, Politur)
 - [~] Konto-Löschung vollständig (serverseitig inkl. Auth-Account) — DSGVO — ✓ Code komplett 14.07. (B4, inkl. Storage-Fotos; Live-Test braucht `SUPABASE_SERVICE_ROLE_KEY` am Server)

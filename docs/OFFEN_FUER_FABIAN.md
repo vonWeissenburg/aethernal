@@ -1,4 +1,4 @@
-# Offen für Fabian — Übergabe nach Redesign-Mission (Stand 14.07.2026)
+# Offen für Fabian — Übergabe nach Redesign-Mission (Stand 19.07.2026)
 
 *Alles, was Claude nicht ohne dich erledigen kann. Sortiert nach Dringlichkeit.
 Code-Stand: Track A komplett (A0–A8), Track B: B0, B1, B2*, B4*, B5, B6, B7-Teil
@@ -24,29 +24,15 @@ Einordnung, damit die Entscheidung bewusst bleibt (Audit 01.07., P0):
 → **Meine Empfehlung bleibt: rotieren.** Wenn nicht: den `_LÖSCHEN`-Ordner
 endgültig löschen und aus jedem Cloud-Sync nehmen.
 
-## 2. Server-/Secrets-Setup (Voraussetzung für alle Live-Tests)
+## 2. Server-/Secrets-Setup — ✅ ERLEDIGT 16./19.07.2026
 
-**A) App-Server (VPS-`.env` bzw. lokale `.env.local`):**
-```
-NEXT_PUBLIC_SUPABASE_URL=…        (Supabase → Settings → API)
-NEXT_PUBLIC_SUPABASE_ANON_KEY=…
-NEXT_PUBLIC_APP_URL=https://app.aethernal.me
-SUPABASE_SERVICE_ROLE_KEY=…       (NUR Server! Für Konto-Löschung B4 + Bestätigung B2)
-RESEND_API_KEY=re_…               (Für Einladungs-Mails B2)
-FROM_EMAIL="Aethernal <noreply@aethernal.me>"
-```
-Eine lokale `.env.local` (gleiche Variablen) brauche ich außerdem, um künftig
-im Dev-Server zu sichten und Live-Tests selbst zu fahren.
+Komplett scharfgeschaltet, Details in `docs/DEPLOY_PROTOKOLL_2026-07-19.md`:
+VPS-`.env` (echter Ordner: `/opt/aethernal/app`) vollständig, lokale `.env.local`
+angelegt, Function-Secrets gesetzt, Edge Function deployed, alle 3 Migrationen
+eingespielt + verifiziert, Cron-Job aktiv (täglich 06:00 UTC), App auf aktuellem
+Stand (`fb01c89`), Smoke-Test grün.
 
-**B) Supabase (Scheduler, Etappe 0 aus dem Schlachtplan):**
-1. `supabase/config.toml`: `project_id` eintragen (steht auf Platzhalter).
-2. `supabase secrets set RESEND_API_KEY=… FROM_EMAIL=… CRON_SECRET=…`
-3. Edge Function deployen: `supabase functions deploy send-due-messages`
-4. Migrationen einspielen: `supabase db push` (bringt `20260622_scheduler.sql`
-   **und** die neue `20260714_trusted_person_confirmation.sql`), dann
-   `setup-cron.sql` im SQL-Editor ausführen (CRON_SECRET einsetzen).
-
-## 3. Live-Tests (nach Punkt 2 — sag Bescheid, ich mache sie gern mit dir)
+## 3. Live-Tests — 🟢 BEREIT, NÄCHSTER SCHRITT (sag Bescheid, ich mache sie gern mit dir)
 
 - [ ] **Scheduler:** Testnachricht mit Datum „heute" anlegen → kommt die Mail? Erinnerung testen.
 - [ ] **B0 Profilfoto:** hochladen → erscheint auf Detail/Dashboard/SpiritLink? Entfernen → weg (auch im Storage-Bucket prüfen).
