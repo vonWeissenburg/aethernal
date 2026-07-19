@@ -127,9 +127,11 @@ function buildDeliveryHtml(opts: {
   body: string;
   ownerName: string | null;
 }): string {
-  const intro = opts.ownerName
+  // Erste Nennung voller Name, zweite nur Vorname im Genitiv („nach Annas Tod")
+  const firstName = opts.ownerName?.trim().split(/\s+/)[0];
+  const intro = opts.ownerName && firstName
     ? `diese Nachricht hat ${escapeHtml(opts.ownerName)} zu Lebzeiten für dich geschrieben — ` +
-      `mit dem Wunsch, dass sie dich nach ${escapeHtml(genitiv(opts.ownerName))} Tod erreicht. ` +
+      `mit dem Wunsch, dass sie dich nach ${escapeHtml(genitiv(firstName))} Tod erreicht. ` +
       `Aethernal überbringt sie dir heute.`
     : `diese Nachricht wurde zu Lebzeiten für dich geschrieben — ` +
       `mit dem Wunsch, dass sie dich nach dem Tod des Absenders erreicht. ` +
