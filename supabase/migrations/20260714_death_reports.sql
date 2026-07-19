@@ -33,6 +33,7 @@ ALTER TABLE public.death_reports ENABLE ROW LEVEL SECURITY;
 
 -- Der Inhaber darf eigene Reports lesen (z. B. für einen künftigen Warn-Banner);
 -- ALLE Schreibzugriffe laufen serverseitig mit Service-Role.
+DROP POLICY IF EXISTS "death_reports_select_own" ON public.death_reports;
 CREATE POLICY "death_reports_select_own" ON public.death_reports
   FOR SELECT USING (auth.uid() = user_id);
 

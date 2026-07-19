@@ -16,15 +16,20 @@ CREATE UNIQUE INDEX IF NOT EXISTS trusted_persons_token_hash_idx
 -- daher braucht es KEINE anonyme Policy.
 DROP POLICY IF EXISTS "Users see own trusted persons" ON public.trusted_persons;
 
+-- CREATE POLICY kennt kein IF NOT EXISTS — DROP davor macht den Block idempotent.
+DROP POLICY IF EXISTS "trusted_persons_select_own" ON public.trusted_persons;
 CREATE POLICY "trusted_persons_select_own" ON public.trusted_persons
   FOR SELECT USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "trusted_persons_insert_own" ON public.trusted_persons;
 CREATE POLICY "trusted_persons_insert_own" ON public.trusted_persons
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "trusted_persons_update_own" ON public.trusted_persons;
 CREATE POLICY "trusted_persons_update_own" ON public.trusted_persons
   FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "trusted_persons_delete_own" ON public.trusted_persons;
 CREATE POLICY "trusted_persons_delete_own" ON public.trusted_persons
   FOR DELETE USING (auth.uid() = user_id);
 

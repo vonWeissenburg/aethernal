@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-APP_DIR="/opt/aether/apps/nextjs"
+APP_DIR="/opt/aethernal/app"
 cd "$APP_DIR"
 
 echo "==> Pulling latest code..."
