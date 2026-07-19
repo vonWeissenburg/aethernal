@@ -50,9 +50,9 @@ export function MessageList({ messages }: { messages: Message[] }) {
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-1">
-                  <h3 className="font-headline text-base font-semibold text-on-surface truncate">
+                  <h2 className="font-headline text-base font-semibold text-on-surface truncate">
                     {m.title}
-                  </h3>
+                  </h2>
                   <span
                     className={`shrink-0 font-label text-xs px-2.5 py-0.5 rounded-full font-medium ${STATUS_STYLES[m.status]}`}
                   >

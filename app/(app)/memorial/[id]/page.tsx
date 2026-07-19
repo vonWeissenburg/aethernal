@@ -7,6 +7,7 @@ import Image from "next/image";
 import QRCode from "qrcode";
 import CopyLinkButton from "@/components/copy-link-button";
 import ShareLinkButton from "@/components/share-link-button";
+import { LightboxGallery } from "@/components/photo-lightbox";
 
 export async function generateMetadata({
   params,
@@ -158,7 +159,7 @@ export default async function MemorialDetailPage({
           Übersicht
         </span>
         <Link
-          href={`/memorial/${id}/edit#fotos`}
+          href="#fotos"
           className="flex-1 py-3 text-sm font-label font-medium text-on-surface-variant text-center hover:text-on-surface transition-colors duration-250 ease-out"
         >
           Fotos
@@ -272,7 +273,7 @@ export default async function MemorialDetailPage({
         )}
 
         {/* Photo gallery preview */}
-        <div className="bg-surface-container-low rounded-card p-6 border border-outline-variant/30">
+        <div id="fotos" className="bg-surface-container-low rounded-card p-6 border border-outline-variant/30 scroll-mt-20">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary" aria-hidden="true">photo_library</span>
@@ -287,27 +288,10 @@ export default async function MemorialDetailPage({
           </div>
 
           {photos && photos.length > 0 ? (
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              {photos.map((photo) => (
-                <div
-                  key={photo.id}
-                  className="group relative aspect-square rounded-button overflow-hidden bg-surface-container-high"
-                >
-                  <Image
-                    src={photo.url}
-                    alt={photo.caption ?? ""}
-                    fill
-                    className="object-cover grayscale group-hover:grayscale-0 transition-[filter] duration-400 ease-out"
-                    sizes="(max-width: 640px) 33vw, 25vw"
-                  />
-                  {photo.caption && (
-                    <span className="absolute inset-x-0 bottom-0 bg-black/60 px-2 py-1 text-[10px] font-label text-white truncate">
-                      {photo.caption}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
+            <LightboxGallery
+              photos={photos.map((p) => ({ id: p.id, url: p.url, caption: p.caption }))}
+              variant="grid"
+            />
           ) : (
             <div className="rounded-card border border-dashed border-outline-variant/40 p-8 text-center">
               <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 mb-2" aria-hidden="true">add_photo_alternate</span>

@@ -86,9 +86,9 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                <h3 className="font-headline text-base font-semibold text-on-surface truncate">
+                <h2 className="font-headline text-base font-semibold text-on-surface truncate">
                   {r.title}
-                </h3>
+                </h2>
                 {r.description && (
                   <p className="font-body text-xs text-on-surface-variant mt-0.5 line-clamp-1">
                     {r.description}

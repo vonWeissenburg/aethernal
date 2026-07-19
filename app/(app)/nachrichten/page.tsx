@@ -80,18 +80,6 @@ export default async function NachrichtenPage({
           </Link>
         </div>
 
-        {/* Ehrlicher Status-Hinweis (entfernen, sobald der Scheduler live ist) */}
-        {activeTab === "nachrichten" && (
-          <div className="flex items-start gap-3 rounded-button bg-surface-container-low border border-outline-variant/30 p-4 mb-6">
-            <span className="material-symbols-outlined text-on-surface-variant text-[20px] mt-0.5" aria-hidden="true">info</span>
-            <p className="font-body text-xs text-on-surface-variant">
-              Der automatische E-Mail-Versand ist noch nicht aktiv. Deine
-              Nachrichten werden sicher gespeichert und zugestellt, sobald der
-              Versand startet.
-            </p>
-          </div>
-        )}
-
         {activeTab === "nachrichten" ? (
           <MessageList messages={messages ?? []} />
         ) : (

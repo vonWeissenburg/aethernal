@@ -163,9 +163,9 @@ export function TrustedPersons({
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-headline text-base font-semibold text-on-surface truncate">
+                  <h2 className="font-headline text-base font-semibold text-on-surface truncate">
                     {tp.name}
-                  </h3>
+                  </h2>
                   {tp.relationship && (
                     <p className="font-body text-xs text-on-surface-variant mt-0.5">
                       {tp.relationship}
@@ -245,13 +245,13 @@ export function TrustedPersons({
 
       {/* Add / Edit form */}
       <div className="rounded-card bg-card border border-outline-variant/30 p-6">
-        <h3 className="font-headline text-lg font-semibold text-on-surface mb-5">
+        <h2 className="font-headline text-lg font-semibold text-on-surface mb-5">
           {editingId
             ? "Vertrauensperson bearbeiten"
             : trustedPersons.length > 0
               ? "Weitere Vertrauensperson hinzufügen"
               : "Vertrauensperson festlegen"}
-        </h3>
+        </h2>
 
         {error && (
           <div className="flex items-center gap-2 rounded-button bg-error/10 border border-error/20 p-3 mb-5">

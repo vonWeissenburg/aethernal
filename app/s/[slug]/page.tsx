@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { formatLifespan } from "@/lib/utils";
 import type { Memorial, MemorialPhoto } from "@/lib/types";
 import Image from "next/image";
+import { LightboxGallery } from "@/components/photo-lightbox";
 
 export async function generateMetadata({
   params,
@@ -142,27 +143,10 @@ export default async function SpiritLinkPage({
             <h2 className="font-headline text-xl lg:text-2xl text-on-surface mb-6 text-center">
               Fotos
             </h2>
-            <div className="flex overflow-x-auto gap-4 pb-4 -mx-6 px-6 hide-scrollbar lg:grid lg:grid-cols-3 lg:overflow-visible lg:mx-0 lg:px-0 lg:pb-0">
-              {photos.map((photo) => (
-                <figure
-                  key={photo.id}
-                  className="group relative flex-shrink-0 w-48 lg:w-auto aspect-[3/4] rounded-card overflow-hidden bg-surface shadow-xl"
-                >
-                  <Image
-                    src={photo.url}
-                    alt={photo.caption ?? ""}
-                    width={320}
-                    height={427}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-[filter] duration-400 ease-out"
-                  />
-                  {photo.caption && (
-                    <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-3 pt-6 pb-2 text-[11px] font-body text-white/90">
-                      {photo.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              ))}
-            </div>
+            <LightboxGallery
+              photos={photos.map((p) => ({ id: p.id, url: p.url, caption: p.caption }))}
+              variant="strip"
+            />
           </section>
         )}
 
