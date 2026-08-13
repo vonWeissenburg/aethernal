@@ -2,6 +2,41 @@
 
 _Was wann gebaut/geändert wurde. Neueste zuerst._
 
+## 2026-08-13
+- **Performance-Etappe (A6), Teil 1 — Fonts & Landing-Page-Assets.** Vorher gemessen statt geraten:
+  Der VPS ist NICHT die Bremse (Frankfurt, Load 0.00; statische LP direkt aus nginx in **28 ms**,
+  App-SSR `/login` warm in **17 ms**, VPS→Supabase Ping **1 ms**). Die 8–9 s entstanden im Client:
+  externe Roundtrips und Bytes.
+- **App: Google Fonts entfernt, alles selbst gehostet** (`app/layout.tsx` + `app/globals.css`).
+  3 render-blockierende Stylesheets von `fonts.googleapis.com`/`fonts.gstatic.com` sind weg
+  (= 2 fremde Hosts × DNS+TLS+CSS+Font aus dem kritischen Pfad). Fonts jetzt über `next/font/local`
+  mit `size-adjust`-Fallbacks (weniger Layout-Shift). **Material-Symbols-Icon-Font auf die
+  66 tatsächlich benutzten Icons subgesetzt: 3 868 KB → 85 KB (−97,8 %)**; alle 66 Ligaturen mit
+  HarfBuzz gegengeprüft, Icon-Namen liegen in `app/fonts/ICONS.txt`. Achtung: Die Regeln
+  `font-family`/`font-feature-settings`/… für `.material-symbols-outlined` kamen früher aus dem
+  Google-Stylesheet und stehen jetzt in `globals.css` — ohne sie rendern Icons als Klartext.
+- **Landing Page: Tailwind-Play-CDN raus.** `cdn.tailwindcss.com` (~400 KB JS, das im Browser
+  erst CSS kompilieren muss, bevor irgendetwas gestaltet ist) ersetzt durch statisch kompiliertes
+  `styles.css` (**28 KB**). Config-Nachbau in `landingpage.tailwind.config.js`, Build:
+  `npx tailwindcss -c landingpage.tailwind.config.js -i input.css -o styles.css --minify`.
+- **Landing Page: 8 Hero-/Sektionsbilder waren von `lh3.googleusercontent.com` gehotlinkt**
+  (temporäre Google-Stitch-URLs — hätten jederzeit verschwinden können und die Seite zerlegt).
+  Jetzt lokal als WebP: **2,98 MB → 191 KB (−93,7 %)**, mit `width`/`height` gegen Layout-Shift,
+  Hero `fetchpriority=high`, Rest `loading=lazy`.
+- **Ergebnis Landing Page live:** 17 externe Requests → **0**, Seitengewicht ~3,5 MB → **280 KB**,
+  10 Requests gesamt. Optisch geprüft (Vollseiten-Screenshot alt/neu): mittlere Pixelabweichung
+  2,4/255. Icon-Größen (`text-5xl/6xl/7xl`) verhalten sich identisch wie vorher — dafür braucht die
+  Default-Größe `:where(.material-symbols-outlined)` (Spezifität 0), sonst schlägt sie die
+  Tailwind-Klassen.
+- **Nebenbefund, live mitgefixt:** Auf dem Server lag noch die April-Fassung von `index.html`.
+  Deren DSGVO-FAQ behauptete „Keine US-Cloud-Dienste für personenbezogene Daten", obwohl Warteliste
+  (Google Apps Script) und Mailversand (Resend) laufen. Die korrigierte Fassung lag seit 01.07.
+  ungenutzt im Repo und ist jetzt mit ausgeliefert.
+- **Offener Bugfund (nicht angefasst, vorher schon so):** Das Icon `qr_code_2` in der
+  SpiritLink-Sektion ligiert nicht und rendert als Text (245 px breit statt 60). Identisch in alt
+  und neu — also keine Regression, aber zu fixen.
+- Backup der Live-Fassung auf dem Server: `/opt/aethernal/landingpage/index.html.bak-2026-08-13-vor-perf`.
+
 ## 2026-07-19
 - **UI-Fixes aus dem Browser-Rundgang** (`0fb5a1e`, deployed): Foto-**Lightbox** (klickbare Galerien mit Vollbild, Pfeiltasten/ESC — Gedenkprofil + SpiritLink, neue `components/photo-lightbox.tsx`); „Fotos"-Tab zeigt View-Galerie statt Editor; veralteter „Versand nicht aktiv"-Hinweis entfernt (B7-Rest ✓); Zoom erlaubt + Heading-Reihenfolge gefixt (A11y). **Avatar-„Bug" aufgeklärt:** Rendering war intakt — Demo-Platzhalter waren konturlos (ersetzt durch Landschafts-Motive), Bestandskonten haben schlicht nie ein Foto gespeichert (`profile_photo_url` NULL); B0-Upload-Pfad dabei end-to-end unter RLS verifiziert. Umsetzungspläne für Gästebuch/Profil-Sektionen/Kalender-Export/Nachrichten-Anhänge in `docs/BACKLOG.md` ergänzt (nichts davon gebaut)
 - **Vorzeige-Demo-Account angelegt** (`fabian.fehervary+demo@gmail.com`, „Maria Aigner"): Profil komplett (Avatar, Anzeigename, Onboarding), 2 Memorials (Elisabeth Aigner/Mensch + Balu/Tier, beide öffentlich mit Biografien + 5 Verlaufs-Platzhalterfotos im Storage), 4 herzliche Nachrichten (2× date weit in der Zukunft, 2× death — nichts davon versendet), 2 bestätigte Vertrauenspersonen, 3 Tagebucheinträge, 2 Jahrestage. Hinweis: „Über mich"-Bio/Ort existieren im Datenmodell nicht (profiles hat keine solchen Spalten)

@@ -69,11 +69,12 @@
   --radius-button: 8px;
 
   /* === Typography === */
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Noto Serif", Georgia, serif;
-  --font-headline: "Noto Serif", Georgia, serif;
-  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-label: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Die --font-inter / --font-noto-serif kommen aus next/font/local (app/layout.tsx). */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-noto-serif), Georgia, serif;
+  --font-headline: var(--font-noto-serif), Georgia, serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-label: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* === Motion Scale === */
@@ -116,8 +117,24 @@ body {
   border-radius: 10px;
 }
 
-/* === Material Symbols === */
+/* === Material Symbols ===
+   Die Regeln bis einschliesslich font-feature-settings kamen frueher aus dem
+   Google-Fonts-Stylesheet. Seit dem Selbst-Hosting muessen sie hier stehen —
+   ohne sie rendern die Icons als Klartext ("home" statt Haus-Symbol). */
 .material-symbols-outlined {
+  font-family: var(--font-material-symbols);
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+
   font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
   display: inline-block;
   vertical-align: middle;

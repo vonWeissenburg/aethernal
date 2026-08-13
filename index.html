@@ -20,70 +20,29 @@
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <!-- Favicon -->
 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script>
-tailwind.config = {
-  darkMode: "class",
-  theme: {
-    extend: {
-      colors: {
-        "primary-fixed-dim": "#eac249",
-        "on-surface": "#e4e1ea",
-        "on-secondary-container": "#b8b6d0",
-        "primary-container": "#f2ca50",
-        "inverse-primary": "#745b00",
-        "on-tertiary-container": "#565858",
-        "background": "#131319",
-        "on-primary": "#3d2f00",
-        "on-surface-variant": "#d0c5af",
-        "surface-variant": "#35343b",
-        "surface-container": "#1f1f26",
-        "secondary-container": "#47475d",
-        "outline": "#99907c",
-        "tertiary-container": "#cecece",
-        "surface-container-highest": "#35343b",
-        "surface-bright": "#393840",
-        "on-primary-container": "#6b5500",
-        "surface": "#131319",
-        "surface-container-low": "#1b1b22",
-        "secondary": "#c6c4df",
-        "surface-dim": "#131319",
-        "error-container": "#93000a",
-        "on-error-container": "#ffdad6",
-        "on-background": "#e4e1ea",
-        "primary": "#ffe9b0",
-        "error": "#ffb4ab",
-        "inverse-surface": "#e4e1ea",
-        "surface-container-lowest": "#0e0e14",
-        "inverse-on-surface": "#303037",
-        "tertiary": "#eaeaea",
-        "surface-tint": "#eac249",
-        "primary-fixed": "#ffe08a",
-        "surface-container-high": "#2a2930",
-        "outline-variant": "#4d4635"
-      },
-      borderRadius: {
-        DEFAULT: "0.125rem",
-        lg: "0.25rem",
-        xl: "0.5rem",
-        full: "0.75rem"
-      },
-      fontFamily: {
-        headline: ["Noto Serif"],
-        body: ["Inter"],
-        label: ["Inter"]
-      }
-    }
-  }
-}
-</script>
+<!-- Fonts: selbst gehostet (kein Google-Abruf beim Besucher -> 3 externe
+     Roundtrips weniger und keine DSGVO-Frage wegen US-Datentransfer) -->
+<link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin/>
+<link rel="preload" href="/fonts/noto-serif-var-latin.woff2" as="font" type="font/woff2" crossorigin/>
+<link rel="stylesheet" href="/styles.css"/>
 <style>
+/* === Selbst gehostete Fonts === */
+@font-face{font-family:'Inter';src:url('/fonts/inter-var-latin.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
+@font-face{font-family:'Noto Serif';src:url('/fonts/noto-serif-var-latin.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
+@font-face{font-family:'Noto Serif';src:url('/fonts/noto-serif-italic-var-latin.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap;}
+/* Auf die 7 hier benutzten Icons reduziert (all_inclusive, arrow_forward, auto_awesome,
+   history_edu, mail, qr_code_2, security). Neues Icon? -> Subset neu ziehen. */
+@font-face{font-family:'Material Symbols Outlined';src:url('/fonts/material-symbols-subset.woff2') format('woff2');font-weight:100 700;font-style:normal;font-display:block;}
+body{font-family:'Inter',ui-sans-serif,system-ui,sans-serif;}
+:where(.material-symbols-outlined) { font-size: 24px; }
 .material-symbols-outlined {
+  /* Diese Regeln kamen frueher aus dem Google-Stylesheet. Ohne sie rendern
+     die Icons als Klartext ("mail" statt Briefsymbol). */
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal; font-style: normal; line-height: 1;
+  letter-spacing: normal; text-transform: none; display: inline-block;
+  white-space: nowrap; word-wrap: normal; direction: ltr;
+  font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased;
   font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
 }
 .font-noto-serif { font-family: 'Noto Serif', serif; }
@@ -151,7 +110,7 @@ html { scroll-behavior: smooth; }
 <!-- 1. Hero Section -->
 <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
   <div class="absolute inset-0 z-0">
-    <img class="w-full h-full object-cover opacity-40" alt="Kosmischer Nebel mit goldenem Staub" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXRWhkFAmKX5XCSa59TBqYb-Q1IFKcgh3MEuxqAyKw5JCe1_xok4St78KvYcW4yvZq0xIhtTpbqGT1eDeEvOHZbQPuQg8Kzz9bLKJSd9tasvUaeR0P8hZoCs7bDVeB7TcXrFCEBCS2nIqgTLEkF5KSCNmq_yLTRYlAKgdVocuM3KHZM4XMeOL67QQIhc9YbvLSSIXTb5097fAk-D7PnJ1nfdgFHKIevKWjp5bKVnZGZq1hwtqEuR1F57Fo-80HdMOkTtGga7WldvVH"/>
+    <img class="w-full h-full object-cover opacity-40" alt="Kosmischer Nebel mit goldenem Staub" src="/img/lp-2.webp" width="512" height="512" decoding="async" fetchpriority="high"/>
     <div class="absolute inset-0 bg-gradient-to-b from-transparent via-background/60 to-background"></div>
   </div>
   <div class="relative z-10 text-center px-6 max-w-5xl">
@@ -185,7 +144,7 @@ html { scroll-behavior: smooth; }
       </div>
     </div>
     <div class="relative aspect-[4/5] rounded-xl overflow-hidden shadow-2xl reveal">
-      <img class="w-full h-full object-cover" alt="Antikes Foto wird in Händen gehalten" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF5udOqoGg4ZmswFWNK8rP2hG0gASTpwytjNTnLLTewT2igWC3d7EB-IRwMAnQ5-ibtPkr-YTvCt6bLUVrXOIHgm4caDFyccagvWxSMuef-NIMlmZPJnrIAG93XjBbffIyfiXKaz52BdG_yHCpKc-WTwaMag-oUnoeT7_rnDUcYmdZDXaIHlOFX7Yw6j6vy4JUorRZd5cq8tnESIiNYWKZ1hf66jjdDloj2H0iB_IcQTVyQcSw8AHWVPNfmj9MIf5TSUTf9t-ISiF7"/>
+      <img class="w-full h-full object-cover" alt="Antikes Foto wird in Händen gehalten" src="/img/lp-6.webp" width="512" height="512" decoding="async" loading="lazy"/>
     </div>
   </div>
 </section>
@@ -220,7 +179,7 @@ html { scroll-behavior: smooth; }
     <h2 class="font-headline text-4xl text-on-surface mb-20 text-center reveal">Alles, was eine Erinnerung braucht</h2>
     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
       <div class="md:col-span-8 bg-surface-container-low rounded-xl p-8 md:p-12 relative overflow-hidden min-h-[300px] md:min-h-[380px] flex flex-col justify-end reveal">
-        <img class="absolute inset-0 w-full h-full object-cover opacity-30 hover:scale-105 transition-transform duration-1000" alt="Digitale Gedenkseite Interface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEoC3e6GGMXQuU51OONBRBwJrvNZR2eYMQ4d-LRknjFkYZN8XDOJzTNwzlh-A6sQPEEpmEA9eLzwM8sxszGX_T28sCSQkHe8r9twq0zHcetuAGlFX6CrF9RF8PRv90Z39mkgo0smbeFZBMRdgQeOPSAemYmSjdQeQw2vPQ03jITbx2GQkxDjJ8VhVfn3TTBU5y8HL_tkiwL39foxuwy5r9wU_Y-eXJrbA0pR-tUVgHxQKe-17-FQbK-63WouwyQSYi7JatKnTWYaDS"/>
+        <img class="absolute inset-0 w-full h-full object-cover opacity-30 hover:scale-105 transition-transform duration-1000" alt="Digitale Gedenkseite Interface" src="/img/lp-4.webp" width="512" height="512" decoding="async" loading="lazy"/>
         <div class="relative z-10">
           <h3 class="font-headline text-2xl md:text-3xl text-primary mb-4">Multimedia-Galerien</h3>
           <p class="max-w-md text-on-surface-variant">Laden Sie Fotos, Videos und Sprachnachrichten hoch, um die Person lebendig zu halten.</p>
@@ -257,7 +216,7 @@ html { scroll-behavior: smooth; }
   <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 lg:gap-24 items-center">
     <div class="order-2 md:order-1 relative reveal">
       <div class="absolute -inset-4 bg-primary-container/5 blur-3xl rounded-full"></div>
-      <img class="relative rounded-xl shadow-2xl border border-outline-variant/10" alt="Portrait eines älteren Mannes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFKY9YfRrdx1-uoToeu8y110ovou0rOgQ9zNDEXbRjZvXw5xPixTo8EuzUrY1-CUuearHBxFgUUHG90BQTvKP7_Tik9_XaWdXT2YgZXGzZPCZCFMfrWv0gfrWanwT_MiBP9McQ31acldLEpHf5hcNt49iu62l0YlfRSKTvgh3aSX29tnleABK2bPRJJ09PsjN-iWVwrtQBqNo1oi1cm-V6p3wsfMZ2j0-tAhI13KBi1nm_tDe5s3wizREq8ZHR8Tvo0h-7cAVnLQM9"/>
+      <img class="relative rounded-xl shadow-2xl border border-outline-variant/10" alt="Portrait eines älteren Mannes" src="/img/lp-5.webp" width="512" height="512" decoding="async" loading="lazy"/>
     </div>
     <div class="order-1 md:order-2 space-y-8 reveal">
       <h2 class="font-headline text-4xl md:text-5xl leading-tight">Mehr als Name und Jahreszahl</h2>
@@ -297,7 +256,7 @@ html { scroll-behavior: smooth; }
       </button>
     </div>
     <div class="flex-1 relative reveal">
-      <img class="rounded-xl shadow-2xl md:scale-110 md:rotate-3" alt="QR-Code Plakette auf Grabstein" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAbMjU2nSgvFoEqullVfXh04fBMaXKOY1GdVAemxf6FSNDxRAlEmbYOoIIN01jOCHwCZn4oOuUmT2OFofazzNBUO2Zq_-QfNlusO6_wGkaJ7nANZBrk9_SalflJW78bBUqYlodUQ4K9t-laOC-btqJrravbneybgyKNyRck-5w1Vj_ImTMdL5L9bL70W0P8vRm73Z5NTbEH4OXm_QXUws0XeglkgVYKGHUyNXtYJ-KsRNMUZ0BwmyMJxTuVKQ_S_MDr0Q83dXo4JFV"/>
+      <img class="rounded-xl shadow-2xl md:scale-110 md:rotate-3" alt="QR-Code Plakette auf Grabstein" src="/img/lp-7.webp" width="512" height="512" decoding="async" loading="lazy"/>
     </div>
   </div>
 </section>
@@ -354,7 +313,7 @@ html { scroll-behavior: smooth; }
       <button onclick="scrollToWaitlist()" class="bg-primary/10 border border-primary/20 text-primary px-8 py-3 rounded-full font-label text-xs uppercase tracking-widest hover:bg-primary/20 transition-all cursor-pointer">Tier-Gedenkseite erstellen</button>
     </div>
     <div class="flex-1 min-h-[300px] md:min-h-[400px]">
-      <img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" alt="Golden Retriever Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDh5lGTXUI6zSN18WQU7weKD7dbUc-fROvIn-mApCdL-CzPUd60rLyys9VkkNfwvxS0BltYXwcLrWDmkdTG7SX67EZbzjzcJxnKSiV1q6pCBXgFTb51WC580TvUaz4MF_gIXmCNbBCfpH_kos-E5c2iffhIhmXCvpzrOIpRreC-SJKxXS3ny3wefrTHDue-J3Y6FXKFdkOnMRwSHLudh9vYx5dc_sCU5KtqjUEKAynrtYZA2MvuoP6gSCBL38Je2sc2ki1l5fPhFYs1"/>
+      <img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" alt="Golden Retriever Portrait" src="/img/lp-8.webp" width="512" height="512" decoding="async" loading="lazy"/>
     </div>
   </div>
 </section>
@@ -601,8 +560,8 @@ html { scroll-behavior: smooth; }
       <a href="/partner-apply.html" class="text-primary-fixed-dim border-b border-primary-fixed-dim/30 pb-1 font-label text-sm uppercase tracking-widest no-underline hover:text-primary transition-colors">Partner-Anfrage senden</a>
     </div>
     <div class="flex-1 grid grid-cols-2 gap-4">
-      <img class="rounded-lg" alt="Professioneller Arbeitsplatz" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANo3qcMHPL9il9ftJ_WXJSfqK0sBxdZVlPgj_3xYRS_Vj-hpD9f1rNSWaRDB0jMwKkjkIzwj9sUm-X_20cRzIhFNz_kOcEAGtOX4pwKzZ2pUzW28-eTYYMhZIgSWJPZHrc9vXr1PlaUrjTg8AMc9kj__ViWTTQ0TLSmDp9ixmZ5IgpU5s5l96dbrl_noapB1GbLH-2Lw_7NNCEv7pRVvgkA_LlRR_iWyYgu3qa1q_QmW-7fhz2rUfZ0QzodVecAe1fk1_GymXe4wp8"/>
-      <img class="rounded-lg mt-8" alt="Handschlag in professionellem Setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtz8KoutYqSXxVWUxdlnSQ9JBjdE_5vy7MTsIjA3hJGK_4efJHe20Ixwy6C_wCGAHLcvHICooMKfmsixKKyYxkCM2xw_4RIAmvxy8Yd9V2L_Hm07nOMV9QBUx9yY2jRn7kMOjlYBWCf0hadkfFa-1O0ZSgDKwF78ORwNaqdUGE1Bddcxs4B6Fn-Hfva09uvuhVKJMIfFDceTBBOqzYgrLeCQWvU_NRId3j7folM46K0pEl0J21g9_YqH7LHQCXftG3UCoKLV5yTJwf"/>
+      <img class="rounded-lg" alt="Professioneller Arbeitsplatz" src="/img/lp-1.webp" width="512" height="512" decoding="async" loading="lazy"/>
+      <img class="rounded-lg mt-8" alt="Handschlag in professionellem Setting" src="/img/lp-3.webp" width="512" height="512" decoding="async" loading="lazy"/>
     </div>
   </div>
 </section>

@@ -44,3 +44,9 @@ keine Firma, keine UID.
 ## Festgelegte Richtung
 Der Stack ist fix: **Next.js + Supabase.** Der frühere Laravel-Rewrite-Plan ist
 verworfen (siehe `docs/DECISIONS.md`).
+
+## Projekt-Gehirn & Assets (seit 2026-07-31)
+Der breitere Projektkontext — Design, Strategie, Assets, Marketing, PM-Docs (`00_Projekt`) und das
+konsolidierte Projektgedächtnis — liegt jetzt in **Google Drive: `Meine Ablage/Projekte/Aethernal/`**
+(offline verfügbar). Single Source of Truth dort: `CLAUDE.md` + `_Gehirn/`. Dieser Repo-Ordner enthält
+nur den **Code**; der lebende Dev-Zustand bleibt in `docs/` hier im Repo.
