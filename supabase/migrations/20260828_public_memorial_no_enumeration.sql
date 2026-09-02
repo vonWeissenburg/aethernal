@@ -19,12 +19,28 @@
 -- Die Policies für Eigentümer ("Users can view own memorials" und das Pendant für
 -- Fotos) bleiben unberührt — im eingeloggten Bereich ändert sich nichts.
 --
--- ⚠️ REIHENFOLGE: Diese Migration ZUERST einspielen, DANN den App-Code deployen.
--- Umgekehrt liest die alte Seite kurzzeitig gegen eine entfernte Policy und die
--- Gedenkseiten zeigen "Nicht gefunden". Anders als beim Todesfall-Ablauf ist der
--- Fehler hier aber sichtbar und in zwei Minuten behoben.
+-- ⚠️ REIHENFOLGE — DIESE MIGRATION HAT ZWEI SCHRITTE MIT DEM DEPLOY DAZWISCHEN.
 --
--- Idempotent. Einspielen über den Supabase-SQL-Editor (Projekt nrxeocbokfllrufdbsdx).
+-- Naiv gedacht (alles auf einmal, dann deployen) laufen die Gedenkseiten zwischen
+-- Migration und Deploy auf "Nicht gefunden", weil der alte Code gegen entfernte
+-- Policies liest. Umgekehrt (erst deployen) bricht es auch, weil die Funktion dann
+-- noch nicht existiert. Beides ist vermeidbar:
+--
+--   SCHRITT 1  (unten, Abschnitt 1+2)  → Funktion anlegen. Rein additiv, ändert
+--                                        am Verhalten NICHTS.
+--   DANN       Zweig fix/gedenkprofile-nicht-auflistbar nach main mergen und
+--              deployen. Die Seite nutzt ab jetzt die Funktion und funktioniert.
+--   SCHRITT 2  (unten, Abschnitt 3)    → Policies entfernen. Das Leck ist zu, die
+--                                        Seite merkt es nicht.
+--
+-- Ergebnis: kein einziger Moment, in dem eine Gedenkseite nicht erreichbar ist.
+--
+-- Idempotent, beide Schritte beliebig oft ausführbar.
+-- Einspielen über den Supabase-SQL-Editor (Projekt nrxeocbokfllrufdbsdx).
+
+-- ============================================================
+-- SCHRITT 1 — JETZT einspielen (rein additiv, ändert kein Verhalten)
+-- ============================================================
 
 -- 1) Genau ein Profil per Kurzname, samt Fotos, als ein JSON-Objekt.
 --    SECURITY DEFINER umgeht RLS bewusst — die WHERE-Klausel ist die Schranke.
@@ -59,6 +75,10 @@ COMMENT ON FUNCTION public.get_public_memorial(text) IS
 -- 2) Nur ausführen dürfen, nicht mehr auflisten.
 REVOKE ALL ON FUNCTION public.get_public_memorial(text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.get_public_memorial(text) TO anon, authenticated;
+
+-- ============================================================
+-- SCHRITT 2 — ERST NACH dem Deploy einspielen
+-- ============================================================
 
 -- 3) Die auflistenden Policies entfernen. Ab hier ist die Tabelle für
 --    Unangemeldete nicht mehr lesbar — nur noch über die Funktion oben.
