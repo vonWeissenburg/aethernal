@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { formatLifespan } from "@/lib/utils";
@@ -5,25 +6,53 @@ import type { Memorial, MemorialPhoto } from "@/lib/types";
 import Image from "next/image";
 import { LightboxGallery } from "@/components/photo-lightbox";
 
+type PublicMemorial = { memorial: Memorial; photos: MemorialPhoto[] };
+
+/**
+ * Öffentliche Gedenkseite: Profil und Fotos über die Datenbankfunktion
+ * get_public_memorial (Migration 20260828_public_memorial_no_enumeration).
+ *
+ * Bewusst NICHT mehr als zwei Tabellen-Abfragen: die früheren Policies gaben
+ * Unangemeldeten SELECT auf alle Zeilen mit is_public = true und machten damit die
+ * gesamte Tabelle über die öffentliche REST-Schnittstelle auflistbar — Klarnamen und
+ * Sterbedaten realer Verstorbener inklusive. Die Funktion liefert genau eine Zeile
+ * per Kurzname; die Policies sind entfernt.
+ *
+ * `cache` dedupliziert den Aufruf innerhalb einer Anfrage, damit generateMetadata und
+ * die Seite selbst nur einmal fragen.
+ */
+const loadPublicMemorial = cache(async (slug: string): Promise<PublicMemorial | null> => {
+  const supabase = await createClient();
+  // Die Funktion gibt kein Rowset zurück, sondern ein einzelnes jsonb — PostgREST
+  // liefert es direkt als Antwortkörper, bei fehlendem Treffer null. Deshalb kein
+  // .single()/.returns(), sondern eine explizite Umtypisierung des Ergebnisses.
+  const { data, error } = await supabase.rpc("get_public_memorial", { p_slug: slug });
+
+  if (error) {
+    // Häufigster Fall: Migration noch nicht eingespielt. Sichtbar machen, nicht schlucken.
+    console.error("get_public_memorial fehlgeschlagen (Migration eingespielt?):", error.message);
+    return null;
+  }
+
+  const result = data as PublicMemorial | null;
+  if (!result?.memorial) return null;
+  return { memorial: result.memorial, photos: result.photos ?? [] };
+});
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("memorials")
-    .select("name, description")
-    .eq("slug", slug)
-    .eq("is_public", true)
-    .single();
+  const result = await loadPublicMemorial(slug);
 
-  if (!data) return { title: "Nicht gefunden" };
+  if (!result) return { title: "Nicht gefunden" };
 
+  const { memorial } = result;
   return {
-    title: data.name,
-    description: data.description ?? `Gedenkprofil für ${data.name}`,
+    title: memorial.name,
+    description: memorial.description ?? `Gedenkprofil für ${memorial.name}`,
   };
 }
 
@@ -33,23 +62,11 @@ export default async function SpiritLinkPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const supabase = await createClient();
+  const result = await loadPublicMemorial(slug);
 
-  const { data: memorial } = await supabase
-    .from("memorials")
-    .select("*")
-    .eq("slug", slug)
-    .eq("is_public", true)
-    .single<Memorial>();
+  if (!result) notFound();
 
-  if (!memorial) notFound();
-
-  const { data: photos } = await supabase
-    .from("memorial_photos")
-    .select("*")
-    .eq("memorial_id", memorial.id)
-    .order("order_index")
-    .returns<MemorialPhoto[]>();
+  const { memorial, photos } = result;
 
   return (
     <div
