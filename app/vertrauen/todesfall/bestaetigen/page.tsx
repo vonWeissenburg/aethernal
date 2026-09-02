@@ -140,7 +140,7 @@ export default async function DeathReportConfirmPage({
         icon="check_circle"
         iconClass="text-success"
         title="Danke — die Meldung ist eingegangen"
-        text={`In Gedenken. Aus Sicherheitsgründen gilt nun eine Schutzfrist von ${GRACE_PERIOD_DAYS} Tagen, in der die Meldung widerrufen werden kann. Danach werden die hinterlassenen Nachrichten zugestellt. Du musst nichts weiter tun.`}
+        text={`In Gedenken. Aus Sicherheitsgründen gilt nun eine Schutzfrist von ${GRACE_PERIOD_DAYS} Tagen, in der die Meldung widerrufen werden kann. Danach melden wir uns noch ein letztes Mal bei dir und bitten dich um eine zweite Bestätigung — erst dann werden die hinterlassenen Nachrichten zugestellt. Bis dahin musst du nichts tun.`}
       />
     );
   } else if (status === "abgelaufen") {
@@ -217,7 +217,8 @@ export default async function DeathReportConfirmPage({
           </p>
           <p className="font-body text-sm text-on-surface-variant leading-relaxed mb-8">
             Nach deiner Bestätigung beginnt eine Schutzfrist von{" "}
-            {GRACE_PERIOD_DAYS} Tagen. Danach werden die hinterlassenen
+            {GRACE_PERIOD_DAYS} Tagen. Danach bitten wir dich per E-Mail um eine
+            zweite, letzte Bestätigung — erst dann werden die hinterlassenen
             Nachrichten an ihre Empfänger zugestellt. Bitte bestätige nur, wenn
             du dir sicher bist.
           </p>

@@ -152,6 +152,83 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;");
 }
 
+// --- Doppelbestätigung: Helfer (Entscheidung 28.08.2026) --------------------
+
+/** Karenzzeit-Rückfall: ohne zweite Bestätigung wird nach so vielen Tagen zugestellt. */
+const FINAL_CONFIRM_FALLBACK_DAYS = 14;
+/** Bleibt die zweite Bestätigung aus, wird nach so vielen Tagen einmal erinnert. */
+const FINAL_CONFIRM_REMINDER_DAYS = 7;
+
+/** Basis-URL der App für Links in E-Mails. Secret APP_URL, mit sicherem Rückfall. */
+function appBaseUrl(): string {
+  return (Deno.env.get("APP_URL") ?? "https://app.aethernal.me").replace(/\/+$/, "");
+}
+
+/** 32 Byte Zufall als Hex — identisch zu Node `randomBytes(32).toString("hex")`. */
+function newToken(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** SHA-256 als Hex — identisch zu Node `createHash("sha256")…digest("hex")`,
+ *  damit derselbe Hash wie in lib/death-flow.ts entsteht. */
+async function hashToken(token: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Mail-Button in derselben Optik wie lib/death-flow.ts mailButton. */
+function mailButton(href: string, label: string, color = "#D4AF37", textColor = "#3C2F00"): string {
+  return `<p style="text-align:center;margin:24px 0;">
+    <a href="${href}" style="display:inline-block;background:${color};color:${textColor};text-decoration:none;font-weight:bold;padding:14px 32px;border-radius:8px;font-family:Arial,Helvetica,sans-serif;font-size:15px;">
+      ${label}
+    </a>
+  </p>`;
+}
+
+/** Datum/Zeit in Wien, ausgeschrieben — wie lib/death-flow.ts formatDateTimeVienna. */
+function formatDateTimeVienna(iso: string): string {
+  return new Intl.DateTimeFormat("de-AT", {
+    timeZone: TZ,
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(iso));
+}
+
+/**
+ * Bitte an die Vertrauensperson um die zweite Bestätigung.
+ * `isReminder` formuliert es als Erinnerung und weist darauf hin, dass der
+ * frühere Link durch diesen ersetzt wurde (es wird nur der Hash gespeichert,
+ * der alte Link lässt sich deshalb nicht erneut verschicken).
+ */
+function buildFinalConfirmHtml(opts: {
+  personName: string;
+  ownerName: string | null;
+  releaseUrl: string;
+  fallbackAt: string;
+  isReminder: boolean;
+}): string {
+  const owner = opts.ownerName ? escapeHtml(opts.ownerName) : "dem Aethernal-Mitglied";
+  const anrede = opts.personName ? `Hallo ${escapeHtml(opts.personName)},` : "Hallo,";
+  const einstieg = opts.isReminder
+    ? `wir haben dich vor einigen Tagen um eine letzte Bestätigung gebeten und noch keine Antwort erhalten. Deshalb diese eine Erinnerung.`
+    : `die Schutzfrist nach deiner Meldung zu ${owner} ist abgelaufen, und die Meldung wurde nicht widerrufen.`;
+  return mailShell(
+    `<p style="font-size:16px;line-height:1.6;margin:0 0 16px;">${anrede}</p>` +
+      `<p style="font-size:16px;line-height:1.6;margin:0 0 16px;">${einstieg}</p>` +
+      `<p style="font-size:16px;line-height:1.6;margin:0 0 8px;">Bevor die hinterlassenen Nachrichten an ihre Empfänger gehen, bitten wir dich um eine <strong>zweite, letzte Bestätigung</strong>:</p>` +
+      mailButton(opts.releaseUrl, "Nachrichten jetzt freigeben", "#3a4a6b", "#ffffff") +
+      `<p style="font-size:13px;line-height:1.6;color:#7a7263;margin:16px 0 0;">Wenn du nichts tust, werden die Nachrichten am <strong>${formatDateTimeVienna(opts.fallbackAt)}</strong> automatisch zugestellt. Dein Schweigen hält sie nicht dauerhaft auf.</p>` +
+      (opts.isReminder
+        ? `<p style="font-size:13px;line-height:1.6;color:#7a7263;margin:8px 0 0;">Dieser Link ersetzt den aus unserer früheren E-Mail. Bitte benutze nur diesen.</p>`
+        : ""),
+  );
+}
+
 // --- Handler ----------------------------------------------------------------
 
 Deno.serve(async (req) => {
@@ -171,7 +248,7 @@ Deno.serve(async (req) => {
     today,
     messages: { checked: 0, sent: 0, failed: 0 },
     reminders: { checked: 0, sent: 0, failed: 0 },
-    death: { reports: 0, sent: 0, failed: 0 },
+    death: { reports: 0, sent: 0, failed: 0, finalRequested: 0, remindersSent: 0 },
   };
 
   // Owner-Namen (profiles.full_name) cachen — für Absender-Anzeigenamen
@@ -276,16 +353,199 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 4) Bestätigte Todesfälle nach Ablauf der Karenzzeit (B3) → death-Nachrichten
-  //    über DENSELBEN Versand-Weg. Bewusst weich abgesichert: existiert die
-  //    Tabelle (noch) nicht, darf das den Datums-Versand oben nicht brechen.
-  const { data: dueReports, error: drErr } = await supabase
+  // 4) Doppelbestätigung und Zustellung (Entscheidung 28.08.2026).
+  //    A) Karenzzeit abgelaufen → Vertrauensperson um die zweite Bestätigung bitten
+  //    B) keine Antwort nach FINAL_CONFIRM_REMINDER_DAYS → genau einmal erinnern
+  //    C) freigegeben ODER Rückfalldatum erreicht → zustellen (Schleife darunter)
+  //
+  //    Die zweite Bestätigung ist bewusst ein BESCHLEUNIGER, keine harte Hürde:
+  //    bliebe sie aus, käme nie eine Nachricht an. Deshalb das Rückfalldatum.
+  //    Bewusst weich abgesichert: fehlen Tabelle oder Spalten, darf das den
+  //    Datums-Versand aus Abschnitt 2 nicht brechen.
+  const nowIso = new Date().toISOString();
+  const appUrl = appBaseUrl();
+
+  /** Name und E-Mail einer Vertrauensperson laden (kann gelöscht worden sein). */
+  async function trustedPerson(id: string | null) {
+    if (!id) return null;
+    const { data } = await supabase
+      .from("trusted_persons")
+      .select("name, email")
+      .eq("id", id)
+      .single();
+    if (!data?.email) return null;
+    return { name: String(data.name ?? "").trim(), email: data.email as string };
+  }
+
+  // --- A) Zweite Bestätigung anfordern ---------------------------------------
+  const { data: awaitingReports, error: awErr } = await supabase
     .from("death_reports")
-    .select("id, user_id")
+    .select("id, user_id, trusted_person_id")
     .is("cancelled_at", null)
     .is("processed_at", null)
-    .lte("effective_at", new Date().toISOString())
+    .is("final_request_sent_at", null)
+    .lte("effective_at", nowIso)
     .limit(50);
+
+  if (awErr) {
+    console.error(
+      "death_reports Schritt A fehlgeschlagen (Migration 20260828 eingespielt?):",
+      awErr.message,
+    );
+  } else {
+    for (const report of awaitingReports ?? []) {
+      const person = await trustedPerson(report.trusted_person_id);
+      const fallbackAt = new Date(
+        Date.now() + FINAL_CONFIRM_FALLBACK_DAYS * 24 * 60 * 60 * 1000,
+      ).toISOString();
+
+      // Vertrauensperson wurde gelöscht → es gibt niemanden zu fragen. Dann gilt
+      // die ursprüngliche Regel: nach Ablauf der Karenzzeit wird zugestellt.
+      if (!person) {
+        await supabase
+          .from("death_reports")
+          .update({ final_request_sent_at: nowIso, fallback_deliver_at: nowIso })
+          .eq("id", report.id);
+        console.warn(
+          `Report ${report.id}: keine Vertrauensperson mehr — Zustellung ohne zweite Bestätigung`,
+        );
+        continue;
+      }
+
+      const releaseToken = newToken();
+      const { error: updErr } = await supabase
+        .from("death_reports")
+        .update({
+          final_confirm_token_hash: await hashToken(releaseToken),
+          final_request_sent_at: nowIso,
+          fallback_deliver_at: fallbackAt,
+        })
+        .eq("id", report.id);
+
+      if (updErr) {
+        console.error(
+          `Report ${report.id}: Freigabe-Token konnte nicht gesetzt werden:`,
+          updErr.message,
+        );
+        continue; // nichts verschickt, nächster Lauf versucht es erneut
+      }
+
+      try {
+        await sendEmail({
+          to: person.email,
+          subject: "Aethernal — eine letzte Bestätigung ist nötig",
+          html: buildFinalConfirmHtml({
+            personName: person.name,
+            ownerName: await ownerName(report.user_id),
+            releaseUrl: `${appUrl}/vertrauen/todesfall/freigeben?token=${releaseToken}`,
+            fallbackAt,
+            isReminder: false,
+          }),
+        });
+        result.death.finalRequested++;
+      } catch (e) {
+        // Mail fehlgeschlagen: Der Report steht mit Rückfalldatum, die Zustellung
+        // erfolgt dort spätestens automatisch. Kein erneuter Versand (sonst würde
+        // bei dauerhaft kaputter Mail jeden Tag ein neuer Token gesetzt).
+        console.error(`Report ${report.id}: Anfrage-Mail fehlgeschlagen:`, e);
+      }
+    }
+  }
+
+  // --- B) Genau einmal erinnern, wenn die zweite Bestätigung ausbleibt --------
+  const reminderCutoff = new Date(
+    Date.now() - FINAL_CONFIRM_REMINDER_DAYS * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  const { data: staleReports, error: stErr } = await supabase
+    .from("death_reports")
+    .select("id, user_id, trusted_person_id, fallback_deliver_at")
+    .is("cancelled_at", null)
+    .is("processed_at", null)
+    .is("final_confirmed_at", null)
+    .is("final_reminder_sent_at", null)
+    .not("final_request_sent_at", "is", null)
+    .lte("final_request_sent_at", reminderCutoff)
+    .limit(50);
+
+  if (stErr) {
+    console.error("death_reports Schritt B fehlgeschlagen:", stErr.message);
+  } else {
+    for (const report of staleReports ?? []) {
+      const person = await trustedPerson(report.trusted_person_id);
+      if (!person) {
+        await supabase
+          .from("death_reports")
+          .update({ final_reminder_sent_at: nowIso })
+          .eq("id", report.id);
+        continue;
+      }
+
+      // Frischer Token: der alte Link lässt sich nicht erneut verschicken, weil nur
+      // sein Hash gespeichert ist. Die Mail sagt ausdrücklich, dass er ersetzt wurde.
+      const releaseToken = newToken();
+      const { error: updErr } = await supabase
+        .from("death_reports")
+        .update({
+          final_confirm_token_hash: await hashToken(releaseToken),
+          final_reminder_sent_at: nowIso,
+        })
+        .eq("id", report.id);
+
+      if (updErr) {
+        console.error(`Report ${report.id}: Erinnerungs-Token fehlgeschlagen:`, updErr.message);
+        continue;
+      }
+
+      try {
+        await sendEmail({
+          to: person.email,
+          subject: "Erinnerung: eine letzte Bestätigung bei Aethernal",
+          html: buildFinalConfirmHtml({
+            personName: person.name,
+            ownerName: await ownerName(report.user_id),
+            releaseUrl: `${appUrl}/vertrauen/todesfall/freigeben?token=${releaseToken}`,
+            fallbackAt: report.fallback_deliver_at ?? nowIso,
+            isReminder: true,
+          }),
+        });
+        result.death.remindersSent++;
+      } catch (e) {
+        console.error(`Report ${report.id}: Erinnerungs-Mail fehlgeschlagen:`, e);
+      }
+    }
+  }
+
+  // --- C) Zustellen: zweite Bestätigung erteilt ODER Rückfalldatum erreicht ---
+  //     Zwei Abfragen statt eines .or() — besser lesbar und ohne
+  //     PostgREST-Syntaxrisiko. Danach nach id entdoppeln.
+  const [confirmedRes, fallbackRes] = await Promise.all([
+    supabase
+      .from("death_reports")
+      .select("id, user_id")
+      .is("cancelled_at", null)
+      .is("processed_at", null)
+      .not("final_confirmed_at", "is", null)
+      .limit(50),
+    supabase
+      .from("death_reports")
+      .select("id, user_id")
+      .is("cancelled_at", null)
+      .is("processed_at", null)
+      .lte("fallback_deliver_at", nowIso)
+      .limit(50),
+  ]);
+
+  const drErr = confirmedRes.error ?? fallbackRes.error;
+  const seenReportIds = new Set<string>();
+  const dueReports = [
+    ...(confirmedRes.data ?? []),
+    ...(fallbackRes.data ?? []),
+  ].filter((r) => {
+    if (seenReportIds.has(r.id)) return false;
+    seenReportIds.add(r.id);
+    return true;
+  });
 
   if (drErr) {
     console.error("death_reports query failed (Migration eingespielt?):", drErr.message);
