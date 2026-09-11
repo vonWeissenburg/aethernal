@@ -605,6 +605,22 @@ Deno.serve(async (req) => {
     }
   }
 
+  // Ping am Ende jedes Laufs (Etappe A, Masterplan 28.08.). Fehlt die Zeile,
+  // ist der Lauf ausgefallen — von aussen ist "nichts zu tun" sonst nicht von
+  // "nichts passiert" zu unterscheiden. Ausgewertet vom Waechter auf dem VPS.
+  //
+  // Bewusst NICHT fehlerkritisch: Ein Schreibfehler hier darf einen erfolgreichen
+  // Versand nicht nachtraeglich als gescheitert erscheinen lassen.
+  const runOk =
+    result.messages.failed === 0 &&
+    result.reminders.failed === 0 &&
+    result.death.failed === 0;
+  try {
+    await supabase.from("scheduler_runs").insert({ ok: runOk, summary: result });
+  } catch (e) {
+    console.error("scheduler_runs insert failed:", e);
+  }
+
   return new Response(JSON.stringify(result), {
     headers: { "Content-Type": "application/json" },
   });
