@@ -68,6 +68,31 @@ _Was wann gebaut/geändert wurde. Neueste zuerst._
 - Geprüft: `npx tsc --noEmit` sauber, `next build` sauber (Route `/vertrauen/todesfall/freigeben`
   registriert), `deno check` der Edge Function sauber. **Noch nicht committet, nicht deployt,
   Migration noch nicht eingespielt.**
+- **★ Beide Zweige ausgerollt — die Kette lief in der geplanten Reihenfolge durch** (`3ff78d5`):
+  1. Migration Schritt 1 über die Management-API eingespielt (`death_reports` +5 Spalten,
+     +3 Indizes; Funktion `get_public_memorial` + Rechte). Gegenprobe: 5/5 Spalten, 3/3 Indizes,
+     Funktion liefert das Demo-Profil, unbekannter Slug liefert `null`.
+  2. `main` vorgezogen, CI deployt, alle 5 Gedenkseiten über die neue Funktion geprüft —
+     jede rendert ihren Namen, unbekannter Slug bleibt „Nicht gefunden".
+  3. Edge Function `send-due-messages` ausgerollt, Secret `APP_URL` gesetzt. **Scharfer Test:**
+     Scheduler über den bestehenden Cron-Auftrag angestoßen (ohne das CRON_SECRET sichtbar zu
+     machen — `EXECUTE` des gespeicherten `cron.job.command`) → HTTP 200 mit den neuen Zählern
+     `finalRequested`/`remindersSent`. Damit ist bewiesen, dass die Doppelbestätigung gegen die
+     migrierte Datenbank läuft und nichts still ausfällt.
+  4. Migration Schritt 2: die zwei auflistenden Policies entfernt.
+- **Auflistbarkeit nachweislich geschlossen.** Dieselbe Abfrage mit dem öffentlichen anon-Key,
+  die vorher **5 Zeilen mit Namen, Geburts- und Sterbedatum** lieferte, liefert jetzt **0** —
+  `memorials` und `memorial_photos`. Der Einzelabruf per Kurzname funktioniert unverändert
+  (Demo-Profil + 2 Fotos). Kein Moment ohne erreichbare Gedenkseite.
+- **Testkonto `eti.fakler@gmail.com` entfernt** (Freigabe Fabian: Testkonto eines Bekannten).
+  Vorher gezielt gesichert nach `~/Projekte/Aethernal/backups/konto-eti.fakler-vor-loeschung-*.json`.
+  Kaskade sauber: Profil, Gedenkprofil, 2 Tagebucheinträge, 1 Termin weg. Bestand jetzt
+  3 Konten / 4 Gedenkprofile. Der Slug `adolf-pp01e2` ist damit erwartungsgemäß 404.
+- **Offen aus Etappe A:** Überwachung fehlt noch (Ping am Ende jedes Versandlaufs +
+  Kanarienvogel-Termin, der wöchentlich eine echte Mail erzwingt). Ohne sie fällt ein Ausfall
+  erst am **03.11.** auf, wenn die erste echte Nachricht fällig ist. Ebenso offen: `pg_dump`
+  für Schema/Policies/Auth-Konten (braucht das DB-Passwort) und der harte Riegel
+  „Allow new users to sign up" in den Supabase-Auth-Einstellungen.
 
 ## 2026-08-13
 - **Performance-Etappe (A6), Teil 1 — Fonts & Landing-Page-Assets.** Vorher gemessen statt geraten:

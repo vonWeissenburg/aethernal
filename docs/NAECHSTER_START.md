@@ -1,78 +1,62 @@
-# Nächster Start — Resume-Notiz (Stand 13.08.2026)
+# Nächster Start — Resume-Notiz (Stand 11.09.2026)
 
-*Alles Untenstehende ist committet und gepusht (`main` = `origin/main`), App und
-Landing Page laufen live. Die Vorgängerfassung dieser Datei (19.07.) ist im
-CHANGELOG vollständig abgebildet.*
+*`main` = `origin/main` = Server. Alles Untenstehende ist live und gegengeprüft.*
 
-## Wo wir stehen (ein Absatz)
+## Wo wir stehen
 
-Phase 1 ist seit 19.07. komplett und end-to-end bewiesen (Scheduler + Cron,
-Death-Journey inkl. Karenz und Widerruf, DSGVO-Löschung, Rechtstexte,
-Lighthouse-A11y ≥ 90). Danach lag das Projekt 25 Tage still. Am **13.08.** ist
-die Performance-Etappe (A6) zur Hälfte erledigt: Google Fonts raus, Icon-Font
-subgesetzt, Tailwind-CDN von der Landing Page geworfen, LP-Bilder lokalisiert
-(`3feb852`, live). Der Engpass sind jetzt Fabians offene Entscheidungen —
-gesammelt in `00_Projekt/Aethernal_ToDos_Fabian_2026-08-13.docx` im Drive-Ordner.
+Am 11.09. sind die beiden seit 02.09. liegengebliebenen Zweige ausgerollt worden, dazu die
+ersten Punkte aus Etappe A des Masterplans (`00_Projekt/MASTERPLAN_2026-08-28.md`).
 
-## Wichtig vor jeder Performance-Arbeit
+**Live seit heute:**
+- Auflistbarkeit öffentlicher Gedenkprofile geschlossen — mit dem öffentlichen anon-Key
+  liefern `memorials` und `memorial_photos` jetzt **0 Zeilen** statt 5 mit Klarnamen und
+  Sterbedaten. Der Einzelabruf per Kurzname läuft über `public.get_public_memorial()`.
+- Doppelbestätigung im Todesfall-Ablauf scharf (Migration + App + Edge Function),
+  durch einen echten Scheduler-Lauf bestätigt.
+- Registrierung geschlossen (`REGISTRATION_OPEN` in der Server-`.env`, Standard zu).
+- Tägliche Datensicherung auf dem VPS, 03:30, 14 Generationen, inkl. Bilddateien.
+- Serveraltlasten archiviert, `.env` auf `600`.
 
-**Erst auf dem Server messen, nicht im Browser.** Von Fabians Mac aus liegt die
-RTT nach Frankfurt bei 220–450 ms (normal: 15–25 ms). Der VPS selbst liefert die
-statische LP in **28 ms**, App-SSR `/login` warm in **17 ms**, VPS→Supabase
-**1 ms Ping**. Client-Urteile deshalb über pagespeed.web.dev holen.
+**Bestand:** 3 Konten, 4 Gedenkprofile (Testkonto `eti.fakler` wurde entfernt).
 
-## Empfohlene Reihenfolge
+## Als Nächstes — Rest von Etappe A
 
-1. **Performance Teil 2 (A6-Rest):** Dashboard und Memorial-Detail machen pro
-   SSR-Request zu viele serielle Supabase-Roundtrips. Bündeln (`Promise.all`),
-   ggf. `revalidate` für unkritische Reads. Das ist der letzte Teil der Ladezeit,
-   den wir selbst beeinflussen.
-2. **Bugfix `qr_code_2`:** Das Icon in der SpiritLink-Sektion der Landing Page
-   ligiert nicht und rendert als Text (245 px breit statt 60). Bestand schon vor
-   dem 13.08., also keine Regression — trotzdem offen.
-3. **B4 Kalender-Export** (Quick-Win, Plan in `BACKLOG.md` C-B4) — sobald Fabian
-   „nur ICS“ vs. „auch Abo-Feed“ entschieden hat (To-do 11).
-4. **„Konto nach Todesfall“-Batch** — braucht Fabians Antwort auf To-do 09
-   (Gedenkmodus / Einfrieren / nichts). Voraussetzung für die
-   Gästebuch-Moderations-Übergabe.
-5. **B2 Gästebuch** (eigene Etappe, Plan in C-B2, 4 offene Fragen = To-do 10)
-   → danach B3 Profil-Sektionen, B5 Nachrichten-Anhänge.
+1. **Überwachung.** Das ist der wichtigste offene Punkt. Ping am Ende jedes Versandlaufs
+   plus ein Kanarienvogel-Termin, der wöchentlich eine echte Mail erzwingt. Ohne das fällt
+   ein Ausfall erst am **03.11.2026** auf — dann ist die erste echte Nachricht fällig.
+2. **`pg_dump`** für Schema, Policies, Datenbankfunktionen und Auth-Konten. Die tägliche
+   Sicherung deckt nur Daten und Dateien ab. Braucht das DB-Passwort aus dem
+   Supabase-Dashboard (Settings → Database).
+3. **`CRON_SECRET`** in einen Passwortmanager, aus der Drive-Doku entfernen, neu setzen.
+
+Danach Etappe B (Fotospeicher auf privat + signierte Links — der Bucket `memorial-photos`
+ist weiterhin öffentlich, das ist Blocker 2), dann C (Ladezeit der Gedenkseite unter 2 s).
 
 ## Was auf Fabian wartet
 
-Vollständig und mit Anleitung in
-`Meine Ablage/Projekte/Aethernal/00_Projekt/Aethernal_ToDos_Fabian_2026-08-13.docx`.
-Kurzfassung: GitHub-Token widerrufen · Alt-Ordner mit Klartext-Keys löschen ·
-Internetleitung prüfen · Anwaltstermin · Impressum vervollständigen ·
-Markenschutz ÖPA · Karenzzeit absegnen · Todesfall-Wortlaute lesen ·
-Konto-nach-Todesfall entscheiden · Gästebuch-Detailfragen · Kalender-Export-Umfang ·
-Profil-Sektionen-Set · Bild-Lizenz freigeben · Graustufen/Demo-Fotos · GA4 auf der LP ·
-QR-Scan am Handy · Foto-Upload am Handy.
+Supabase → Authentication → **„Allow new users to sign up" ausschalten**. Die App-Sperre
+schließt nur die Oberfläche. Ansonsten: Abschnitt 7 des Masterplans (AVVs, Formulartest,
+Anwältin, Steuerberater).
 
-## Nützliche Fakten (erspart Suchen)
+## Nützliche Fakten
 
-- **Landing Page hat KEIN CI/CD.** Nach jeder Änderung an `index.html`,
-  `styles.css`, `img/` oder `fonts/`:
-  `scp <datei> aether:/opt/aethernal/landingpage/`. Ein Commit allein ändert
-  live nichts. (Genau diese Falle hatte dazu geführt, dass bis 13.08. die
-  April-Fassung mit einer falschen DSGVO-Aussage live war.)
+- **Supabase-Zugang:** Ein gültiger Personal Access Token liegt in
+  `.claude/settings.local.json` (Berechtigungsregel `export SUPABASE_ACCESS_TOKEN=sbp_…`).
+  `supabase login` funktioniert aus Claude Code NICHT (kein TTY). SQL läuft über
+  `POST https://api.supabase.com/v1/projects/nrxeocbokfllrufdbsdx/database/query`.
+- **Scheduler von Hand anstoßen, ohne das Secret zu sehen:**
+  `do $$ declare cmd text; begin select command into cmd from cron.job
+  where jobname='aethernal-send-due-messages'; execute cmd; end $$;`
+  Antwort danach in `net._http_response` nachlesen.
+- **Landing Page hat KEIN CI/CD.** Nach jeder Änderung `scp datei aether:/opt/aethernal/landingpage/`.
 - **LP-CSS neu bauen:**
   `npx tailwindcss -c landingpage.tailwind.config.js -i landingpage.input.css -o styles.css --minify`
-  (braucht `tailwindcss@3` + `@tailwindcss/forms` + `@tailwindcss/container-queries`).
-- **Neues Icon im Code?** Namen in `app/fonts/ICONS.txt` ergänzen und den Subset
-  neu ziehen, sonst rendert es als Klartext:
-  `https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=<liste>` →
-  woff2-URL aus der CSS ziehen, Datei nach `app/fonts/material-symbols-subset.woff2`.
-- **Icon-Größen:** In der App gewinnt `.material-symbols-outlined { font-size: 24px }`
-  über Tailwind-`text-*`-Klassen (so war es auch vorher). Auf der Landing Page ist
-  es bewusst umgekehrt gelöst (`:where(...)`, Spezifität 0), weil dort
-  `text-5xl/6xl/7xl` gebraucht werden.
-- App-Deploy: push auf `main` → GitHub Actions baut und deployt (~2,5 min).
-  Manuell: `ssh aether` → `/opt/aethernal/app` → `./deploy.sh`.
-- Edge Function manuell triggern: POST mit `Authorization: Bearer <CRON_SECRET>` an
-  `https://nrxeocbokfllrufdbsdx.supabase.co/functions/v1/send-due-messages`.
-- Migrationen liefen bisher über SQL-Editor/Management-API, NICHT `db push`
-  (Historie leer, alles idempotent — Hinweis in SCHEMA_DRIFT).
-- Demo-Login: `fabian.fehervary+demo@gmail.com` (Passwort hat Fabian; steht bewusst
-  nicht in der Doku). Die 3 Bestandskonten nie anfassen.
-- Rollback Landing Page: `/opt/aethernal/landingpage/index.html.bak-2026-08-13-vor-perf`.
+- **Neues Icon im Code?** Namen in `app/fonts/ICONS.txt` ergänzen und den Subset neu ziehen.
+- App-Deploy: push auf `main` → GitHub Actions (~2,5 min). Edge Function separat:
+  `supabase functions deploy send-due-messages --project-ref nrxeocbokfllrufdbsdx`.
+- Migrationen laufen über die Management-API bzw. den SQL-Editor, NICHT `db push`
+  (Historie ist leer, alles idempotent — siehe SCHEMA_DRIFT).
+- Demo-Login: `fabian.fehervary+demo@gmail.com`. Die verbliebenen Bestandskonten nicht anfassen.
+- Sicherungen: täglich `/opt/aethernal/backups` auf dem VPS, einmalig lokal unter
+  `~/Projekte/Aethernal/backups/`.
+- Rollback Landing Page: `/opt/aethernal/_archiv-2026-09-11/index.html.bak-2026-08-13-vor-perf`.
