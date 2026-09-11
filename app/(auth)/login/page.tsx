@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { isRegistrationOpen } from "@/lib/registration";
 
 export const metadata = { title: "Anmelden" };
 
@@ -131,15 +132,27 @@ async function LoginForm({
 
         {/* Footer Link */}
         <div className="text-center">
-          <p className="text-on-surface-variant/70">
-            Noch kein Konto?{" "}
-            <Link
-              href="/register"
-              className="text-primary font-medium hover:underline underline-offset-4 ml-1"
-            >
-              Registrieren
-            </Link>
-          </p>
+          {isRegistrationOpen() ? (
+            <p className="text-on-surface-variant/70">
+              Noch kein Konto?{" "}
+              <Link
+                href="/register"
+                className="text-primary font-medium hover:underline underline-offset-4 ml-1"
+              >
+                Registrieren
+              </Link>
+            </p>
+          ) : (
+            <p className="text-on-surface-variant/70">
+              Neue Konten sind derzeit geschlossen.{" "}
+              <Link
+                href="/register"
+                className="text-primary font-medium hover:underline underline-offset-4 ml-1"
+              >
+                Warum?
+              </Link>
+            </p>
+          )}
         </div>
       </div>
     </>
