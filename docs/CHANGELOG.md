@@ -3,6 +3,42 @@
 _Was wann gebaut/geändert wurde. Neueste zuerst._
 
 ## 2026-09-11
+
+### Nachtschicht — Etappe A abgeschlossen, Etappe B begonnen
+
+- **Ausfalluberwachung steht** (`1bc2c0a`). Migration `20260911_scheduler_runs.sql`
+  (RLS an, bewusst ohne Policy → nur Service-Role), die Edge Function schreibt am Ende
+  jedes Laufs eine Zeile, `ops/watchdog-aethernal.py` läuft täglich 07:15 auf dem VPS und
+  schlägt Alarm, wenn der letzte Lauf älter als 26 h ist oder Fehler meldet. Montags
+  zusätzlich ein Lebenszeichen — der Kanarienvogel für den Mailweg. Beide Wege wirklich
+  durchgetestet (Normalfall + erzwungener Alarm), zwei als Test markierte Mails zugestellt.
+  - **Befund:** `net._http_response` taugt nicht als Grundlage — pg_net leert die Tabelle
+    nach Stunden (beim Prüfen: 1 Eintrag). Daher der eigene Ping.
+  - **Befund:** Resend braucht einen eigenen User-Agent, sonst blockt Cloudflare mit
+    HTTP 403 / Code 1010. **Ohne diese Zeile wäre jeder Alarm stumm gescheitert.**
+- **Fotospeicher: Grenzen gesetzt** — 15 MB, nur Bildformate (inkl. HEIC). Vorher
+  unbegrenzt in Größe und Typ. Der Speicher ist weiterhin öffentlich; dazu gibt es eine
+  Architekturentscheidung, siehe `00_Projekt/ENTSCHEIDUNG_Fotospeicher_2026-09-11.md`.
+- **Google Fonts und Tailwind-CDN aus den restlichen Landing-Seiten** (`650955d`).
+  Bis heute floss beim Öffnen von agb, datenschutz, impressum, partner-apply und 404 eine
+  IP an Google — ausgerechnet auch auf der Datenschutzerklärung. Eigenes `styles-seiten.css`
+  (18 KB), weil die Startseite `borderRadius` überschreibt und die Unterseiten nicht.
+  Cormorant Garamond für die 404 lokal geholt, damit sich optisch nichts ändert.
+  404.html lag bisher nur auf dem Server und in keinem Commit. Optisch gegengeprüft:
+  agb/impressum 0,00/255, datenschutz 0,34, 404 0,04; partner-apply weicht bewusst ab
+  (das forms-Plugin überstimmte bisher die eigenen Regeln der Seite).
+  **Live: alle sechs Seiten laden von null fremden Hosts.**
+- **Gedenkseiten aus dem Suchindex** (`e0…`, zwei Commits): `robots: noindex` auf
+  `/s/[slug]` inkl. der Nicht-gefunden-Fassung, Impressum- und Datenschutzlink in den Fuß
+  (Pflichtangaben, fehlten), und `app/robots.ts` neu.
+  - **Befund:** Es gab überhaupt keine `robots.txt` — der Abruf lieferte HTTP 200 mit der
+    Login-Seite, weil die Middleware sie abfing. Für eine Suchmaschine liest sich das als
+    „keine Einschränkungen". Matcher ergänzt, live gegengeprüft: jetzt `text/plain`,
+    `Disallow: /`.
+- **Bewusst NICHT gemacht:** Fotospeicher auf privat. Das kehrt die Entscheidung vom
+  02.09. um („kein Service-Role-Key im Renderpfad der öffentlichen Seite") und braucht
+  eine Datenwanderung, weil in der DB fertige öffentliche Adressen stehen statt Pfaden.
+  Drei Wege mit Empfehlung liegen als Entscheidungsvorlage bereit.
 - **Etappe A angefangen — Sicherung, Server, Registrierung.** Ausgangslage: Der Server lief
   noch auf `87c1f54` vom 13.08. Beide seit dem 02.09. fertigen Zweige lagen ungemergt, also
   war weder der Auflistbarkeits-Fix noch die Doppelbestätigung wirksam.

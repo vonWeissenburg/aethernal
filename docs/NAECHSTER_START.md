@@ -16,14 +16,19 @@ ersten Punkte aus Etappe A des Masterplans (`00_Projekt/MASTERPLAN_2026-08-28.md
 - Registrierung geschlossen (`REGISTRATION_OPEN` in der Server-`.env`, Standard zu).
 - Tägliche Datensicherung auf dem VPS, 03:30, 14 Generationen, inkl. Bilddateien.
 - Serveraltlasten archiviert, `.env` auf `600`.
+- **Ausfallüberwachung**: `scheduler_runs` + Wächter täglich 07:15, Alarm per Mail,
+  montags Lebenszeichen. Beide Wege durchgetestet.
+- Google Fonts und Tailwind-CDN aus **allen** Landing-Seiten (vorher nur der Startseite).
+- Gedenkseiten auf `noindex`, Impressum/Datenschutz im Fuß, `robots.txt` für die App.
 
 **Bestand:** 3 Konten, 4 Gedenkprofile (Testkonto `eti.fakler` wurde entfernt).
 
-## Als Nächstes — Rest von Etappe A
+## Als Nächstes
 
-1. **Überwachung.** Das ist der wichtigste offene Punkt. Ping am Ende jedes Versandlaufs
-   plus ein Kanarienvogel-Termin, der wöchentlich eine echte Mail erzwingt. Ohne das fällt
-   ein Ausfall erst am **03.11.2026** auf — dann ist die erste echte Nachricht fällig.
+1. **Fotospeicher auf privat** — der letzte offene Punkt derselben Art wie die heute
+   geschlossene Auflistbarkeit. **Braucht eine Entscheidung von Fabian:**
+   `00_Projekt/ENTSCHEIDUNG_Fotospeicher_2026-09-11.md` (drei Wege, Empfehlung C).
+   Größen- und Formatgrenze sind bereits gesetzt (15 MB, nur Bildformate).
 2. **`pg_dump`** für Schema, Policies, Datenbankfunktionen und Auth-Konten. Die tägliche
    Sicherung deckt nur Daten und Dateien ab. Braucht das DB-Passwort aus dem
    Supabase-Dashboard (Settings → Database).
