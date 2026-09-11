@@ -2,6 +2,37 @@
 
 _Was wann gebaut/geändert wurde. Neueste zuerst._
 
+## 2026-09-11
+- **Etappe A angefangen — Sicherung, Server, Registrierung.** Ausgangslage: Der Server lief
+  noch auf `87c1f54` vom 13.08. Beide seit dem 02.09. fertigen Zweige lagen ungemergt, also
+  war weder der Auflistbarkeits-Fix noch die Doppelbestätigung wirksam.
+- **Datensicherung eingerichtet und geprüft** (vorher gab es keine): `/opt/aethernal/backup-aethernal.py`
+  auf dem VPS, täglich 03:30, 14 Generationen, Ablage in Frankfurt. Sichert alle 8 Tabellen als
+  JSON **und** alle Storage-Dateien als echte Kopie. Erstlauf grün (28 Zeilen, 7 Dateien),
+  Dateigrößen und MIME-Typen gegengeprüft. **Was fehlt:** Schema, RLS-Policies, Datenbank-
+  funktionen und Auth-Nutzer — dafür braucht es `pg_dump` mit dem DB-Passwort, das nirgends
+  hinterlegt ist. Steht in `/opt/aethernal/backups/LIESMICH.txt`.
+- **Server aufgeräumt:** `index.html.bak`, `.bak2`, `.bak-2026-08-13` und `download-images.sh`
+  aus dem Web-Verzeichnis nach `/opt/aethernal/_archiv-2026-09-11/` verschoben (nicht gelöscht).
+  `/opt/aethernal/app/.env` von `644` auf `600` — auf der Kiste laufen drei weitere Projekte.
+- **Registrierung geschlossen** (`5582f7a`, live): `/register` zeigt eine Hinweisseite,
+  bestehende Konten melden sich unverändert an. Schalter `REGISTRATION_OPEN` in der Server-`.env`,
+  Standard geschlossen. Zwei Fallen dabei gefunden und im Code festgehalten: (a) **kein**
+  `NEXT_PUBLIC_`-Präfix, weil Next solche Variablen beim Bauen fest einsetzt und der
+  Docker-Build die `.env` mitkopiert — der Wert wäre im Abbild eingebacken; (b)
+  `export const dynamic = "force-dynamic"` auf `/register`, sonst rendert Next die geschlossene
+  Fassung einmal vor und liefert sie statisch aus. Beide Zustände lokal und live gegengeprüft.
+- **Auflistbarkeit als noch offen bestätigt** (Gegenprobe mit dem öffentlichen anon-Key):
+  `memorials` liefert 5 Zeilen mit Namen, Geburts- und Sterbedatum, `memorial_photos` 4 Zeilen.
+  Der Fix liegt fertig im Zweig und wartet auf Schritt 1 der Migration.
+- **Beide Zweige testweise zusammengeführt:** keine Konflikte, `tsc` und `next build` sauber,
+  Route `/vertrauen/todesfall/freigeben` registriert. Zweig `release/2026-09-11` steht bereit.
+  **Nicht gepusht** — `app/s/[slug]/page.tsx` ruft `get_public_memorial()` auf; ohne Schritt 1
+  der Migration wären die Gedenkseiten sofort kaputt.
+- **Blockiert:** Kein Supabase-Zugangstoken und kein DB-Passwort hinterlegt → die SQL-Schritte
+  und das Ausrollen der Edge Function kann Claude nicht selbst ausführen. Copy-Paste-Fassungen
+  liegen in `00_Projekt/SQL_2026-09-11/`.
+
 ## 2026-08-13
 - **Performance-Etappe (A6), Teil 1 — Fonts & Landing-Page-Assets.** Vorher gemessen statt geraten:
   Der VPS ist NICHT die Bremse (Frankfurt, Load 0.00; statische LP direkt aus nginx in **28 ms**,
