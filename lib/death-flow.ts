@@ -8,6 +8,21 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 export const REPORT_LINK_VALID_HOURS = 48;
 export const GRACE_PERIOD_DAYS = 7;
 
+// Doppelbestätigung (Entscheidung 28.08.2026): Nach Ablauf der Karenzzeit bittet der
+// Scheduler die Vertrauensperson um eine zweite, bewusste Bestätigung.
+//
+// Die zweite Bestätigung ist ein BESCHLEUNIGER, keine harte Hürde: Bliebe sie aus,
+// käme nie eine Nachricht an — das Kernversprechen wäre gebrochen. Nach Ablauf von
+// FINAL_CONFIRM_FALLBACK_DAYS ab der Anfrage wird deshalb auch ohne zweite
+// Bestätigung zugestellt. Das Widerrufsfenster des Nutzers wächst damit auf
+// GRACE_PERIOD_DAYS + FINAL_CONFIRM_FALLBACK_DAYS = 21 Tage.
+export const FINAL_CONFIRM_FALLBACK_DAYS = 14;
+
+// Bleibt die zweite Bestätigung aus, wird nach dieser Zeit einmal erinnert.
+// Die Erinnerung enthält einen FRISCHEN Link; der alte verfällt dabei (wie bei
+// Passwort-Zurücksetzen). Das ist nötig, weil nur der Hash gespeichert wird.
+export const FINAL_CONFIRM_REMINDER_DAYS = 7;
+
 export function getAdmin(): SupabaseClient | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

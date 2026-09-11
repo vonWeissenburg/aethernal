@@ -2,6 +2,37 @@
 
 _Neueste zuerst. Jede wichtige Richtungsentscheidung hier mit Datum + Begründung festhalten._
 
+## 2026-08-28 — Doppelbestätigung im Todesfall, Karenzzeit bleibt 7 Tage (Fabian)
+Fabian hat den vorgeschlagenen **zweiten Bestätigungsschritt** freigegeben, die
+Karenzzeit bleibt bei 7 Tagen. Neuer Ablauf: Karenzzeit läuft ab → der Scheduler
+bittet die Vertrauensperson per E-Mail um eine **zweite, bewusste Bestätigung**
+(`/vertrauen/todesfall/freigeben`) → erst danach wird zugestellt.
+
+**Konstruktionsentscheidung (Claude, von Fabian nicht widersprochen): Die zweite
+Bestätigung ist ein BESCHLEUNIGER, keine harte Hürde.** Eine harte Hürde würde das
+Kernversprechen des Produkts brechen — bliebe die Bestätigung aus (überforderte,
+nicht erreichbare oder selbst verstorbene Vertrauensperson, Mail im Spam), käme
+**nie** eine Nachricht an. Deshalb:
+
+- bestätigt → Zustellung beim nächsten Scheduler-Lauf (< 24 h)
+- schweigt → einmalige Erinnerung nach `FINAL_CONFIRM_REMINDER_DAYS` (7 Tage),
+  dann automatische Zustellung am Rückfalldatum `FINAL_CONFIRM_FALLBACK_DAYS`
+  (14 Tage nach der Anfrage)
+
+**Nebeneffekt und eigentlicher Sicherheitsgewinn:** Das Widerrufsfenster des
+Nutzers wächst von 7 auf bis zu **21 Tage**. Zwei getrennte, bewusste Handlungen
+eines vom Nutzer selbst benannten Menschen senken das Missbrauchsrisiko stärker
+als eine längere Frist allein.
+
+**Bewusst NICHT gebaut:** eine zweite Warn-Mail an den Nutzer bei Ablauf der
+Karenzzeit. Der Widerrufslink wird nur als Hash gespeichert und lässt sich nicht
+erneut verschicken; ein rotierter Link hätte den Link aus der ersten Mail
+entwertet. Zudem wäre eine zweite Mail ins Postfach einer tatsächlich
+verstorbenen Person genau der peinliche Fehler, den Entscheidung 2026-07-19
+vermeiden will. **Richtiger Ort dafür ist ein Widerruf-Banner im eingeloggten
+Dashboard** (die RLS-Policy `death_reports_select_own` ist dafür schon angelegt)
+— steht als Empfehlung im Backlog, ist noch nicht gebaut.
+
 ## 2026-07-19 — Zustell-Mail für hinterlassene Nachrichten: persönlicher Rahmen (Fabian)
 Finaler Wortlaut der death-Zustellmail (umgesetzt in `send-due-messages`):
 Absender-Anzeigename **„{Name} über Aethernal"** (im Postfach steht der Name

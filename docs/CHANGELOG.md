@@ -32,6 +32,42 @@ _Was wann gebaut/geändert wurde. Neueste zuerst._
 - **Blockiert:** Kein Supabase-Zugangstoken und kein DB-Passwort hinterlegt → die SQL-Schritte
   und das Ausrollen der Edge Function kann Claude nicht selbst ausführen. Copy-Paste-Fassungen
   liegen in `00_Projekt/SQL_2026-09-11/`.
+## 2026-08-28
+- **Doppelbestätigung im Todesfall-Ablauf** (Entscheidung 28.08., siehe `DECISIONS.md`).
+  Karenzzeit bleibt 7 Tage; danach stellt der Scheduler nicht mehr direkt zu, sondern bittet
+  die Vertrauensperson um eine zweite, bewusste Bestätigung. Bleibt sie aus, wird nach einer
+  Erinnerung (7 Tage) am Rückfalldatum (14 Tage) automatisch zugestellt — die zweite
+  Bestätigung ist bewusst ein Beschleuniger, keine harte Hürde. Widerrufsfenster des Nutzers
+  damit bis zu 21 Tage.
+- **Migration `supabase/migrations/20260828_death_report_second_confirmation.sql`** (idempotent):
+  `death_reports` erhält `final_request_sent_at`, `final_confirm_token_hash`,
+  `final_confirmed_at`, `final_reminder_sent_at`, `fallback_deliver_at` plus Unique-Index auf
+  den Token-Hash und zwei Teil-Indizes für die Scheduler-Abfragen. Kein Backfill nötig.
+  **⚠️ REIHENFOLGE: Migration im Supabase-SQL-Editor einspielen, BEVOR der Code deployt wird.**
+  Ohne die Spalten schlagen alle drei Todesfall-Abfragen fehl und die Zustellung von
+  death-Nachrichten stünde bis zum Einspielen still.
+- **Neue Seite `/vertrauen/todesfall/freigeben`** (`app/vertrauen/todesfall/freigeben/page.tsx`):
+  zweite Bestätigung per Token, Zwei-Schritt (Button + POST, kein Auslösen durch Mail-Scanner),
+  benennt das Rückfalldatum ausdrücklich, damit niemand glaubt, sein Schweigen halte die
+  Nachrichten dauerhaft auf.
+- **Scheduler `send-due-messages` Abschnitt 4 in drei Schritte zerlegt:**
+  A) Karenzzeit abgelaufen → Freigabe-Token setzen, Rückfalldatum setzen, Bitte um zweite
+  Bestätigung an die Vertrauensperson. B) nach 7 Tagen ohne Antwort genau eine Erinnerung mit
+  FRISCHEM Token (der alte verfällt, weil nur der Hash gespeichert ist — die Mail sagt das).
+  C) Zustellung, wenn freigegeben ODER Rückfalldatum erreicht (zwei Abfragen + Entdoppelung
+  statt `.or()`). Token-Erzeugung und SHA-256 in Deno über Web Crypto, hashgleich zu
+  `lib/death-flow.ts`. Neue Zähler `finalRequested`/`remindersSent` in der Antwort.
+- **Sonderfall abgedeckt:** ist die Vertrauensperson gelöscht (`trusted_person_id` NULL),
+  gibt es niemanden zu fragen → es gilt die alte Regel, Zustellung direkt nach der Karenzzeit.
+- **Neues Secret nötig:** `APP_URL` für die Edge Function (Links in den Mails). Fällt weich auf
+  `https://app.aethernal.me` zurück, wenn nicht gesetzt.
+- Konstanten `FINAL_CONFIRM_FALLBACK_DAYS = 14` und `FINAL_CONFIRM_REMINDER_DAYS = 7` in
+  `lib/death-flow.ts` (und spiegelbildlich in der Edge Function, die keine Imports aus `lib/` hat).
+- Texte im ersten Bestätigungsschritt angepasst: die Vertrauensperson erfährt jetzt vorab,
+  dass eine zweite Bestätigung kommt.
+- Geprüft: `npx tsc --noEmit` sauber, `next build` sauber (Route `/vertrauen/todesfall/freigeben`
+  registriert), `deno check` der Edge Function sauber. **Noch nicht committet, nicht deployt,
+  Migration noch nicht eingespielt.**
 
 ## 2026-08-13
 - **Performance-Etappe (A6), Teil 1 — Fonts & Landing-Page-Assets.** Vorher gemessen statt geraten:
