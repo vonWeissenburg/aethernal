@@ -10,40 +10,19 @@
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script>
-tailwind.config = {
-  darkMode: "class",
-  theme: {
-    extend: {
-      colors: {
-        "primary-fixed-dim": "#eac249",
-        "on-surface": "#e4e1ea",
-        "primary-container": "#f2ca50",
-        "background": "#131319",
-        "on-primary": "#3d2f00",
-        "on-surface-variant": "#d0c5af",
-        "surface-container": "#1f1f26",
-        "outline": "#99907c",
-        "surface-container-lowest": "#0e0e14",
-        "surface-container-high": "#2a2930",
-        "outline-variant": "#4d4635",
-        "primary": "#ffe9b0",
-        "surface": "#131319"
-      },
-      fontFamily: {
-        headline: ["Noto Serif"],
-        body: ["Inter"],
-        label: ["Inter"]
-      }
-    }
-  }
-}
-</script>
+<!-- Fonts selbst gehostet: kein Google-Abruf beim Besucher. Bis 11.09.2026 floss
+     beim Oeffnen dieser Seite eine IP-Adresse an Google - ausgerechnet auf der
+     Datenschutzerklaerung. -->
+<link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin/>
+<link rel="preload" href="/fonts/noto-serif-var-latin.woff2" as="font" type="font/woff2" crossorigin/>
+<!-- Eigenes Stylesheet, NICHT /styles.css: Die Startseite ueberschreibt borderRadius,
+     diese Seiten nicht. Gebaut aus landingpage-seiten.tailwind.config.js. -->
+<link rel="stylesheet" href="/styles-seiten.css"/>
 <style>
+@font-face{font-family:'Inter';src:url('/fonts/inter-var-latin.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
+@font-face{font-family:'Noto Serif';src:url('/fonts/noto-serif-var-latin.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap;}
+@font-face{font-family:'Noto Serif';src:url('/fonts/noto-serif-italic-var-latin.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap;}
+body{font-family:'Inter',ui-sans-serif,system-ui,sans-serif;}
 html { scroll-behavior: smooth; }
 .font-noto-serif { font-family: 'Noto Serif', serif; }
 </style>
