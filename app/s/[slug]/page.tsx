@@ -47,12 +47,20 @@ export async function generateMetadata({
   const { slug } = await params;
   const result = await loadPublicMemorial(slug);
 
-  if (!result) return { title: "Nicht gefunden" };
+  // Nicht indexieren (Etappe B, Masterplan 28.08.). Hier stehen Klarnamen,
+  // Geburts- und Sterbedaten realer Verstorbener. Wer den QR-Code am Grabstein
+  // scannt, soll die Seite finden — eine Suchmaschine soll sie nicht auffindbar
+  // machen. Gilt auch für die Nicht-gefunden-Fassung, damit Suchmaschinen keine
+  // Kurznamen durchprobieren.
+  const robots = { index: false, follow: false, nocache: true };
+
+  if (!result) return { title: "Nicht gefunden", robots };
 
   const { memorial } = result;
   return {
     title: memorial.name,
     description: memorial.description ?? `Gedenkprofil für ${memorial.name}`,
+    robots,
   };
 }
 
@@ -188,7 +196,23 @@ export default async function SpiritLinkPage({
           >
             Eigenes Gedenkprofil erstellen
           </a>
-          <p className="mt-10 font-label text-[9px] text-on-surface-variant/60 tracking-[0.2em] uppercase">
+          {/* Pflichtangaben: Das hier ist eine oeffentlich abrufbare Seite. */}
+          <nav className="mt-10 flex items-center gap-4">
+            <a
+              href="https://aethernal.me/impressum.html"
+              className="font-label text-[11px] text-on-surface-variant/70 hover:text-primary underline underline-offset-4 transition-colors"
+            >
+              Impressum
+            </a>
+            <span className="text-on-surface-variant/30" aria-hidden="true">·</span>
+            <a
+              href="https://aethernal.me/datenschutz.html"
+              className="font-label text-[11px] text-on-surface-variant/70 hover:text-primary underline underline-offset-4 transition-colors"
+            >
+              Datenschutz
+            </a>
+          </nav>
+          <p className="mt-6 font-label text-[9px] text-on-surface-variant/60 tracking-[0.2em] uppercase">
             Ewige Erinnerung
           </p>
         </footer>
