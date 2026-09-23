@@ -3,12 +3,16 @@ import Image from "next/image";
 import { formatLifespan } from "@/lib/utils";
 import type { Memorial } from "@/lib/types";
 
+// photoUrl: vom Aufrufer bereits signierte Adresse des Profilfotos (privater Bucket,
+// lib/photo-urls.ts) — null, wenn kein Foto oder nicht signierbar → Platzhalter-Icon.
 export default function MemorialCard({
   memorial,
   diaryCount,
+  photoUrl,
 }: {
   memorial: Memorial;
   diaryCount: number;
+  photoUrl: string | null;
 }) {
   const m = memorial;
   return (
@@ -18,9 +22,9 @@ export default function MemorialCard({
     >
       <div className="flex justify-between items-start mb-6 lg:mb-8">
         <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden ring-1 ring-primary/20 bg-background flex items-center justify-center">
-          {m.profile_photo_url ? (
+          {photoUrl ? (
             <Image
-              src={m.profile_photo_url}
+              src={photoUrl}
               alt={m.name}
               width={80}
               height={80}

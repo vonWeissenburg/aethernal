@@ -8,6 +8,7 @@ import QRCode from "qrcode";
 import CopyLinkButton from "@/components/copy-link-button";
 import ShareLinkButton from "@/components/share-link-button";
 import { LightboxGallery } from "@/components/photo-lightbox";
+import { signPhotoPaths } from "@/lib/photo-urls";
 
 export async function generateMetadata({
   params,
@@ -74,6 +75,20 @@ export default async function MemorialDetailPage({
   const photoCount = photos?.length ?? 0;
   const spiritLinkUrl = `${process.env.NEXT_PUBLIC_APP_URL}/s/${memorial.slug}`;
 
+  // Fotos liegen im privaten Bucket — Profilfoto und Galerie in einem Signier-Aufruf.
+  // Nicht signierbare Einträge fallen weg statt als kaputtes Bild zu erscheinen.
+  const signed = await signPhotoPaths(supabase, [
+    memorial.profile_photo_path,
+    ...(photos ?? []).map((p) => p.path),
+  ]);
+  const profilePhotoUrl = memorial.profile_photo_path
+    ? signed.get(memorial.profile_photo_path) ?? null
+    : null;
+  const galleryPhotos = (photos ?? []).flatMap((p) => {
+    const url = signed.get(p.path);
+    return url ? [{ id: p.id, url, caption: p.caption }] : [];
+  });
+
   // Echter, scannbarer QR-Code (B5) — serverseitig generiert
   const qrDataUrl = memorial.is_public
     ? await QRCode.toDataURL(spiritLinkUrl, {
@@ -101,10 +116,10 @@ export default async function MemorialDetailPage({
       <div className="flex flex-col items-center pt-10 pb-6 px-4 relative">
         <div className="absolute inset-x-0 top-0 h-64 pointer-events-none golden-glow animate-glow-pulse" aria-hidden="true" />
 
-        {memorial.profile_photo_url ? (
+        {profilePhotoUrl ? (
           <div className="relative w-[140px] h-[140px] rounded-full border-2 border-primary overflow-hidden shadow-[0_0_40px_rgba(242,202,80,0.15)]">
             <Image
-              src={memorial.profile_photo_url}
+              src={profilePhotoUrl}
               alt={memorial.name}
               fill
               className="object-cover"
@@ -287,11 +302,8 @@ export default async function MemorialDetailPage({
             </Link>
           </div>
 
-          {photos && photos.length > 0 ? (
-            <LightboxGallery
-              photos={photos.map((p) => ({ id: p.id, url: p.url, caption: p.caption }))}
-              variant="grid"
-            />
+          {galleryPhotos.length > 0 ? (
+            <LightboxGallery photos={galleryPhotos} variant="grid" />
           ) : (
             <div className="rounded-card border border-dashed border-outline-variant/40 p-8 text-center">
               <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 mb-2" aria-hidden="true">add_photo_alternate</span>

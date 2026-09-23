@@ -5,6 +5,7 @@ import { formatLifespan } from "@/lib/utils";
 import type { Memorial, MemorialPhoto } from "@/lib/types";
 import Image from "next/image";
 import { LightboxGallery } from "@/components/photo-lightbox";
+import { signPhotoPaths } from "@/lib/photo-urls";
 
 type PublicMemorial = { memorial: Memorial; photos: MemorialPhoto[] };
 
@@ -76,6 +77,24 @@ export default async function SpiritLinkPage({
 
   const { memorial, photos } = result;
 
+  // Fotos liegen im privaten Bucket (Migration 20260923_fotospeicher_privat). Signiert wird
+  // mit demselben Client wie oben — also mit dem anon-Schlüssel (oder dem des angemeldeten
+  // Besuchers), NICHT mit dem Service-Role-Key. Ob das Signieren erlaubt ist, entscheidet
+  // die Storage-RLS: nur Dateien öffentlicher Gedenkprofile. Ein privat geschaltetes Profil
+  // gibt ab dem Moment keine Fotoadressen mehr her, ganz gleich wer fragt.
+  const supabase = await createClient();
+  const signed = await signPhotoPaths(supabase, [
+    memorial.profile_photo_path,
+    ...photos.map((p) => p.path),
+  ]);
+  const profilePhotoUrl = memorial.profile_photo_path
+    ? signed.get(memorial.profile_photo_path) ?? null
+    : null;
+  const galleryPhotos = photos.flatMap((p) => {
+    const url = signed.get(p.path);
+    return url ? [{ id: p.id, url, caption: p.caption }] : [];
+  });
+
   return (
     <div
       className="min-h-screen text-on-surface"
@@ -96,9 +115,9 @@ export default async function SpiritLinkPage({
           {/* Photo with gold ring */}
           <div className="relative w-[150px] h-[150px] lg:w-[180px] lg:h-[180px] mb-8">
             <div className="absolute -inset-1.5 rounded-full border-2 border-primary/50 shadow-[0_0_40px_rgba(242,202,80,0.15)]" />
-            {memorial.profile_photo_url ? (
+            {profilePhotoUrl ? (
               <Image
-                src={memorial.profile_photo_url}
+                src={profilePhotoUrl}
                 alt={memorial.name}
                 width={180}
                 height={180}
@@ -160,7 +179,7 @@ export default async function SpiritLinkPage({
         )}
 
         {/* Photo gallery */}
-        {photos && photos.length > 0 && (
+        {galleryPhotos.length > 0 && (
           <section className="mb-16 lg:mb-20">
             <p className="text-center font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant/70 mb-2">
               Erinnerungen
@@ -168,10 +187,7 @@ export default async function SpiritLinkPage({
             <h2 className="font-headline text-xl lg:text-2xl text-on-surface mb-6 text-center">
               Fotos
             </h2>
-            <LightboxGallery
-              photos={photos.map((p) => ({ id: p.id, url: p.url, caption: p.caption }))}
-              variant="strip"
-            />
+            <LightboxGallery photos={galleryPhotos} variant="strip" />
           </section>
         )}
 

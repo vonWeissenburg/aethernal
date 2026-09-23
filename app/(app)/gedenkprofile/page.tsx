@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Memorial } from "@/lib/types";
 import MemorialCard from "@/components/memorial-card";
 import EmptyState from "@/components/empty-state";
+import { signPhotoPaths } from "@/lib/photo-urls";
 
 export const metadata = { title: "Gedenkprofile" };
 
@@ -32,6 +33,12 @@ export default async function GedenkprofilePage() {
     diaryCountMap[d.memorial_id] = (diaryCountMap[d.memorial_id] || 0) + 1;
   });
 
+  // Profilfotos liegen im privaten Bucket — ein Signier-Aufruf für alle Karten
+  const photoUrls = await signPhotoPaths(
+    supabase,
+    (memorials ?? []).map((m) => m.profile_photo_path)
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-5xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
@@ -48,7 +55,12 @@ export default async function GedenkprofilePage() {
         {memorials && memorials.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {memorials.map((m) => (
-              <MemorialCard key={m.id} memorial={m} diaryCount={diaryCountMap[m.id] || 0} />
+              <MemorialCard
+                key={m.id}
+                memorial={m}
+                diaryCount={diaryCountMap[m.id] || 0}
+                photoUrl={m.profile_photo_path ? photoUrls.get(m.profile_photo_path) ?? null : null}
+              />
             ))}
           </div>
         ) : (

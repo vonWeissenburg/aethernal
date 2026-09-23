@@ -6,21 +6,30 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useToast } from "@/components/toast";
 import { useConfirm } from "@/components/confirm-dialog";
-import { uploadProfilePhoto, removeProfilePhoto } from "@/lib/profile-photo";
+import {
+  uploadProfilePhoto,
+  removeProfilePhoto,
+  PROFILE_PHOTO_ACCEPT,
+} from "@/lib/profile-photo";
 
+// Der Aufrufer liefert Pfad UND bereits signierte Adresse — signiert wird dort, wo die
+// Daten geladen werden. Nach einem Upload kommen beide frisch aus uploadProfilePhoto.
 export function ProfilePhotoUpload({
   memorialId,
   memorialName,
+  initialPath,
   initialUrl,
 }: {
   memorialId: string;
   memorialName: string;
+  initialPath: string | null;
   initialUrl: string | null;
 }) {
   const router = useRouter();
   const { showToast } = useToast();
   const { confirm } = useConfirm();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [path, setPath] = useState<string | null>(initialPath);
   const [url, setUrl] = useState<string | null>(initialUrl);
   const [busy, setBusy] = useState(false);
 
@@ -39,11 +48,12 @@ export function ProfilePhotoUpload({
       return;
     }
 
-    const result = await uploadProfilePhoto(supabase, user.id, memorialId, file, url);
+    const result = await uploadProfilePhoto(supabase, user.id, memorialId, file, path);
     if (result.error) {
       showToast(result.error, "error");
     } else {
-      setUrl(result.url ?? null);
+      setPath(result.path ?? null);
+      setUrl(result.signedUrl ?? null);
       showToast("Profilfoto gespeichert");
       router.refresh();
     }
@@ -51,7 +61,7 @@ export function ProfilePhotoUpload({
   }
 
   async function handleRemove() {
-    if (!url) return;
+    if (!path) return;
     const ok = await confirm({
       title: "Profilfoto entfernen?",
       message: `Möchtest du das Profilfoto von „${memorialName}" wirklich entfernen?`,
@@ -61,10 +71,11 @@ export function ProfilePhotoUpload({
 
     setBusy(true);
     const supabase = createClient();
-    const result = await removeProfilePhoto(supabase, memorialId, url);
+    const result = await removeProfilePhoto(supabase, memorialId, path);
     if (result.error) {
       showToast(result.error, "error");
     } else {
+      setPath(null);
       setUrl(null);
       showToast("Profilfoto entfernt");
       router.refresh();
@@ -78,7 +89,7 @@ export function ProfilePhotoUpload({
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={busy}
-        aria-label={url ? "Profilfoto ändern" : "Profilfoto hochladen"}
+        aria-label={path ? "Profilfoto ändern" : "Profilfoto hochladen"}
         className="relative group rounded-full disabled:opacity-60"
       >
         {url ? (
@@ -102,14 +113,14 @@ export function ProfilePhotoUpload({
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif"
+        accept={PROFILE_PHOTO_ACCEPT}
         onChange={handleFile}
         className="hidden"
         aria-hidden="true"
         tabIndex={-1}
       />
 
-      {url ? (
+      {path ? (
         <button
           type="button"
           onClick={handleRemove}

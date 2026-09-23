@@ -6,7 +6,11 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { generateSlug } from "@/lib/utils";
 import { validateMemorial, firstError } from "@/lib/validation";
-import { uploadProfilePhoto, validateProfilePhoto } from "@/lib/profile-photo";
+import {
+  uploadProfilePhoto,
+  validateProfilePhoto,
+  PROFILE_PHOTO_ACCEPT,
+} from "@/lib/profile-photo";
 import { useToast } from "@/components/toast";
 
 const TOTAL_STEPS = 4;
@@ -453,7 +457,7 @@ export default function OnboardingPage() {
             <input
               ref={photoInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
+              accept={PROFILE_PHOTO_ACCEPT}
               onChange={handlePhotoSelect}
               className="hidden"
               aria-hidden="true"

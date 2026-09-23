@@ -17,7 +17,8 @@ export interface Memorial {
   death_date: string | null;
   description: string | null;
   biography: string | null;
-  profile_photo_url: string | null;
+  /** Speicherpfad im privaten Bucket — wird beim Anzeigen signiert (lib/photo-urls.ts). */
+  profile_photo_path: string | null;
   is_public: boolean;
   created_at: string;
   updated_at: string;
@@ -26,7 +27,8 @@ export interface Memorial {
 export interface MemorialPhoto {
   id: string;
   memorial_id: string;
-  url: string;
+  /** Speicherpfad im privaten Bucket — wird beim Anzeigen signiert (lib/photo-urls.ts). */
+  path: string;
   caption: string | null;
   order_index: number;
   created_at: string;

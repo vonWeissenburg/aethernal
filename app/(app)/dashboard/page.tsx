@@ -5,6 +5,7 @@ import Link from "next/link";
 import MemorialCard from "@/components/memorial-card";
 import ReminderTimeline from "@/components/reminder-timeline";
 import EmptyState from "@/components/empty-state";
+import { signPhotoPaths } from "@/lib/photo-urls";
 
 export const metadata = { title: "Dashboard" };
 
@@ -59,6 +60,12 @@ export default async function DashboardPage() {
     diaryCountMap[d.memorial_id] = (diaryCountMap[d.memorial_id] || 0) + 1;
   });
 
+  // Profilfotos liegen im privaten Bucket — ein Signier-Aufruf für alle Karten
+  const photoUrls = await signPhotoPaths(
+    supabase,
+    (memorials ?? []).map((m) => m.profile_photo_path)
+  );
+
   const firstName = profile?.full_name?.split(" ")[0] ?? "";
   const memorialCount = memorials?.length ?? 0;
 
@@ -86,7 +93,11 @@ export default async function DashboardPage() {
               >
                 {memorials.map((m) => (
                   <div key={m.id} className="w-[280px] shrink-0 snap-start lg:w-auto">
-                    <MemorialCard memorial={m} diaryCount={diaryCountMap[m.id] || 0} />
+                    <MemorialCard
+                      memorial={m}
+                      diaryCount={diaryCountMap[m.id] || 0}
+                      photoUrl={m.profile_photo_path ? photoUrls.get(m.profile_photo_path) ?? null : null}
+                    />
                   </div>
                 ))}
               </section>

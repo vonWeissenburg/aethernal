@@ -8,6 +8,7 @@ import { validateMemorial, firstError } from "@/lib/validation";
 import { useToast } from "@/components/toast";
 import { useConfirm } from "@/components/confirm-dialog";
 import { ProfilePhotoUpload } from "@/components/profile-photo-upload";
+import { PHOTO_BUCKET, signPhotoPath, signPhotoPaths } from "@/lib/photo-urls";
 import type { Memorial, MemorialPhoto } from "@/lib/types";
 
 export default function EditMemorialPage() {
@@ -17,6 +18,9 @@ export default function EditMemorialPage() {
   const { confirm } = useConfirm();
   const [memorial, setMemorial] = useState<Memorial | null>(null);
   const [photos, setPhotos] = useState<MemorialPhoto[]>([]);
+  // Signierte Adressen (privater Bucket): Profilfoto einzeln, Galerie als Pfad → Adresse
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+  const [photoUrls, setPhotoUrls] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +65,16 @@ export default function EditMemorialPage() {
       .returns<MemorialPhoto[]>();
 
     setPhotos(photoData ?? []);
+
+    // Alles in einem Signier-Aufruf; nicht signierbare Einträge bleiben ohne Adresse
+    const signed = await signPhotoPaths(supabase, [
+      data.profile_photo_path,
+      ...(photoData ?? []).map((p) => p.path),
+    ]);
+    setProfilePhotoUrl(
+      data.profile_photo_path ? signed.get(data.profile_photo_path) ?? null : null
+    );
+    setPhotoUrls(Object.fromEntries(signed));
     setLoading(false);
   }, [id, router]);
 
@@ -146,7 +160,7 @@ export default function EditMemorialPage() {
       const filePath = `${user.id}/${id}/${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
-        .from("memorial-photos")
+        .from(PHOTO_BUCKET)
         .upload(filePath, file);
 
       if (uploadError) {
@@ -154,21 +168,22 @@ export default function EditMemorialPage() {
         continue;
       }
 
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("memorial-photos").getPublicUrl(filePath);
-
+      // Nur der Pfad wird gespeichert; die Adresse entsteht beim Anzeigen (signiert)
       const { data: newPhoto } = await supabase
         .from("memorial_photos")
         .insert({
           memorial_id: id,
-          url: publicUrl,
+          path: filePath,
         })
         .select()
         .single<MemorialPhoto>();
 
       if (newPhoto) {
+        const signedUrl = await signPhotoPath(supabase, filePath);
         setPhotos((prev) => [...prev, newPhoto]);
+        if (signedUrl) {
+          setPhotoUrls((prev) => ({ ...prev, [filePath]: signedUrl }));
+        }
       }
     }
 
@@ -185,14 +200,8 @@ export default function EditMemorialPage() {
 
     const supabase = createClient();
 
-    // Delete from storage
-    const url = new URL(photo.url);
-    const pathParts = url.pathname.split("/memorial-photos/");
-    if (pathParts[1]) {
-      await supabase.storage
-        .from("memorial-photos")
-        .remove([decodeURIComponent(pathParts[1])]);
-    }
+    // Delete from storage — der Pfad steht direkt in der Zeile
+    await supabase.storage.from(PHOTO_BUCKET).remove([photo.path]);
 
     // Delete from DB
     await supabase.from("memorial_photos").delete().eq("id", photo.id);
@@ -231,7 +240,8 @@ export default function EditMemorialPage() {
             <ProfilePhotoUpload
               memorialId={memorial.id}
               memorialName={memorial.name}
-              initialUrl={memorial.profile_photo_url}
+              initialPath={memorial.profile_photo_path}
+              initialUrl={profilePhotoUrl}
             />
           )}
         </div>
@@ -378,14 +388,16 @@ export default function EditMemorialPage() {
             {photos.length > 0 && (
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
                 {photos.map((photo) => (
-                  <div key={photo.id} className="relative group aspect-square rounded-xl overflow-hidden">
-                    <Image
-                      src={photo.url}
-                      alt={photo.caption ?? ""}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 33vw, 25vw"
-                    />
+                  <div key={photo.id} className="relative group aspect-square rounded-xl overflow-hidden bg-surface-container-high">
+                    {photoUrls[photo.path] && (
+                      <Image
+                        src={photoUrls[photo.path]}
+                        alt={photo.caption ?? ""}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 33vw, 25vw"
+                      />
+                    )}
                     <button
                       type="button"
                       onClick={() => handleDeletePhoto(photo)}
